@@ -33820,7 +33820,6 @@ var App = function (_React$Component) {
 							return _react2.default.createElement(
 								_react2.default.Fragment,
 								null,
-								_this2.state.toDelete ? null : _react2.default.createElement(_Splash2.default, { toChangeShadowToLow: _this2.toShadowLow, toDelete: _this2.hideSplash }),
 								_react2.default.createElement(_Aside2.default, null),
 								_react2.default.createElement(
 									_reactTransitionGroup.TransitionGroup,
@@ -33843,7 +33842,8 @@ var App = function (_React$Component) {
 											_react2.default.createElement(_reactRouterDom.Route, { path: '/works/:id', component: _TattooDes2.default })
 										)
 									)
-								)
+								),
+								_this2.state.toDelete ? null : _react2.default.createElement(_Splash2.default, { toChangeShadowToLow: _this2.toShadowLow, toDelete: _this2.hideSplash })
 							);
 						} })
 				)
