@@ -33827,7 +33827,7 @@ var App = function (_React$Component) {
 									{ className: 'trans-group' },
 									_react2.default.createElement(
 										_reactTransitionGroup.CSSTransition,
-										{ key: location.pathname, classNames: 'fade', timeout: { enter: 0, exit: 0 } },
+										{ key: location.pathname, classNames: 'fade', timeout: { enter: 700, exit: 700 } },
 										_react2.default.createElement(
 											_reactRouterDom.Switch,
 											{ location: location },
