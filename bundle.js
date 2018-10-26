@@ -33790,6 +33790,7 @@ var App = function (_React$Component) {
 		value: function mouseMove(e) {
 			var dark = document.getElementById('dark');
 			var x = e.clientX || e.touches[0].clientX;
+			if (x === undefined) return;
 			var y = e.clientY || e.touches[0].clientY;
 			dark.style.left = x - dark.clientWidth / 2 + 'px';
 			dark.style.top = y - dark.clientHeight / 2 + 'px';
@@ -34439,25 +34440,15 @@ var Tattoo = function (_React$Component) {
 		var _this = _possibleConstructorReturn(this, (Tattoo.__proto__ || Object.getPrototypeOf(Tattoo)).call(this, props));
 
 		_this.state = {};
-		_this.animateImage = _this.animateImage.bind(_this);
 		return _this;
 	}
 
 	_createClass(Tattoo, [{
-		key: 'animateImage',
-		value: function animateImage(e) {
-			e.currentTarget.classList.toggle('active');
-		}
-	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
 				_reactRouterDom.Link,
-				{
-					onMouseEnter: this.animateImage,
-					onMouseLeave: this.animateImage,
-					to: '/works/' + this.props.id,
-					className: 'tattoo anime' },
+				{ to: '/works/' + this.props.id, className: 'tattoo anime' },
 				_react2.default.createElement(
 					'div',
 					{ className: 'img' },
