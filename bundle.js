@@ -32038,16 +32038,14 @@ var Slider = function (_React$Component) {
 			var img = document.createElement('img');
 			img.src = __webpack_require__(/*! ../../img/arrow.png */ "./src/img/arrow.png");
 			if (e.clientX) e.dataTransfer.setDragImage(img, 10000, 0);
-			this.dragStarted = [e.touches[0].clientX || e.clientX, e.touches[0].clientY || e.clientY];
+			this.dragStarted = [e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY];
 			this.setState({ isDragStarted: !this.state.isDragStarted });
 		}
 	}, {
 		key: 'toDrag',
 		value: function toDrag(e) {
-			if (e.touches[0].clientX) {
-				document.getElementById('root').style.overflow = 'hidden';
-			};
-			var xy = [e.touches[0].clientX || e.clientX, e.touches[0].clientY || e.clientY];
+			if (e.type == 'touchmove') document.getElementById('root').style.overflow = 'hidden';
+			var xy = [e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY];
 			this.cube.current.style.transform = 'rotateY(' + (xy[0] - this.dragStarted[0]) + 'deg) rotateX(' + (this.props.product ? this.dragStarted[1] - xy[1] : 0) + 'deg)';
 		}
 	}, {
@@ -32056,7 +32054,6 @@ var Slider = function (_React$Component) {
 			document.getElementById('root').style.overflow = '';
 			this.setState({ isDragStarted: !this.state.isDragStarted });
 			this.cube.current.style.transform = '';
-			console.log('test');
 		}
 	}, {
 		key: 'render',
