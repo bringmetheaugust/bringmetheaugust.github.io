@@ -32037,21 +32037,26 @@ var Slider = function (_React$Component) {
 		value: function dragStart(e) {
 			var img = document.createElement('img');
 			img.src = __webpack_require__(/*! ../../img/arrow.png */ "./src/img/arrow.png");
-			e.dataTransfer.setDragImage(img, 10000, 0);
-			this.dragStarted = [e.clientX, e.clientY];
+			if (e.clientX) e.dataTransfer.setDragImage(img, 10000, 0);
+			this.dragStarted = [e.touches[0].clientX || e.clientX, e.touches[0].clientY || e.clientY];
 			this.setState({ isDragStarted: !this.state.isDragStarted });
 		}
 	}, {
 		key: 'toDrag',
 		value: function toDrag(e) {
-			var xy = [e.clientX, e.clientY];
+			if (e.touches[0].clientX) {
+				document.getElementById('root').style.overflow = 'hidden';
+			};
+			var xy = [e.touches[0].clientX || e.clientX, e.touches[0].clientY || e.clientY];
 			this.cube.current.style.transform = 'rotateY(' + (xy[0] - this.dragStarted[0]) + 'deg) rotateX(' + (this.props.product ? this.dragStarted[1] - xy[1] : 0) + 'deg)';
 		}
 	}, {
 		key: 'dragEnd',
-		value: function dragEnd() {
+		value: function dragEnd(e) {
+			document.getElementById('root').style.overflow = '';
 			this.setState({ isDragStarted: !this.state.isDragStarted });
 			this.cube.current.style.transform = '';
+			console.log('test');
 		}
 	}, {
 		key: 'render',
@@ -32073,8 +32078,11 @@ var Slider = function (_React$Component) {
 				_react2.default.createElement(
 					'div',
 					{ onDragOver: this.toDrag,
+						onTouchMove: this.toDrag,
 						onDragStart: this.dragStart,
+						onTouchStart: this.dragStart,
 						onDragEnd: this.dragEnd,
+						onTouchEnd: this.dragEnd,
 						ref: this.cube, className: 'cube',
 						style: this.state.isDragStarted ? { transitionDuration: '0s' } : null
 					},
