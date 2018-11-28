@@ -28245,7 +28245,6 @@ var map = {
 	"./basket.png": "./src/img/basket.png",
 	"./bi/07.jpg": "./src/img/bi/07.jpg",
 	"./bi/20150511150957.png": "./src/img/bi/20150511150957.png",
-	"./bi/3cee03f16e025a4c4456f628550bf95f_XL.jpg": "./src/img/bi/3cee03f16e025a4c4456f628550bf95f_XL.jpg",
 	"./bi/58731274.png": "./src/img/bi/58731274.png",
 	"./bi/6d464069f3ce6c83d4e51a33736817f0.jpg": "./src/img/bi/6d464069f3ce6c83d4e51a33736817f0.jpg",
 	"./bi/7a7478039_2376672.png": "./src/img/bi/7a7478039_2376672.png",
@@ -28253,7 +28252,6 @@ var map = {
 	"./bi/940x1410_0xc0a839a4_6912462991475681269.jpeg": "./src/img/bi/940x1410_0xc0a839a4_6912462991475681269.jpeg",
 	"./bi/955d2f975523a5150c87db74ddqi--tsvety-i-floristika-tsvetochnyj-gorshok.jpg": "./src/img/bi/955d2f975523a5150c87db74ddqi--tsvety-i-floristika-tsvetochnyj-gorshok.jpg",
 	"./bi/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png": "./src/img/bi/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png",
-	"./bi/Nova-Pochta.png": "./src/img/bi/Nova-Pochta.png",
 	"./bi/about.jpg": "./src/img/bi/about.jpg",
 	"./bi/al_ovchinnikova.jpg": "./src/img/bi/al_ovchinnikova.jpg",
 	"./bi/avgust_26_2016_stranica_2_willow.png": "./src/img/bi/avgust_26_2016_stranica_2_willow.png",
@@ -28268,8 +28266,10 @@ var map = {
 	"./bi/dsfsdf.jpg": "./src/img/bi/dsfsdf.jpg",
 	"./bi/img_12394_4.png": "./src/img/bi/img_12394_4.png",
 	"./bi/intime.png": "./src/img/bi/intime.png",
+	"./bi/np.png": "./src/img/bi/np.png",
 	"./bi/pots.jpg": "./src/img/bi/pots.jpg",
 	"./bi/service.jpg": "./src/img/bi/service.jpg",
+	"./bi/urk.png": "./src/img/bi/urk.png",
 	"./bi/wrap.png": "./src/img/bi/wrap.png",
 	"./cross.png": "./src/img/cross.png",
 	"./db/101/101-1.jpg": "./src/img/db/101/101-1.jpg",
@@ -28511,17 +28511,6 @@ module.exports = __webpack_require__.p + "img/20150511150957.png";
 
 /***/ }),
 
-/***/ "./src/img/bi/3cee03f16e025a4c4456f628550bf95f_XL.jpg":
-/*!************************************************************!*\
-  !*** ./src/img/bi/3cee03f16e025a4c4456f628550bf95f_XL.jpg ***!
-  \************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/3cee03f16e025a4c4456f628550bf95f_XL.jpg";
-
-/***/ }),
-
 /***/ "./src/img/bi/58731274.png":
 /*!*********************************!*\
   !*** ./src/img/bi/58731274.png ***!
@@ -28596,17 +28585,6 @@ module.exports = __webpack_require__.p + "img/955d2f975523a5150c87db74ddqi--tsve
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "img/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png";
-
-/***/ }),
-
-/***/ "./src/img/bi/Nova-Pochta.png":
-/*!************************************!*\
-  !*** ./src/img/bi/Nova-Pochta.png ***!
-  \************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/Nova-Pochta.png";
 
 /***/ }),
 
@@ -28764,6 +28742,17 @@ module.exports = __webpack_require__.p + "img/intime.png";
 
 /***/ }),
 
+/***/ "./src/img/bi/np.png":
+/*!***************************!*\
+  !*** ./src/img/bi/np.png ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/np.png";
+
+/***/ }),
+
 /***/ "./src/img/bi/pots.jpg":
 /*!*****************************!*\
   !*** ./src/img/bi/pots.jpg ***!
@@ -28783,6 +28772,17 @@ module.exports = __webpack_require__.p + "img/pots.jpg";
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "img/service.jpg";
+
+/***/ }),
+
+/***/ "./src/img/bi/urk.png":
+/*!****************************!*\
+  !*** ./src/img/bi/urk.png ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/urk.png";
 
 /***/ }),
 
@@ -30715,7 +30715,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var one = ['bi/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg', 'bi/8529-1487603.jpg', 'bi/07.jpg', 'bi/955d2f975523a5150c87db74ddqi--tsvety-i-floristika-tsvetochnyj-gorshok.jpg'];
 var two = ['bi/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png', 'bi/service.jpg', 'bi/20150511150957.png', 'bi/img_12394_4.png'];
 var three = ['bi/avgust_26_2016_stranica_2_willow.png', 'bi/dsfdsfdsf.png', 'bi/6d464069f3ce6c83d4e51a33736817f0.jpg', 'bi/depositphotos_47009329-stock-photo-glazed-and-unglazed-ceramic-flower.png'];
-var four = ['bi/Nova-Pochta.png', 'bi/delivery.jpg', 'bi/intime.png', 'bi/3cee03f16e025a4c4456f628550bf95f_XL.jpg'];
+var four = ['bi/np.png', 'bi/delivery.jpg', 'bi/intime.png', 'bi/urk.png'];
 var five = ['bi/al_ovchinnikova.jpg', 'bi/940x1410_0xc0a839a4_6912462991475681269.jpeg', 'bi/58731274.png', 'bi/7a7478039_2376672.png'];
 
 var About = function (_React$Component) {
@@ -31249,9 +31249,18 @@ var Basket = function (_React$Component) {
 						{ className: 'anime show' },
 						'\u043E\u0431\u0435\u0440i\u0442\u044C \u043F\u043B\u0430\u0442i\u0436\u043D\u0443 \u0441\u0438\u0441\u0442\u0435\u043C\u0443'
 					),
-					_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/visa.png */ "./src/img/visa.png") }),
-					_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/paypal.png */ "./src/img/paypal.png") }),
-					_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/master.png */ "./src/img/master.png") })
+					_react2.default.createElement('img', { onClick: function onClick() {
+							return alert('paysystems are not working yet');
+						},
+						src: __webpack_require__(/*! ../../img/visa.png */ "./src/img/visa.png") }),
+					_react2.default.createElement('img', { onClick: function onClick() {
+							return alert('paysystems are not working yet');
+						},
+						src: __webpack_require__(/*! ../../img/paypal.png */ "./src/img/paypal.png") }),
+					_react2.default.createElement('img', { onClick: function onClick() {
+							return alert('paysystems are not working yet');
+						},
+						src: __webpack_require__(/*! ../../img/master.png */ "./src/img/master.png") })
 				)
 			);
 		}
@@ -32037,6 +32046,7 @@ var Slider = function (_React$Component) {
 		value: function dragStart(e) {
 			var img = document.createElement('img');
 			img.src = __webpack_require__(/*! ../../img/arrow.png */ "./src/img/arrow.png");
+			img.style.opacity = '0';
 			if (e.clientX) e.dataTransfer.setDragImage(img, 10000, 0);
 			this.dragStarted = [e.clientX || e.touches[0].clientX, e.clientY || e.touches[0].clientY];
 			this.setState({ isDragStarted: !this.state.isDragStarted });
