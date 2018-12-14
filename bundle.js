@@ -22241,7 +22241,7 @@ if (false) {} else {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/** @license React v0.11.3
+/** @license React v16.6.1
  * scheduler-tracing.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -22673,7 +22673,7 @@ exports.unstable_unsubscribe = unstable_unsubscribe;
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(global) {/** @license React v0.11.3
+/** @license React v16.6.1
  * scheduler.development.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
@@ -23107,45 +23107,41 @@ var requestHostCallback;
 var cancelHostCallback;
 var shouldYieldToHost;
 
-var globalValue = null;
-if (typeof window !== 'undefined') {
-  globalValue = window;
-} else if (typeof global !== 'undefined') {
-  globalValue = global;
-}
-
-if (globalValue && globalValue._schedMock) {
+if (typeof window !== 'undefined' && window._schedMock) {
   // Dynamic injection, only for testing purposes.
-  var globalImpl = globalValue._schedMock;
-  requestHostCallback = globalImpl[0];
-  cancelHostCallback = globalImpl[1];
-  shouldYieldToHost = globalImpl[2];
-  exports.unstable_now = globalImpl[3];
+  var impl = window._schedMock;
+  requestHostCallback = impl[0];
+  cancelHostCallback = impl[1];
+  shouldYieldToHost = impl[2];
 } else if (
 // If Scheduler runs in a non-DOM environment, it falls back to a naive
 // implementation using setTimeout.
 typeof window === 'undefined' ||
-// Check if MessageChannel is supported, too.
-typeof MessageChannel !== 'function') {
-  // If this accidentally gets imported in a non-browser environment, e.g. JavaScriptCore,
-  // fallback to a naive implementation.
+// "addEventListener" might not be available on the window object
+// if this is a mocked "window" object. So we need to validate that too.
+typeof window.addEventListener !== 'function') {
   var _callback = null;
-  var _flushCallback = function (didTimeout) {
+  var _currentTime = -1;
+  var _flushCallback = function (didTimeout, ms) {
     if (_callback !== null) {
+      var cb = _callback;
+      _callback = null;
       try {
-        _callback(didTimeout);
+        _currentTime = ms;
+        cb(didTimeout);
       } finally {
-        _callback = null;
+        _currentTime = -1;
       }
     }
   };
   requestHostCallback = function (cb, ms) {
-    if (_callback !== null) {
+    if (_currentTime !== -1) {
       // Protect against re-entrancy.
-      setTimeout(requestHostCallback, 0, cb);
+      setTimeout(requestHostCallback, 0, cb, ms);
     } else {
       _callback = cb;
-      setTimeout(_flushCallback, 0, false);
+      setTimeout(_flushCallback, ms, true, ms);
+      setTimeout(_flushCallback, maxSigned31BitInt, false, maxSigned31BitInt);
     }
   };
   cancelHostCallback = function () {
@@ -23153,6 +23149,9 @@ typeof MessageChannel !== 'function') {
   };
   shouldYieldToHost = function () {
     return false;
+  };
+  exports.unstable_now = function () {
+    return _currentTime === -1 ? 0 : _currentTime;
   };
 } else {
   if (typeof console !== 'undefined') {
@@ -23185,9 +23184,12 @@ typeof MessageChannel !== 'function') {
   };
 
   // We use the postMessage trick to defer idle work until after the repaint.
-  var channel = new MessageChannel();
-  var port = channel.port2;
-  channel.port1.onmessage = function (event) {
+  var messageKey = '__reactIdleCallback$' + Math.random().toString(36).slice(2);
+  var idleTick = function (event) {
+    if (event.source !== window || event.data !== messageKey) {
+      return;
+    }
+
     isMessageEventScheduled = false;
 
     var prevScheduledCallback = scheduledHostCallback;
@@ -23228,6 +23230,9 @@ typeof MessageChannel !== 'function') {
       }
     }
   };
+  // Assumes that we have addEventListener in this environment. Might need
+  // something better for old IE.
+  window.addEventListener('message', idleTick, false);
 
   var animationTick = function (rafTime) {
     if (scheduledHostCallback !== null) {
@@ -23267,7 +23272,7 @@ typeof MessageChannel !== 'function') {
     frameDeadline = rafTime + activeFrameTime;
     if (!isMessageEventScheduled) {
       isMessageEventScheduled = true;
-      port.postMessage(undefined);
+      window.postMessage(messageKey, '*');
     }
   };
 
@@ -23276,7 +23281,7 @@ typeof MessageChannel !== 'function') {
     timeoutTime = absoluteTimeout;
     if (isFlushingHostCallback || absoluteTimeout < 0) {
       // Don't wait for the next frame. Continue working ASAP, in a new event.
-      port.postMessage(undefined);
+      window.postMessage(messageKey, '*');
     } else if (!isAnimationFrameScheduled) {
       // If rAF didn't already schedule one, we need to schedule a frame.
       // TODO: If this rAF doesn't materialize because the browser throttles, we
@@ -23308,7 +23313,6 @@ exports.unstable_shouldYield = unstable_shouldYield;
   })();
 }
 
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ "./node_modules/webpack/buildin/global.js")))
 
 /***/ }),
 
@@ -23346,37 +23350,6 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "./node_modules/webpack/buildin/global.js":
-/*!***********************************!*\
-  !*** (webpack)/buildin/global.js ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || new Function("return this")();
-} catch (e) {
-	// This works if the window reference is available
-	if (typeof window === "object") g = window;
-}
-
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
-
-module.exports = g;
-
-
-/***/ }),
-
 /***/ "./src/html/main.pug":
 /*!***************************!*\
   !*** ./src/html/main.pug ***!
@@ -23386,23 +23359,36 @@ module.exports = g;
 
 var pug = __webpack_require__(/*! ../../node_modules/pug-runtime/index.js */ "./node_modules/pug-runtime/index.js");
 
-function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;pug_html = pug_html + "\u003C!DOCTYPE html\u003E\u003Chtml lang=\"en\"\u003E\u003Chead\u003E\u003Clink rel=\"stylesheet\" href=\"style.css\"\u003E\u003Cmeta charset=\"UTF-8\"\u003E\u003Cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003E\u003Ctitle\u003EMetryus\u003C\u002Ftitle\u003E\u003C\u002Fhead\u003E\u003Cbody\u003E\u003Cdiv id=\"root\"\u003E\u003C\u002Fdiv\u003E\u003Cscript src=\"bundle.js\" type=\"text\u002Fjavascript\"\u003E\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";;return pug_html;};
+function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;pug_html = pug_html + "\u003C!DOCTYPE html\u003E\u003Chtml lang=\"en\"\u003E\u003Chead\u003E\u003Clink rel=\"stylesheet\" href=\"style.css\"\u003E\u003Cmeta charset=\"UTF-8\"\u003E\u003Cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003E\u003Cmeta name=\"keywords\" content=\"abz, front-end, html, css, javascript\"\u003E\u003Cmeta name=\"description\" content=\"Test assigment for Frontend Developer position\"\u003E\u003Ctitle\u003EABZ\u003C\u002Ftitle\u003E\u003C\u002Fhead\u003E\u003Cbody\u003E\u003Cdiv id=\"root\"\u003E\u003C\u002Fdiv\u003E\u003Cscript src=\"bundle.js\" type=\"text\u002Fjavascript\"\u003E\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";;return pug_html;};
 module.exports = template;
 
 /***/ }),
 
-/***/ "./src/img sync recursive ^\\.\\/.*\\.png$":
-/*!************************************!*\
-  !*** ./src/img sync ^\.\/.*\.png$ ***!
-  \************************************/
+/***/ "./src/img sync recursive ^\\.\\/.*$":
+/*!*******************************!*\
+  !*** ./src/img sync ^\.\/.*$ ***!
+  \*******************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 var map = {
-	"./1_objects.png": "./src/img/1_objects.png",
-	"./arrow-down.png": "./src/img/arrow-down.png",
-	"./arrow-up.png": "./src/img/arrow-up.png",
-	"./lock.png": "./src/img/lock.png"
+	"./bi/bg-1.jpg": "./src/img/bi/bg-1.jpg",
+	"./bi/bg-2.jpg": "./src/img/bi/bg-2.jpg",
+	"./caret-down.svg": "./src/img/caret-down.svg",
+	"./css.svg": "./src/img/css.svg",
+	"./facebook.svg": "./src/img/facebook.svg",
+	"./html.svg": "./src/img/html.svg",
+	"./instagram.svg": "./src/img/instagram.svg",
+	"./javascript.svg": "./src/img/javascript.svg",
+	"./line-menu.svg": "./src/img/line-menu.svg",
+	"./linkedin.svg": "./src/img/linkedin.svg",
+	"./logo.svg": "./src/img/logo.svg",
+	"./man-laptop-v1.svg": "./src/img/man-laptop-v1.svg",
+	"./man-mobile.svg": "./src/img/man-mobile.svg",
+	"./pinterest.svg": "./src/img/pinterest.svg",
+	"./twitter.svg": "./src/img/twitter.svg",
+	"./upload.svg": "./src/img/upload.svg",
+	"./user-superstar-2x.jpg": "./src/img/user-superstar-2x.jpg"
 };
 
 
@@ -23424,51 +23410,260 @@ webpackContext.keys = function webpackContextKeys() {
 };
 webpackContext.resolve = webpackContextResolve;
 module.exports = webpackContext;
-webpackContext.id = "./src/img sync recursive ^\\.\\/.*\\.png$";
+webpackContext.id = "./src/img sync recursive ^\\.\\/.*$";
 
 /***/ }),
 
-/***/ "./src/img/1_objects.png":
-/*!*******************************!*\
-  !*** ./src/img/1_objects.png ***!
-  \*******************************/
+/***/ "./src/img/bi/bg-1.jpg":
+/*!*****************************!*\
+  !*** ./src/img/bi/bg-1.jpg ***!
+  \*****************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "img/1_objects.png";
+module.exports = __webpack_require__.p + "img/bg-1.jpg";
 
 /***/ }),
 
-/***/ "./src/img/arrow-down.png":
+/***/ "./src/img/bi/bg-2.jpg":
+/*!*****************************!*\
+  !*** ./src/img/bi/bg-2.jpg ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/bg-2.jpg";
+
+/***/ }),
+
+/***/ "./src/img/caret-down.svg":
 /*!********************************!*\
-  !*** ./src/img/arrow-down.png ***!
+  !*** ./src/img/caret-down.svg ***!
   \********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAATCAYAAACp65zuAAAABHNCSVQICAgIfAhkiAAAAMtJREFUKJFjZsACZHQ8AtlFlP98e333HUyMCZtCdnbWOD4uNmdkMawKsYFRhYNcoTYbYYUifryKRopT5PV8FXEpUjLxCmZieLPpMzMTwy4WNqZNSsZeuuiKFE3845j+szYwwgRUTHxC/v9nrv/P8DuKkYG5iYGRYcc/BqbvzP8ZSn8xsfgzwxS+e3brmrC06msGBpbJ/xn/MzD8+y/MzMAU+IuJxf/R6bX3mJGteffs1jVhKZU3//8ypjMx/Rf4xcTm/ej02nsMDAwMANUaOES1dNaUAAAAAElFTkSuQmCC"
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='16px' height='9px' viewBox='0 0 16 9' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Ecaret-down%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='caret-down' fill='%23000000' fill-rule='nonzero'%3E %3Cpath d='M15.7,0.3 C15.5194393,0.105723309 15.2652077,-0.00323309512 15,4.4408921e-16 L1,4.4408921e-16 C0.734792279,-0.00323309512 0.48056067,0.105723309 0.3,0.3 C0.111585736,0.48463046 0.00375704786,0.736230733 -4.92092261e-16,1 C-0.00323309512,1.26520772 0.105723309,1.51943933 0.3,1.7 L7.3,8.7 C7.68884351,9.08114288 8.31115649,9.08114288 8.7,8.7 L15.7,1.7 C15.8942767,1.51943933 16.0032331,1.26520772 16,1 C15.996243,0.736230733 15.8884143,0.48463046 15.7,0.3 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
 
 /***/ }),
 
-/***/ "./src/img/arrow-up.png":
+/***/ "./src/img/css.svg":
+/*!*************************!*\
+  !*** ./src/img/css.svg ***!
+  \*************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='100px' height='114px' viewBox='0 0 100 114' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Ecss%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='css' fill-rule='nonzero'%3E %3Cpolygon id='Shape' fill='%23264DE4' points='49.94 113.41 9.1 102.07 0 0 100 0 90.89 102.06'%3E%3C/polygon%3E %3Cpolygon id='Shape' fill='%232965F1' points='83.09 95.56 90.88 8.35 50 8.35 50 104.73'%3E%3C/polygon%3E %3Cpath d='M20.86,46.2 L22,58.72 L50,58.72 L50,46.2 L20.86,46.2 Z M18.61,20.87 L19.75,33.38 L50,33.38 L50,20.87 L18.61,20.87 Z M50,78.72 L36,75 L35.11,65 L22.54,65 L24.3,84.64 L49.94,91.76 L50,91.76 L50,78.72 Z' id='Shape' fill='%23EBEBEB'%3E%3C/path%3E %3Cpolygon id='Shape' fill='%23FFFFFF' points='79.06 46.2 81.32 20.87 50 20.87 50 33.38 67.6 33.38 66.46 46.2 50 46.2 50 58.72 65.37 58.72 63.92 75 50 78.73 50 91.73 75.66 84.62 75.85 82.5 78.79 49.55 79.1 46.18'%3E%3C/polygon%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/facebook.svg":
 /*!******************************!*\
-  !*** ./src/img/arrow-up.png ***!
+  !*** ./src/img/facebook.svg ***!
   \******************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAATCAYAAACp65zuAAAABHNCSVQICAgIfAhkiAAAAKVJREFUKJHt0DsKwkAQgOF/N40oq41YWIqoVSLkGJ7B2jNY24nXsHXJLQSTwtbKAwi2guhYbELUTXoLp5vhmwcDFSH0m9817aOwBb1EiFa1UBi2QVuQCai5EK496JDZgWSgUpANBHGBtUNjA8bC86A4LvPeO1xnBdbCoAONLcj+DQGgON8cJs7Xjrqft06tEC3KnEC7ztOl6k3lZB7ee+riD38VvgCEGSvenpyxSgAAAABJRU5ErkJggg=="
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='26px' height='26px' viewBox='0 0 26 26' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Efacebook%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='facebook' fill='%23FFFFFF' fill-rule='nonzero'%3E %3Cpath d='M19.48,0 L6.5,0 C2.90919977,0.0164928064 0.00546111025,2.92916605 0,6.52 L0,19.52 C0.0273388392,23.0952131 2.92471965,25.9836789 6.5,26 L19.5,26 C23.0908002,25.9835072 25.9945389,23.0708339 26,19.48 L26,6.48 C25.9725685,2.89701754 23.0630834,0.00538210981 19.48,0 Z M16.48,13 L14,13 L14,21.05 L10.94,21.05 L10.94,13 L9.29,13 L9.29,9.7 L10.73,9.7 L10.73,8.3 C10.6658193,7.37030647 11.0101041,6.45882183 11.6728924,5.80371807 C12.3356806,5.1486143 13.2511181,4.81498213 14.18,4.89 L16.71,4.89 L16.71,7.63 L14.92,7.63 C14.63,7.63 14.24,7.82 14.24,8.46 L14.24,9.7 L16.78,9.7 L16.48,13 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
 
 /***/ }),
 
-/***/ "./src/img/lock.png":
+/***/ "./src/img/html.svg":
 /*!**************************!*\
-  !*** ./src/img/lock.png ***!
+  !*** ./src/img/html.svg ***!
   \**************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAaCAYAAAC3g3x9AAAABHNCSVQICAgIfAhkiAAAAWFJREFUSInt1D1OAkEYxvH/Myzabmni195ASmMk7g3EE+gRtFQs1vhVyg3EE+gN3Ehi7OQIRGNiCaXI7muhS4DoBpWSp5rMx29m3mQGJhz9NBCEkZ+mxW3BDlAaGGqaWewKvaNWHLXHAhfWj8OCc5dAAHTMLEZqYhYIQqRlsHZq2ntuVOu54GL5rOJk10AnNXZHF/Q3lGpIK2a299Q4rH0Lzq2eB7MzySNG5+29EL4+7LfySmKJFyOtpKat58bBDYAbnDRTTGogv5eokocBtOKorUIvBDpOdpH198EgjHxJm2Z29XJfbeZhg6hBDQgW1o/DITBJihUAw92Mg2Xpdl0dwDk3DEoEAGliuVcdTb80ZqUhMMu41x2NkP8t+N8IYKl8sivYRAoNoj8gEdAyqGt+7bTkeTxO6oSeXOqDw+Do6a7669Nl+XqutxOv4RScglNwnHhZQ7C9XD7Z+LOkz//wA9lagaseQiDkAAAAAElFTkSuQmCC"
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='100px' height='114px' viewBox='0 0 100 114' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Ehtml%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='html' fill-rule='nonzero'%3E %3Cpolygon id='Shape' fill='%23E44D26' points='100 0 90.89 102.06 49.94 113.41 9.1 102.07 0 0'%3E%3C/polygon%3E %3Cpolygon id='Shape' fill='%23F16529' points='50 104.73 83.09 95.56 90.88 8.35 50 8.35'%3E%3C/polygon%3E %3Cpath d='M32.29,33.38 L50,33.38 L50,20.87 L18.61,20.87 L18.91,24.22 L22,58.72 L50,58.72 L50,46.2 L33.43,46.2 L32.29,33.38 Z M35.11,65 L22.54,65 L24.3,84.64 L49.94,91.76 L50,91.76 L50,78.76 L36,75 L35.11,65 Z' id='Shape' fill='%23EBEBEB'%3E%3C/path%3E %3Cpath d='M50,58.72 L65.37,58.72 L63.92,75 L50,78.73 L50,91.73 L75.66,84.62 L75.85,82.5 L78.79,49.55 L79.1,46.18 L50,46.18 L50,58.72 Z M50,33.35 L80.2,33.35 L80.45,30.54 L81,24.22 L81.3,20.87 L50,20.87 L50,33.35 Z' id='Shape' fill='%23FFFFFF'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/instagram.svg":
+/*!*******************************!*\
+  !*** ./src/img/instagram.svg ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='26px' height='26px' viewBox='0 0 26 26' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Einstagram%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='instagram' fill='%23FFFFFF' fill-rule='nonzero'%3E %3Cpath d='M15.3,11.32 C14.7722708,10.5663332 13.9100607,10.1174981 12.99,10.1174981 C12.0699393,10.1174981 11.2077292,10.5663332 10.68,11.32 C10.3310448,11.8109066 10.1424294,12.3977102 10.14,13 C10.14,14.5740115 11.4159885,15.8499999 12.99,15.8499999 C14.5640115,15.8499999 15.84,14.5740115 15.84,13 C15.8375706,12.3977102 15.6489552,11.8109066 15.3,11.32 Z' id='Shape'%3E%3C/path%3E %3Cpath d='M17.09,11.34 C17.3171443,11.8634612 17.4296627,12.4294627 17.42,13 C17.42,15.4466214 15.4366214,17.43 12.99,17.43 C10.5433786,17.43 8.56,15.4466214 8.56,13 C8.54894702,12.4325683 8.66155427,11.869532 8.89,11.35 L6.39,11.35 L6.39,18 C6.43576145,18.8661414 7.13335431,19.5550685 8,19.59 L18,19.59 C18.8588477,19.5451003 19.5451003,18.8588477 19.59,18 L19.59,11.34 L17.09,11.34 Z' id='Shape'%3E%3C/path%3E %3Cpolygon id='Shape' points='18.84 6.76 16.45 6.76 16.45 9.51 19.18 9.51 19.18 7.11 19.18 6.74'%3E%3C/polygon%3E %3Cpath d='M19.46,7.28306304e-16 L6.52,7.28306304e-16 C2.92138684,0.00550668626 0.00550668626,2.92138684 0,6.52 L0,19.52 C0.0274315433,23.1029825 2.93691658,25.9946179 6.52,26 L19.52,26 C23.1107807,25.9725091 26.0056043,23.0508815 26,19.46 L26,6.52 C25.9780675,2.92042909 23.0596212,0.0109076877 19.46,7.28306304e-16 Z M21,11.32 L21,18 C21,19.6568542 19.6568542,21 18,21 L8,21 C6.34314575,21 5,19.6568542 5,18 L5,8 C5,6.34314575 6.34314575,5 8,5 L18,5 C19.6568542,5 21,6.34314575 21,8 L21,11.3 L21,11.32 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/javascript.svg":
+/*!********************************!*\
+  !*** ./src/img/javascript.svg ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='100px' height='114px' viewBox='0 0 100 114' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Ejavascript%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='javascript' fill-rule='nonzero'%3E %3Cpath d='M9.28,102.18 L0,0 L100,0 L90.8,102.11 L49.92,113.65 L9.28,102.18 Z M83.28,96.61 L91,9.09 L50.08,9.09 L50.39,105.62 L83.28,96.61 Z M46.28,21.92 L36.31,21.92 L36.19,74.3 L16.89,69 L16.89,81 L46.22,88.91 L46.22,21.91 L46.28,21.92 Z' id='path5113' fill='%23D4B830'%3E%3C/path%3E %3Cpath d='M43,88 C41.71,87.61 35.36,85.89 28.88,84.14 L17.12,80.93 L17.12,75 C17.12,69.23 17.12,69.11 17.71,69.3 C18.02,69.42 22.31,70.59 27.22,71.96 L36.15,74.41 L36.23,48.28 L36.31,22.15 L46.06,22.15 L46.06,55.42 C46.06,81.83 45.98,88.65 45.71,88.65 C45.44,88.65 44.27,88.3 43,88 Z' id='path5159' fill-opacity='0' fill='%23EBEBEB' opacity='0.99'%3E%3C/path%3E %3Cpath d='M16.93,81 L16.93,69 C16.93,69 29.25,72.47 36.23,74.27 L36.31,22 L46.26,22 L46.26,89 L16.93,81 Z' id='path5157' fill-opacity='0.92' fill='%23EBEBEB' opacity='0.99'%3E%3C/path%3E %3Cpath d='M50.08,9.05 L91,9.05 L83.27,96.57 L50.08,105.57 L50.08,9.05 Z M81.16,81.9 L83.85,49.18 L64,51.4 L64,33.93 L85.22,33.85 L86,21.92 L54,22.07 L54.43,65.52 L73.77,62.21 L73.5,71.88 L54,77.07 L54.19,88.92 L81.14,81.92 L81.16,81.9 Z' id='path5117' fill='%23FDD83C'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/line-menu.svg":
+/*!*******************************!*\
+  !*** ./src/img/line-menu.svg ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='23px' height='22px' viewBox='0 0 23 22' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Eline-menu%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='line-menu' transform='translate(-1.000000, 0.000000)' fill='%23283593' fill-rule='nonzero'%3E %3Cpath d='M2.9,3.85 C2.4007447,3.86349835 1.91724177,3.6745636 1.55940901,3.3261475 C1.20157626,2.9777314 0.999817556,2.49943771 1,2 C0.972540222,1.47899689 1.1605289,0.969625434 1.51986758,0.591374197 C1.87920625,0.213122961 2.37827425,-0.000723140068 2.9,1.11022302e-16 L22.05,1.11022302e-16 C23.1349951,0.0271333055 24.0003392,0.914665715 24,2 C24.0001776,2.51269524 23.7931506,3.00370229 23.4259431,3.36149423 C23.0587356,3.71928617 22.5625177,3.91349201 22.05,3.9 L2.9,3.85 Z' id='Shape'%3E%3C/path%3E %3Cpath d='M22.05,8.57 C23.1158588,8.59632945 23.9736706,9.45414122 24,10.52 C24.0001776,11.0326952 23.7931506,11.5237023 23.4259431,11.8814942 C23.0587356,12.2392862 22.5625177,12.433492 22.05,12.42 L2.9,12.42 C2.39194706,12.4339272 1.90054037,12.2382249 1.54115774,11.8788423 C1.18177511,11.5194596 0.986072825,11.0280529 1,10.52 C0.986507989,10.0074823 1.18071383,9.51126442 1.53850577,9.1440569 C1.89629771,8.77684939 2.38730476,8.56982244 2.9,8.57 L22.05,8.57 Z' id='Shape'%3E%3C/path%3E %3Cpath d='M22.05,17.2 C22.5607875,17.1865474 23.055465,17.3793951 23.4223722,17.7350128 C23.7892794,18.0906305 23.9974878,18.5790415 24,19.09 C24.0003392,20.1753343 23.1349951,21.0628667 22.05,21.09 L2.9,21.09 C2.37827425,21.0907231 1.87920625,20.876877 1.51986758,20.4986258 C1.1605289,20.1203746 0.972540222,19.6110031 1,19.09 C0.988861135,18.5836606 1.18579474,18.094894 1.54486108,17.7377175 C1.90392743,17.380541 2.39372639,17.1861893 2.9,17.2 L22.05,17.2 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/linkedin.svg":
+/*!******************************!*\
+  !*** ./src/img/linkedin.svg ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='26px' height='26px' viewBox='0 0 26 26' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Elinkedin%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='linkedin' fill='%23FFFFFF' fill-rule='nonzero'%3E %3Cpath d='M19.46,7.28306304e-16 L6.52,7.28306304e-16 C2.92138684,0.00550668626 0.00550668626,2.92138684 0,6.52 L0,19.52 C0.0274315433,23.1029825 2.93691658,25.9946179 6.52,26 L19.52,26 C23.1107807,25.9725091 26.0056043,23.0508815 26,19.46 L26,6.52 C25.9780675,2.92042909 23.0596212,0.0109076877 19.46,7.28306304e-16 Z M8.66,21 L5,21 L5,10.31 L8.66,10.31 L8.66,21 Z M6.78,8.66 C5.73065898,8.66 4.88,7.80934102 4.88,6.76 C4.88,5.71065898 5.73065898,4.86 6.78,4.86 C7.82934102,4.86 8.68,5.71065898 8.68,6.76 C8.66391582,7.80260607 7.82260607,8.64391582 6.78,8.66 Z M21.05,21 L17.94,21 L17.94,15.84 C17.94,14.58 17.77,12.97 16.06,12.97 C14.35,12.97 14.06,14.33 14.06,15.75 L14.06,21 L10.93,21 L10.93,10.31 L13.81,10.31 L13.81,11.75 L13.9,11.75 C14.6007249,10.7200391 15.8111802,10.1590027 17.05,10.29 C20.45,10.29 21.05,12.29 21.05,15.15 L21.05,21 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/logo.svg":
+/*!**************************!*\
+  !*** ./src/img/logo.svg ***!
+  \**************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 133.44 24.37'%3E%3Cdefs%3E%3Cstyle%3E.cls-1%7Bisolation:isolate;%7D.cls-2%7Bfill:%23161616;%7D%3C/style%3E%3C/defs%3E%3Ctitle%3Elogo%3C/title%3E%3Cg id='Layer_2' data-name='Layer 2'%3E%3Cg id='Layer_1-2' data-name='Layer 1'%3E%3Cg id='Layer_2-2' data-name='Layer 2'%3E%3Cg id='Layer_1-2-2' data-name='Layer 1-2'%3E%3Cg id='abz-v2-320'%3E%3Cg id='main--6-320'%3E%3Cg id='header'%3E%3Cg id='logo'%3E%3Cg id='abz.agency'%3E%3Cg class='cls-1'%3E%3Cpath class='cls-2' d='M38.35,7.09A4,4,0,0,1,41.21,8a3.44,3.44,0,0,1,1,2.62V17.7c0,.56.22.84.67.84h.77V19.9a2.6,2.6,0,0,1-1.3.29A2,2,0,0,1,41,19.77a2.11,2.11,0,0,1-.71-1.14H40.2a3.38,3.38,0,0,1-3.07,1.66,5.46,5.46,0,0,1-.83-.07,3.55,3.55,0,0,1-.86-.3,2.94,2.94,0,0,1-.82-.6A3,3,0,0,1,34,18.27a4.83,4.83,0,0,1-.22-1.53,4.42,4.42,0,0,1,.46-2.13,3.06,3.06,0,0,1,1.37-1.29,7,7,0,0,1,2-.63,15.9,15.9,0,0,1,2.57-.18V10.88a2.3,2.3,0,0,0-.43-1.51,1.94,1.94,0,0,0-1.56-.53,1.77,1.77,0,0,0-1.49.58,2.21,2.21,0,0,0-.46,1.41v.29H34.32a3.43,3.43,0,0,1,0-.53A3.16,3.16,0,0,1,35.4,8,4.48,4.48,0,0,1,38.35,7.09Zm1.85,8.33V14.26a8.12,8.12,0,0,0-3.24.5,1.84,1.84,0,0,0-1.08,1.86,2.1,2.1,0,0,0,.42,1.47,1.68,1.68,0,0,0,1.28.45,2.48,2.48,0,0,0,1.83-.83A3.17,3.17,0,0,0,40.2,15.42Z'/%3E%3Cpath class='cls-2' d='M47.26,18.54h-.12L46.87,20H45.38V2.65h2V8.58h.12a2.33,2.33,0,0,1,1-1.1,3.45,3.45,0,0,1,1.66-.39,3.11,3.11,0,0,1,2.72,1.65,9.33,9.33,0,0,1,1,4.92c0,4.42-1.31,6.63-3.91,6.63A2.94,2.94,0,0,1,47.26,18.54Zm4.6-4.4v-.91a7.53,7.53,0,0,0-.55-3.36,1.8,1.8,0,0,0-1.7-1q-2.27,0-2.26,4.49v.81q0,4.39,2.26,4.4a1.81,1.81,0,0,0,1.7-1A7.48,7.48,0,0,0,51.86,14.14Z'/%3E%3Cpath class='cls-2' d='M63.77,7.38v.91l-5.57,10h5.88V20H55.51v-.94l5.55-9.93H55.9V7.38Z'/%3E%3Cpath class='cls-2' d='M68.66,17.41V20h-2.4V17.41Z'/%3E%3Cpath class='cls-2' d='M75.55,7.09A4,4,0,0,1,78.41,8a3.44,3.44,0,0,1,1,2.62V17.7c0,.56.22.84.67.84h.77V19.9a2.6,2.6,0,0,1-1.3.29,2,2,0,0,1-1.28-.42,2.11,2.11,0,0,1-.71-1.14H77.4a3.38,3.38,0,0,1-3.07,1.66,5.46,5.46,0,0,1-.83-.07,3.76,3.76,0,0,1-.87-.3,3,3,0,0,1-.81-.6,2.89,2.89,0,0,1-.58-1.05A4.83,4.83,0,0,1,71,16.74a4.42,4.42,0,0,1,.46-2.13,3,3,0,0,1,1.37-1.29,7,7,0,0,1,2-.63,15.9,15.9,0,0,1,2.57-.18V10.88A2.3,2.3,0,0,0,77,9.37a1.94,1.94,0,0,0-1.56-.53,1.77,1.77,0,0,0-1.49.58,2.21,2.21,0,0,0-.46,1.41v.29H71.52a3.43,3.43,0,0,1,0-.53A3.16,3.16,0,0,1,72.6,8,4.47,4.47,0,0,1,75.55,7.09Zm1.85,8.33V14.26a8.12,8.12,0,0,0-3.24.5,1.84,1.84,0,0,0-1.08,1.86,2.1,2.1,0,0,0,.42,1.47,1.68,1.68,0,0,0,1.28.45,2.48,2.48,0,0,0,1.83-.83A3.22,3.22,0,0,0,77.4,15.42Z'/%3E%3Cpath class='cls-2' d='M89.88,5.34h1.73a3.33,3.33,0,0,1-.57,2A2.52,2.52,0,0,1,89.5,8.36a4.13,4.13,0,0,1,1.12,3,4.26,4.26,0,0,1-1.09,3.08,3.94,3.94,0,0,1-2.94,1.16H85.27a1.1,1.1,0,0,0-.81.33,1.1,1.1,0,0,0,0,1.59,1.07,1.07,0,0,0,.81.34h3.6a2.83,2.83,0,0,1,2.16.85,3,3,0,0,1,.82,2.1,3.58,3.58,0,0,1-1,2.57,3.63,3.63,0,0,1-2.73,1H84.58a3.06,3.06,0,0,1-2.31-.85,3,3,0,0,1-.81-2.15,3.11,3.11,0,0,1,.44-1.67,2.35,2.35,0,0,1,1.19-1,2.1,2.1,0,0,1-1-1.9,2.28,2.28,0,0,1,1.78-2.18,4,4,0,0,1-1.46-3.26,4.25,4.25,0,0,1,1.1-3.12,4,4,0,0,1,3-1.13,3.8,3.8,0,0,1,1.82.45A2.87,2.87,0,0,0,89.88,5.34ZM88.37,19.71H84.89a1.43,1.43,0,0,0-1.1.41,1.54,1.54,0,0,0-.37,1.06,1.49,1.49,0,0,0,.39,1.06,1.37,1.37,0,0,0,1.08.42h3.48a1.49,1.49,0,0,0,1.49-1.48,1.38,1.38,0,0,0-1.49-1.47Zm-.3-10.32a2,2,0,0,0-1.6-.67,1.87,1.87,0,0,0-1.58.7,3,3,0,0,0-.56,1.92,3,3,0,0,0,.56,1.94,1.9,1.9,0,0,0,1.58.67,2,2,0,0,0,1.6-.69,3,3,0,0,0,.56-1.92A3,3,0,0,0,88.07,9.39Z'/%3E%3Cpath class='cls-2' d='M97.85,7.09A3.63,3.63,0,0,1,101,8.49,7.85,7.85,0,0,1,102,13v1.24H95.16a6.2,6.2,0,0,0,.68,3.24,2.29,2.29,0,0,0,2.08,1,1.88,1.88,0,0,0,1.55-.77,3.33,3.33,0,0,0,.58-2.07h2a4.74,4.74,0,0,1-1.14,3.35,3.86,3.86,0,0,1-3,1.24,4.23,4.23,0,0,1-3.59-1.57,8.45,8.45,0,0,1-1.19-5,8.51,8.51,0,0,1,1.18-5A4.12,4.12,0,0,1,97.85,7.09Zm0,1.75a2.18,2.18,0,0,0-1.91.9,5.39,5.39,0,0,0-.76,2.77h4.76C99.94,10.06,99.24,8.84,97.85,8.84Z'/%3E%3Cpath class='cls-2' d='M109.41,7.09c2.08,0,3.13,1.27,3.13,3.81V20h-2V11.05a2.55,2.55,0,0,0-.46-1.72,1.69,1.69,0,0,0-1.32-.49,2,2,0,0,0-1.67.94,4.21,4.21,0,0,0-.68,2.52V20h-2V7.38H106l.26,1.46h.15A3.24,3.24,0,0,1,109.41,7.09Z'/%3E%3Cpath class='cls-2' d='M119.16,7.09a3.41,3.41,0,0,1,2.94,1.25,6.26,6.26,0,0,1,.92,3.72h-2a5.68,5.68,0,0,0-.39-2.46,1.47,1.47,0,0,0-1.43-.76q-2.26,0-2.26,4.39v.91q0,4.39,2.26,4.4a1.54,1.54,0,0,0,1.47-.8,5,5,0,0,0,.45-2.42H123a6.15,6.15,0,0,1-1,3.56,3.26,3.26,0,0,1-2.91,1.41,3.63,3.63,0,0,1-3.28-1.6,9.39,9.39,0,0,1-1-5,9.35,9.35,0,0,1,1-5A3.66,3.66,0,0,1,119.16,7.09Z'/%3E%3Cpath class='cls-2' d='M133.44,7.38l-3.22,12A11.19,11.19,0,0,1,128.64,23a3,3,0,0,1-2.5,1.33,4.57,4.57,0,0,1-1.41-.19V22.81h.69c1.27,0,2.1-.94,2.5-2.81L124.05,7.38h2.16L129,17.17h.09l2.36-9.79Z'/%3E%3C/g%3E%3C/g%3E%3Cg id='abz'%3E%3Cpath id='Shape' class='cls-2' d='M10.71,16.45l1.3-2h0L20.26,1.87H3.77l3.86,5.9-1.29,2L0,0H24L12,18.42l-1.29-2Zm2.58-8.89-1.3,2h0L3.74,22.13H20.23l-3.86-5.9,1.29-2L24,24H0L12,5.59l1.29,2Z'/%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/man-laptop-v1.svg":
+/*!***********************************!*\
+  !*** ./src/img/man-laptop-v1.svg ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='429px' height='362px' viewBox='0 0 429 362' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Eman-laptop-v1%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E %3ClinearGradient x1='49.9996918%25' y1='99.9979689%25' x2='49.9996918%25' y2='0.00240706678%25' id='linearGradient-1'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='1.37163792e-14%25' y1='49.9877232%25' x2='100%25' y2='49.9877232%25' id='linearGradient-2'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='0%25' y1='-2838.69509%25' x2='100%25' y2='-2838.69509%25' id='linearGradient-3'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='0%25' y1='50.0397675%25' x2='99.9881503%25' y2='50.0397675%25' id='linearGradient-4'%3E %3Cstop stop-color='%23FFFFFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%23F7F7F8' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='0%25' y1='-2231.98087%25' x2='100%25' y2='-2231.98087%25' id='linearGradient-5'%3E %3Cstop stop-color='%23FFFFFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%23F7F7F8' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.00110556171%25' y1='241.326809%25' x2='99.9860863%25' y2='241.326809%25' id='linearGradient-6'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.00940329686%25' y1='570.503162%25' x2='99.9963569%25' y2='570.503162%25' id='linearGradient-7'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='0.353973066%25' y1='775.603996%25' x2='100.501238%25' y2='775.603996%25' id='linearGradient-8'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='man-laptop-v1'%3E %3Cpath d='M117.16,302.28 C117.16,302.28 29.23,241.43 117.16,158.38 C205.09,75.33 307.24,27 371.07,24.19 C434.9,21.38 444.84,174.55 406.53,275.28 C368.22,376.01 237.73,393 117.16,302.28 Z' id='_Path_' fill='url(%23linearGradient-1)' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M312.8,202.22 C312.8,202.22 354.03,252.44 302.9,284.91 L294.9,268.46 C294.9,268.46 312.55,250.08 299.47,227.66 L312.8,202.22 Z' id='_Path_2' fill='%23FFCB9C' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M130.15,202.22 C130.15,202.22 88.92,252.44 140.05,284.91 L148.05,268.46 C148.05,268.46 130.4,250.08 143.48,227.66 L130.15,202.22 Z' id='_Path_3' fill='%23FFCB9C' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M322.29,212.84 C301.29,171.05 262.1,164.84 262.1,164.84 L262.1,165.1 L249.6,162 C223.215092,156.380396 195.850215,157.369737 169.94,164.88 C169.94,164.88 131.6,175.11 115.08,218.88 L139.08,231.98 C137.08,252.76 137.59,278.74 142.82,310.98 C155.15,307.06 169.12,312.24 181.95,313.05 C197.19,314.05 210.84,312.43 225.85,314.65 C253.12,318.65 280.95,316.88 308.43,319.01 C308.81,294.46 307.7,259.91 300.92,227.6 L322.29,212.84 Z' id='_Path_4' fill='url(%23linearGradient-2)' fill-rule='nonzero'%3E%3C/path%3E %3Cg id='_Group_2' transform='translate(179.000000, 53.000000)'%3E %3Cpath d='M88.88,56.91 C88.28,71.14 84.73,84.01 63.38,93.6 C63.38,93.6 52.38,104.6 55.62,119.73 C58.86,134.86 17.52,133.73 23.69,112.81 C29.86,91.89 19.62,67.89 12.12,54.23 C4.62,40.57 7.74,12 25,2.78 C31.77,-0.86 48.63,0.78 59.63,6.24 C78.13,15.32 89.75,36.29 88.88,56.91 Z' id='_Path_5' fill='%23FFCB9C' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M16.38,42 C13.1854395,39.5912325 9.09440155,38.7064861 5.19,39.58 C-0.99,41.19 -2.06,63.82 12.41,67.77 C26.88,71.72 21.7,57.52 21.7,57.52 L16.38,42 Z' id='_Path_6' fill='%23FFCB9C' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M89.63,54.49 C89.0534287,54.5697638 88.4720624,54.609858 87.89,54.61 C86.7507248,54.6221538 85.6177508,54.4395251 84.54,54.07 C79.7,56.49 71.46,59.14 63.29,54.9 C50.65,48.32 39.44,47.35 33.54,50.23 C23.37,55.23 11.74,52.51 8.29,36.84 C8.29,36.84 6.87,49.31 14.58,55.84 C22.29,62.37 22.58,72.69 21.5,81.22 C20.42,89.75 14.28,99.22 22.04,110 C29.8,120.78 42.47,110 52.04,112.57 C61.61,115.14 82.53,117.76 86.91,100.44 C91.29,83.12 85.63,76.64 86.91,69.44 C88,63.4 90.39,59.75 89.63,54.49 Z' id='_Path_7' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cg id='_Group_3' transform='translate(46.000000, 59.000000)' fill-rule='nonzero'%3E %3Cg id='_Group_4' fill='%23CE3E3E'%3E %3Cpath d='M13.79,4 C12.0220791,2.51892294 9.95486144,1.43755659 7.73,0.83 C4.79,0.28 1.73,0.83 0.46,4.47 C-0.81,8.11 2.36,11.47 6.41,14.57 C8.8,16.3 17.41,19.47 22.64,18.03 C27.87,16.59 30.69,15.16 32.34,12.09 C33.99,9.02 31.97,5.16 29.57,3.85 C27.4467888,2.80736431 24.9475162,2.87087348 22.88,4.02 C20.1092914,5.80003743 16.5528488,5.79221248 13.79,4 Z' id='_Path_8'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_5' transform='translate(2.000000, 10.000000)' fill='%23FF7D7D'%3E %3Cpath d='M0.4,0.9 C3.47120047,-0.0863029462 6.78175956,-0.033587037 9.82,1.05 C13.7241961,2.17156094 17.0515355,4.74398789 19.12,8.24 C14.8710405,8.52765221 10.6192273,7.7220455 6.77,5.9 C4.26967846,4.77941798 2.08242678,3.06257993 0.4,0.9 Z' id='_Path_9'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cpath d='M52,34.69 C52,37.17 51,39.18 49.68,39.18 C48.36,39.18 47.36,37.18 47.36,34.69 C47.36,32.2 48.36,30.23 49.68,30.23 C51,30.23 52,32.22 52,34.69 Z' id='_Path_10' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M77.28,37.59 C77.28,40.06 76.28,42.07 74.96,42.07 C73.64,42.07 72.64,40.07 72.64,37.59 C72.64,35.11 73.64,33.12 74.96,33.12 C76.28,33.12 77.28,35.13 77.28,37.59 Z' id='_Path_11' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Ccircle id='_Path_12' stroke='%231D1D1B' stroke-width='2' transform='translate(78.906087, 34.722280) rotate(-7.000000) translate(-78.906087, -34.722280) ' cx='78.9060874' cy='34.7222799' r='14.27'%3E%3C/circle%3E %3Cpolygon id='_Path_13' fill='%23FF6252' fill-rule='nonzero' points='65.06 22.62 72.6 52.56 57.07 50.85'%3E%3C/polygon%3E %3Cpath d='M61.7,32.41 C61.7,40.2911034 55.3111034,46.68 47.43,46.68 C39.5488966,46.68 33.16,40.2911034 33.16,32.41 C33.16,24.5288966 39.5488966,18.14 47.43,18.14 C51.2146393,18.14 54.8442696,19.6434421 57.5204138,22.3195862 C60.1965579,24.9957304 61.7,28.6253607 61.7,32.41 Z' id='_Path_14' stroke='%231D1D1B' stroke-width='2'%3E%3C/path%3E %3Cpath d='M68.22,25.26 L59.67,25.26' id='_Path_15' stroke='%231D1D1B' stroke-width='2'%3E%3C/path%3E %3Cpath d='M33.61,28.55 L7.01,36.84' id='_Path_16' stroke='%231D1D1B' stroke-width='2'%3E%3C/path%3E %3Cpath d='M21.4,58.64 C21.4040459,61.4438298 19.7181733,63.9738267 17.1289326,65.0496106 C14.539692,66.1253944 11.5573367,65.5349639 9.57329658,63.5537868 C7.58925647,61.5726097 6.99451994,58.5911101 8.06656369,56.0003187 C9.13860745,53.4095273 11.6661673,51.7200029 14.47,51.72 C18.2934315,51.719996 21.3944828,54.8165725 21.4,58.64 Z' id='_Path_17' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M23.76,66.81 C23.76,70.1237085 21.0737085,72.81 17.76,72.81 C14.4462915,72.81 11.76,70.1237085 11.76,66.81 C11.76,63.4962915 14.4462915,60.81 17.76,60.81 C21.0737085,60.81 23.76,63.4962915 23.76,66.81 Z' id='_Path_18' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M25.85,76.29 C25.8499975,79.5710983 23.8729757,82.5289292 20.8412485,83.783615 C17.8095213,85.0383007 14.3204825,84.3426087 12.0018274,82.021091 C9.68317225,79.6995734 8.99178559,76.2096788 10.2502109,73.179502 C11.5086362,70.1493252 14.4689042,68.1759543 17.75,68.18 C19.8999873,68.1799984 21.9617709,69.0347613 23.4811034,70.5559695 C25.0004358,72.0771777 25.8526543,74.1400143 25.85,76.29 Z' id='_Path_19' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M25.85,89.41 C25.8540444,92.6920053 23.8795902,95.6529052 20.8481848,96.9107432 C17.8167794,98.1685812 14.3261001,97.4753598 12.0053702,95.1546298 C9.68464019,92.8338999 8.99141878,89.3432206 10.2492568,86.3118152 C11.5070948,83.2804098 14.4679947,81.3059556 17.75,81.31 C22.2212222,81.3155098 25.8444902,84.9387778 25.85,89.41 Z' id='_Path_20' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M29.5,103.82 C29.5055076,108.292197 25.8855198,111.922611 21.4133251,111.929964 C16.9411303,111.937318 13.3092231,108.318829 13.3000233,103.846638 C13.2908235,99.3744465 16.9078129,95.7410459 21.38,95.73 C23.5246807,95.7246897 25.5834852,96.5722555 27.1028191,98.0859622 C28.622153,99.599669 29.4773523,101.655314 29.48,103.8 L29.5,103.82 Z' id='_Path_21' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M38.8,112.72 C38.8,117.193506 35.1735065,120.82 30.7,120.82 C26.2264935,120.82 22.6,117.193506 22.6,112.72 C22.6,108.246494 26.2264935,104.62 30.7,104.62 C32.8490673,104.617342 34.9108788,105.469879 36.4305,106.9895 C37.9501213,108.509121 38.8026581,110.570933 38.8,112.72 Z' id='_Path_22' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M54.27,111.91 C54.2506997,116.354541 50.6371479,119.944631 46.192576,119.934981 C41.748004,119.925331 38.150076,116.319582 38.150076,111.875 C38.150076,107.430418 41.748004,103.824669 46.192576,103.815019 C50.6371479,103.805369 54.2506997,107.395459 54.27,111.84 L54.27,111.91 Z' id='_Path_23' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M69.52,114.85 C69.5240444,118.132005 67.5495902,121.092905 64.5181848,122.350743 C61.4867794,123.608581 57.9961001,122.91536 55.6753702,120.59463 C53.3546402,118.2739 52.6614188,114.783221 53.9192568,111.751815 C55.1770948,108.72041 58.1379947,106.745956 61.42,106.75 C65.8935065,106.75 69.52,110.376494 69.52,114.85 Z' id='_Path_24' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M84.83,110.09 C84.8742484,113.370676 82.9374446,116.354815 79.9230829,117.650353 C76.9087211,118.945891 73.4107264,118.297567 71.0608685,116.007815 C68.7110106,113.718063 67.9722862,110.238038 69.1893008,107.191126 C70.4063153,104.144214 73.3392783,102.130754 76.62,102.09 L76.73,102.09 C81.1647433,102.089662 84.7752501,105.655595 84.83,110.09 Z' id='_Path_25' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Ccircle id='_Path_26' fill='%23191919' fill-rule='nonzero' cx='84.17' cy='98.66' r='8.1'%3E%3C/circle%3E %3Cpath d='M97,84.39 C97.0040444,87.6720053 95.0295902,90.6329052 91.9981848,91.8907432 C88.9667794,93.1485812 85.4761001,92.4553598 83.1553702,90.1346298 C80.8346402,87.8138999 80.1414188,84.3232206 81.3992568,81.2918152 C82.6570948,78.2604098 85.6179947,76.2859556 88.9,76.29 C93.3640813,76.2899966 96.984482,79.9059221 96.99,84.37 L97,84.39 Z' id='_Path_27' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M95.93,70.54 C95.9299975,73.8210983 93.9529757,76.7789292 90.9212485,78.033615 C87.8895213,79.2883007 84.4004825,78.5926087 82.0818274,76.271091 C79.7631722,73.9495734 79.0717856,70.4596788 80.3302109,67.429502 C81.5886362,64.3993252 84.5489042,62.4259543 87.83,62.43 C92.3051236,62.435518 95.9300034,66.064873 95.93,70.54 Z' id='_Path_28' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M96.33,60.74 C96.6341041,65.2131906 93.2551949,69.0863103 88.7821039,69.3918763 C84.3090129,69.6974424 80.4347891,66.3197993 80.127761,61.8468084 C79.820733,57.3738175 83.1971097,53.49849 87.67,53.19 L88.24,53.19 C92.5615203,53.0439322 96.1833648,56.428499 96.33,60.75 L96.33,60.74 Z' id='_Path_29' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_6' transform='translate(134.000000, 180.000000)' fill-rule='nonzero'%3E %3Crect id='_Path_30' fill='%23AFAFAF' x='2.85' y='118.47' width='177.32' height='8.26' rx='3.84'%3E%3C/rect%3E %3Crect id='_Path_31' fill='%23D8D8D8' x='0.51' y='0.77' width='182.05' height='122.32' rx='12.48'%3E%3C/rect%3E %3Cpath d='M103.23,61.93 C103.238089,66.7076004 100.366891,71.0194536 95.9556722,72.8543037 C91.5444528,74.6891537 86.462272,73.6855143 83.0797037,70.3115312 C79.6971353,66.937548 78.6805838,61.8579342 80.5042178,57.4420662 C82.3278517,53.0261982 86.6323945,50.1440522 91.41,50.14 C94.5420971,50.1320303 97.5486425,51.3706682 99.7661891,53.5825865 C101.983736,55.7945048 103.23001,58.7978928 103.23,61.93 Z' id='_Path_32' fill='%23FFFFFF'%3E%3C/path%3E %3Cpath d='M3.94,4.14 L180.24,118.43 C181.456071,116.698338 182.234914,114.69805 182.51,112.6 L182.51,11.85 C182.304079,9.32288993 181.358008,6.91249599 179.79,4.92 C177.928545,2.7222188 175.315466,1.29625493 172.46,0.92 C171.592819,0.833460352 170.721388,0.796733366 169.85,0.81 L12.08,0.81 C9.96357689,0.855019342 7.89549951,1.45131499 6.08,2.54 C5.33626348,3.03141227 4.62172468,3.56564689 3.94,4.14 Z' id='_Path_33' fill='%23F5F5F5' opacity='0.57'%3E%3C/path%3E %3C/g%3E %3Cpath d='M300.61,331.85 C298.400703,341.776186 295.180568,351.449994 291,360.72 C291,360.72 250.05,366.47 193.7,345.44 C193.7,345.44 167.38,334.03 163.79,331.85 L300.61,331.85 Z' id='_Path_34' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M305.8,331.85 L305.06,337.62 C304.831088,339.431284 303.182645,340.717873 301.37,340.5 L301.23,340.5 C291.48,338.76 262.23,334.69 233.94,339.65 C199.31,345.71 181.42,340.51 181.42,340.51 C181.42,340.51 168.83,334.56 163.79,331.85 L305.8,331.85 Z' id='_Path_35' fill='url(%23linearGradient-3)' fill-rule='nonzero'%3E%3C/path%3E %3Cg id='_Clip_Group_2' transform='translate(111.000000, 306.000000)' fill-rule='nonzero'%3E %3Cg id='Group'%3E %3Cpath d='M0.83,0.71 L254,0.71 C254,7.65221931 248.372219,13.28 241.43,13.28 L15.43,13.28 C8.13936544,13.2841853 1.95511978,7.92677884 0.92,0.71 L0.83,0.71 Z' id='_Path_36' fill='url(%23linearGradient-4)'%3E%3C/path%3E %3Cpath d='M12.08,13.28 L225.38,13.28 C225.38,20.2222193 219.752219,25.85 212.81,25.85 L26.61,25.85 C19.3165876,25.8512071 13.1283037,20.4976814 12.08,13.28 Z' id='_Path_37' fill='url(%23linearGradient-5)'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_7' transform='translate(305.000000, 48.000000)' stroke='%23141414'%3E %3Ccircle id='_Path_38' stroke-width='3' fill='%23FFFFFF' fill-rule='nonzero' cx='48' cy='47.26' r='47.17'%3E%3C/circle%3E %3Cpolyline id='_Path_39' fill='%23FFFFFF' fill-rule='nonzero' stroke-linecap='round' stroke-linejoin='round' points='47.97 17.17 47.97 47.26 71.52 47.26'%3E%3C/polyline%3E %3Cpath d='M47.97,5.34 L47.97,9.37' id='_Path_40' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M62.22,7.83 L60.86,11.62' id='_Path_41' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M74.8,15.04 L72.2,18.13' id='_Path_42' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M84.15,26.07 L80.67,28.11' id='_Path_43' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M89.2,39.62 L85.22,40.37' id='_Path_44' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M89.34,54.1 L85.34,53.44' id='_Path_45' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M84.55,67.76 L81.01,65.79' id='_Path_46' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M75.39,78.97 L72.75,75.92' id='_Path_47' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M62.97,86.4 L61.53,82.62' id='_Path_48' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M48.77,89.17 L48.68,85.13' id='_Path_49' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M34.47,86.93 L35.77,83.11' id='_Path_50' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M21.77,79.97 L24.3,76.82' id='_Path_51' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M12.22,69.11 L15.66,67' id='_Path_52' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M6.9,55.64 L10.87,54.85' id='_Path_53' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M6.5,41.18 L10.5,41.77' id='_Path_54' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M11.04,27.43 L14.61,29.34' id='_Path_55' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M19.97,16.06 L22.67,19.07' id='_Path_56' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3Cpath d='M32.25,8.39 L33.77,12.14' id='_Path_57' stroke-linecap='round' stroke-linejoin='round'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_8' fill-rule='nonzero'%3E %3Cpath d='M75.6,17.08 C70.0827416,17.7981314 64.6168459,15.4281682 61.37,10.91 C58.48,7 52.61,1.94 43.39,7 C29.54,14.58 27.31,22.57 13.46,25.3 C-0.39,28.03 -3.69,38.71 4.21,46.76 C12.11,54.81 13.46,63.76 9.4,70.88 C5.34,78 3.13,96.35 17.32,97.68 C31.51,99.01 39.83,96.35 43.84,107.52 C47.85,118.69 63.84,132.58 83.34,120.92 C102.84,109.26 122.27,120.46 129.66,119.09 C133.634312,118.392513 137.168202,116.143394 139.482908,112.838279 C141.797614,109.533164 142.703163,105.443312 142,101.47 C142,101.15 141.88,100.84 141.81,100.47 C139.81,90.34 143.16,80.21 150.58,75.47 C150.58,75.47 159.71,72.88 161.93,61.36 C164.15,49.84 162.27,37.36 145.11,31.54 C127.95,25.72 132.71,12.54 117.6,4.84 C102.49,-2.86 91.6,2.42 87.38,7.4 C84,11.36 81.39,16.23 75.6,17.08 Z' id='_Path_58' fill='url(%23linearGradient-6)'%3E%3C/path%3E %3Cpath d='M130.72,122 C129.414705,125.999035 125.824848,128.814841 121.63,129.13 C114.29,129.84 114.98,139.99 124.07,138.59 C133.16,137.19 135.62,139.64 138.6,139.99 C141.58,140.34 146.11,139.45 146.48,133.99 C146.85,128.53 142.27,128.92 139.12,128.8 C135.97,128.68 138.95,122.86 137.02,121.11 C136.197902,120.369889 135.115423,119.986744 134.010783,120.044883 C132.906143,120.103022 131.869865,120.597681 131.13,121.42 C130.977426,121.601583 130.840283,121.79559 130.72,122 Z' id='_Path_59' fill='url(%23linearGradient-7)'%3E%3C/path%3E %3Cpath d='M152.05,147.94 C150.730406,147.032667 149.010308,146.952574 147.61211,147.733358 C146.213913,148.514142 145.379768,150.02058 145.46,151.62 L145.46,152.06 C145.63,157.25 149.99,155.21 152.16,155.52 C154.33,155.83 155.43,153.37 155.43,151.3 C155.43,149.23 153.66,149.49 152.38,148.16 L152.05,147.94 Z' id='_Path_60' fill='url(%23linearGradient-8)'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_9' transform='translate(46.000000, 25.000000)' fill='%23FFFFFF' fill-rule='nonzero'%3E %3Cpath d='M38.11,64.89 L42.75,64.7 L42.43,57.26 L37.59,57.48 C37.0782425,55.7898124 36.2983076,54.1928027 35.28,52.75 L38.5,49.39 L33.14,44.2 L29.78,47.66 C28.2397446,46.7941641 26.5726105,46.176582 24.84,45.83 L24.84,41.27 L17.39,41.27 L17.39,46.14 C15.309135,46.6725413 13.3524424,47.6067262 11.63,48.89 L8.17,45.58 L3.09,51 L6.83,54.46 C5.75121182,56.5381117 5.10807768,58.8146024 4.94,61.15 L0.34,61.75 L1.29,69.13 L6.1,68.51 C6.75946494,70.1500784 7.67408972,71.675578 8.81,73.03 L5.88,76.64 L11.68,81.3 L14.61,77.53 C16.2125148,78.2695647 17.9250537,78.7424551 19.68,78.93 L20.08,83.55 L27.49,82.91 L27.13,78.1 C28.783865,77.5151059 30.3359843,76.674937 31.73,75.61 L35.2,78.67 L40.11,73.08 L36.46,69.87 C37.2684702,68.3071011 37.8253151,66.6264422 38.11,64.89 Z M21.39,68.53 C17.5626667,68.53 14.46,65.4273333 14.46,61.6 C14.46,57.7726667 17.5626667,54.67 21.39,54.67 C25.2173333,54.67 28.32,57.7726667 28.32,61.6 C28.3226591,63.4387642 27.5933901,65.2029822 26.2931862,66.5031862 C24.9929822,67.8033901 23.2287642,68.5326591 21.39,68.53 Z' id='_Compound_Path_'%3E%3C/path%3E %3Cpath d='M80.58,44.62 L85.24,44.42 L84.93,37 L80.08,37.22 C79.5695412,35.5342388 78.7930936,33.9408333 77.78,32.5 L81,29.12 L75.61,23.92 L72.27,27.39 C70.7309167,26.5194619 69.0635562,25.8984207 67.33,25.55 L67.33,21 L59.89,21 L59.89,25.86 C57.8046997,26.3938643 55.8443618,27.3315649 54.12,28.62 L50.66,25.31 L45.6,30.76 L49.34,34.23 C48.2497131,36.2993501 47.6090495,38.5757507 47.46,40.91 L42.83,41.52 L43.83,48.89 L48.65,48.27 C49.2987531,49.9088772 50.2033223,51.434494 51.33,52.79 L48.42,56.41 L54.22,61.07 L57.22,57.36 C58.8194485,58.0983524 60.5284981,58.5712119 62.28,58.76 L62.68,63.39 L70.09,62.68 L69.66,57.84 C71.3218835,57.2593042 72.8812279,56.4188784 74.28,55.35 L77.74,58.42 L82.66,52.82 L79.01,49.62 C79.7978059,48.0482004 80.3278975,46.3600104 80.58,44.62 Z M63.89,48.25 C61.0861673,48.2499971 58.5586074,46.5604727 57.4865637,43.9696813 C56.4145199,41.3788899 57.0092565,38.3973903 58.9932966,36.4162132 C60.9773367,34.4350361 63.959692,33.8446056 66.5489326,34.9203894 C69.1381733,35.9961733 70.8240459,38.5261702 70.82,41.33 C70.8200019,43.167032 70.08956,44.9286783 68.7896447,46.2267179 C67.4897293,47.5247574 65.7270301,48.2526547 63.89,48.25 Z' id='_Compound_Path_2'%3E%3C/path%3E %3Cpath d='M42.19,22.73 L46.82,22.09 L45.82,14.71 L41.02,15.39 C40.3427195,13.7653637 39.4147731,12.257029 38.27,10.92 L41.14,7.26 L35.29,2.66 L32.29,6.49 C30.674864,5.77336099 28.9573312,5.31445243 27.2,5.13 L26.77,0.53 L19.36,1.26 L19.84,6.09 C17.811669,6.82011073 15.9463989,7.94131133 14.35,9.39 L10.51,6.45 L6,12.34 L10,15.44 C9.09928137,17.6319988 8.67982381,19.9918739 8.77,22.36 L4.2,23.36 L6,30.61 L10.73,29.52 C11.5425489,31.0839977 12.5991296,32.508525 13.86,33.74 L11.31,37.64 L17.5,41.78 L20.16,37.71 C21.8335155,38.2882317 23.5894951,38.5921513 25.36,38.61 L26.21,43.18 L33.5,41.78 L32.56,37 C34.1558517,36.2595704 35.6241072,35.2706075 36.91,34.07 L40.7,36.77 L45.03,30.77 L41.03,27.96 C41.7078431,26.2942471 42.1000054,24.5261361 42.19,22.73 Z M25.93,27.92 C23.141351,28.2087934 20.4534181,26.7889219 19.1200631,24.3227246 C17.7867082,21.8565272 18.0706383,18.8299116 19.8394062,16.6547277 C21.6081742,14.4795438 24.5132848,13.5843618 27.1995675,14.3867645 C29.8858502,15.1891672 31.8240346,17.5310596 32.11,20.32 L32.11,20.39 C32.470369,24.1721324 29.7097819,27.5357603 25.93,27.92 Z' id='_Compound_Path_3'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/man-mobile.svg":
+/*!********************************!*\
+  !*** ./src/img/man-mobile.svg ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='289px' height='285px' viewBox='0 0 289 285' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Eman-mobile%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E %3ClinearGradient x1='-0.00014597453%25' y1='49.9939627%25' x2='100.000167%25' y2='49.9939627%25' id='linearGradient-1'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.000204509968%25' y1='49.9976725%25' x2='99.9991484%25' y2='49.9976725%25' id='linearGradient-2'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.407830343%25' y1='49.7575431%25' x2='99.646547%25' y2='49.7575431%25' id='linearGradient-3'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.933706816%25' y1='48.0225989%25' x2='99.0974167%25' y2='48.0225989%25' id='linearGradient-4'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.902583256%25' y1='48.0225989%25' x2='99.1285403%25' y2='48.0225989%25' id='linearGradient-5'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-1.48541114%25' y1='48.3050847%25' x2='98.5676393%25' y2='48.3050847%25' id='linearGradient-6'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='49.7575431%25' y1='0.28548124%25' x2='49.7575431%25' y2='100.339859%25' id='linearGradient-7'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='46.8926554%25' y1='0.746965453%25' x2='46.8926554%25' y2='100.778089%25' id='linearGradient-8'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='47.1751412%25' y1='0.746965453%25' x2='47.1751412%25' y2='100.778089%25' id='linearGradient-9'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='47.1751412%25' y1='0.715841892%25' x2='47.1751412%25' y2='100.746965%25' id='linearGradient-10'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='46.8926554%25' y1='1.16710875%25' x2='46.8926554%25' y2='101.220159%25' id='linearGradient-11'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.261437908%25' y1='49.2825827%25' x2='99.7787833%25' y2='49.2825827%25' id='linearGradient-12'%3E %3Cstop stop-color='%232ACAFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%232ADFC3' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.621546961%25' y1='41.5448852%25' x2='99.4014733%25' y2='41.5448852%25' id='linearGradient-13'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-1.40552995%25' y1='45.9290188%25' x2='98.7096774%25' y2='45.9290188%25' id='linearGradient-14'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-1.42857143%25' y1='46.3465553%25' x2='98.6866359%25' y2='46.3465553%25' id='linearGradient-15'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.667587477%25' y1='41.5448852%25' x2='99.3554328%25' y2='41.5448852%25' id='linearGradient-16'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-1.09846999%25' y1='41.7536534%25' x2='98.9407611%25' y2='41.7536534%25' id='linearGradient-17'%3E %3Cstop stop-color='%2376AADB' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%234A72B2' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3ClinearGradient x1='-0.0465829326%25' y1='49.8249156%25' x2='100.116713%25' y2='49.8249156%25' id='linearGradient-18'%3E %3Cstop stop-color='%23FFFFFF' offset='0%25'%3E%3C/stop%3E %3Cstop stop-color='%23F7F7F8' offset='100%25'%3E%3C/stop%3E %3C/linearGradient%3E %3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='man-mobile'%3E %3Cpath d='M20.66,196.33 C20.66,196.33 -36.19,140.76 38.72,90.86 C113.63,40.96 194.45,18.41 241.56,24.31 C288.67,30.21 276.8,143.79 236.14,212.77 C195.48,281.75 97.68,278 20.66,196.33 Z' id='_Path_' fill='url(%23linearGradient-1)' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M259.94,78.06 C259.94,78.06 325.33,123.31 259.94,185.06 C194.55,246.81 118.6,282.68 71.15,284.8 C23.7,286.92 16.3,173 44.75,98.13 C73.2,23.26 170.29,10.56 259.94,78.06 Z' id='_Path_2' fill='url(%23linearGradient-2)' fill-rule='nonzero'%3E%3C/path%3E %3Cg id='_Group_3' transform='translate(10.000000, 0.000000)'%3E %3Cg id='_Group_4' transform='translate(10.000000, 12.000000)' fill-rule='nonzero'%3E %3Cg id='_Group_5' transform='translate(0.000000, 62.000000)' fill='%23C4C4C4'%3E %3Cpath d='M4.05,17.19 C2.12090977,17.1844883 0.559992126,15.6190981 0.56,13.69 L0.56,4.34 C0.570865679,2.41541471 2.12545368,0.856372305 4.05,0.84 C5.97845265,0.85092634 7.53907366,2.41154735 7.55,4.34 L7.55,13.69 C7.54450717,15.6207168 5.98071684,17.1845072 4.05,17.19 Z' id='_Path_3'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_6' transform='translate(0.000000, 44.000000)' fill='%23C4C4C4'%3E %3Cpath d='M4.05,16.58 C2.12318953,16.5690286 0.565458342,15.006834 0.56,13.08 L0.56,3.74 C0.565458342,1.81316602 2.12318953,0.250971424 4.05,0.24 C5.97845265,0.25092634 7.53907366,1.81154735 7.55,3.74 L7.55,13.09 C7.52828459,15.0122976 5.97235184,16.5637848 4.05,16.58 Z' id='_Path_4'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_7' transform='translate(0.000000, 30.000000)' fill='%23C4C4C4'%3E %3Cpath d='M4.05,10.58 C2.12868878,10.5745418 0.570971213,9.02128765 0.56,7.1 L0.56,4 C0.570926002,2.0770701 2.1270701,0.520926002 4.05,0.51 C5.97458529,0.520865679 7.5336277,2.07545368 7.55,4 L7.55,7.1 C7.53357195,9.02290186 5.97296443,10.5745916 4.05,10.58 Z' id='_Path_5'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_8' transform='translate(98.000000, 50.000000)' fill='%23C4C4C4'%3E %3Cpath d='M4.24,24.48 C2.31804907,24.48 0.76,22.9219509 0.76,21 L0.76,3.69 C0.759992104,1.76642472 2.31643262,0.205511677 4.24,0.2 C6.16519402,0.205492741 7.72450726,1.76480598 7.73,3.69 L7.73,21 C7.72448832,22.9235674 6.16357528,24.4800079 4.24,24.48 Z' id='_Path_6'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_9' transform='translate(2.000000, 0.000000)'%3E %3Cpath d='M20.46,1.74 L81.36,1.74 C92.1383121,1.74551744 100.874483,10.4816879 100.88,21.26 L100.88,187.39 C100.88,198.176121 92.1361212,206.92 81.35,206.92 L20.46,206.92 C9.67940168,206.92 0.94,198.180598 0.94,187.4 L0.94,21.26 C0.94,10.4794017 9.67940168,1.74 20.46,1.74 Z' id='_Path_7' fill='%23000000'%3E%3C/path%3E %3Cpath d='M85.61,207.83 L16.15,207.83 C7.23193553,207.807973 0.0109895881,200.578085 0,191.66 L0,17 C0.0165256651,8.06698386 7.25697535,0.831006345 16.19,0.82 L85.66,0.82 C94.571219,0.863925461 101.778132,8.08869955 101.8,17 L101.8,191.66 C101.777973,200.58911 94.5391306,207.81901 85.61,207.83 Z M16.19,2.64 C8.26994217,2.66199839 1.8564811,9.07992877 1.84,17 L1.84,191.66 C1.85652019,199.576813 8.27317736,205.988999 16.19,206 L85.66,206 C93.5706434,205.978026 99.9780259,199.570643 100,191.66 L100,17 C99.9889652,9.06043406 93.5495736,2.62999233 85.61,2.63 L16.19,2.63 L16.19,2.64 Z' id='_Compound_Path_' fill='%239B9B9A'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_10' transform='translate(2.000000, 1.000000)' fill='%23858585'%3E %3Cg id='_Group_11'%3E %3Cpath d='M85,3.17 C92.4629863,3.16999796 98.51448,9.21701572 98.52,16.68 L98.52,190 C98.5034574,197.455171 92.4551898,203.490018 85,203.49 L16.89,203.49 C9.43871399,203.484507 3.3965319,197.45127 3.38,190 L3.38,16.68 C3.38551503,9.22091863 9.43091863,3.17551503 16.89,3.17 L85,3.17 Z M85,0.74 L16.89,0.74 C12.6572566,0.724059912 8.59197693,2.39229067 5.59052448,5.37685995 C2.58907204,8.36142922 0.89793631,12.4172341 0.89,16.65 L0.89,190 C0.928540649,198.809207 8.08070868,205.930084 16.89,205.93 L85,205.93 C93.7838922,205.907959 100.894517,198.783918 100.9,190 L100.9,16.68 C100.905534,7.8899029 93.7900833,0.756552117 85,0.74 Z' id='_Compound_Path_2'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_12' transform='translate(2.000000, 22.000000)' fill='%23EBEBEB'%3E %3Crect id='_Path_8' x='0.01' y='0.52' width='3.32' height='2.18'%3E%3C/rect%3E %3C/g%3E %3Cg id='_Group_13' transform='translate(100.000000, 22.000000)' fill='%23EBEBEB'%3E %3Crect id='_Path_9' x='0.42' y='0.52' width='3.38' height='2.18'%3E%3C/rect%3E %3C/g%3E %3Cg id='_Group_14' transform='translate(2.000000, 185.000000)' fill='%23EBEBEB'%3E %3Crect id='_Path_10' x='0.01' y='0.82' width='3.4' height='2.18'%3E%3C/rect%3E %3C/g%3E %3Cg id='_Group_15' transform='translate(100.000000, 185.000000)' fill='%23EBEBEB'%3E %3Crect id='_Path_11' x='0.37' y='0.82' width='3.4' height='2.18'%3E%3C/rect%3E %3C/g%3E %3Cpath d='M97.2,17.7 L97.2,17 C97.2180951,16.7678042 97.1803788,16.5346486 97.09,16.32 C97.0104446,16.0836869 96.9600711,15.8385359 96.94,15.59 C96.88,15.36 96.8,15.08 96.71,14.84 C96.6282706,14.5681529 96.5314538,14.3010721 96.42,14.04 C96.29,13.74 96.15,13.45 96.01,13.16 C95.8407849,12.8152411 95.6504219,12.481271 95.44,12.16 C95.1531075,11.758054 94.8460478,11.3708917 94.52,11 C92.9843892,9.29434201 90.9461932,8.12115363 88.7,7.65 C88.2427037,7.5501473 87.7776468,7.48992411 87.31,7.47 C87.0537149,7.45020729 86.7962851,7.45020729 86.54,7.47 L78.31,7.47 C78.1078253,7.47060887 77.916736,7.56247869 77.79,7.72 C77.6995418,7.83444622 77.6470989,7.97429403 77.64,8.12 L77.64,8.26 C77.6513512,8.45595797 77.6276464,8.65236933 77.57,8.84 C77.5,9.04 77.57,9.23 77.47,9.43 C77.4318608,9.60764878 77.3783253,9.78163923 77.31,9.95 C77.2768857,10.1360402 77.2053654,10.3131381 77.1,10.47 C77.019767,10.6320786 76.9295951,10.7890443 76.83,10.94 C76.739395,11.0992594 76.639211,11.252875 76.53,11.4 C76.42,11.54 76.29,11.68 76.17,11.82 C76.0422972,11.9596286 75.9016706,12.0868622 75.75,12.2 C75.6105345,12.3347729 75.4636383,12.4616378 75.31,12.58 C75.1311069,12.6967917 74.9439452,12.8003991 74.75,12.89 C74.5559893,12.9985976 74.3556282,13.0954388 74.15,13.18 C73.92,13.26 73.68,13.34 73.44,13.4 C73.1436142,13.4618324 72.8425533,13.4986287 72.54,13.51 L33.25,13.51 C32.6293958,13.4810263 32.0193394,13.3386798 31.45,13.09 C31.0959937,12.9347343 30.7605558,12.7401803 30.45,12.51 C29.8952237,12.1595789 29.4047596,11.71647 29,11.2 C28.8202671,10.8835244 28.6760585,10.5481556 28.57,10.2 C28.4677988,9.94822091 28.390757,9.68694855 28.34,9.42 C28.2854874,9.19276109 28.2454073,8.9623007 28.22,8.73 C28.22,8.53 28.22,8.33 28.22,8.13 C28.1938656,7.80172395 27.9193131,7.54896135 27.59,7.55 L18.5,7.55 C18.1925191,7.5316206 17.8842452,7.56888448 17.59,7.66 C17.3204796,7.69791195 17.0533696,7.75133395 16.79,7.82 L16.04,8.02 L15.37,8.27 L14.76,8.53 L14.16,8.81 L13.64,9.14 C13.4571414,9.23805026 13.2831531,9.35181187 13.12,9.48 L12.65,9.82 L12.2,10.21 L11.79,10.59 L11.4,11 C11.2666667,11.14 11.1466667,11.28 11.04,11.42 C10.91,11.56 10.81,11.71 10.7,11.85 C10.5853629,11.9941696 10.4785427,12.1443855 10.38,12.3 C10.29,12.45 10.19,12.62 10.09,12.77 C9.99532516,12.922101 9.90854364,13.0789753 9.83,13.24 C9.75,13.41 9.66,13.57 9.59,13.74 C9.50651931,13.902015 9.43304821,14.0689947 9.37,14.24 C9.37,14.41 9.23,14.59 9.18,14.76 L9.01,15.3 C8.98217412,15.4843655 8.93525522,15.6653384 8.87,15.84 C8.87,16.02 8.79,16.21 8.76,16.41 C8.72218306,16.6016309 8.69547187,16.795287 8.68,16.99 C8.68,17.2 8.68,17.38 8.68,17.59 L8.68,190.2 C8.67046282,190.468063 8.690585,190.736359 8.74,191 C8.75326841,191.284553 8.80026379,191.566525 8.88,191.84 C8.98237569,192.132837 9.059327,192.43395 9.11,192.74 C9.20018971,193.058703 9.30700255,193.372466 9.43,193.68 C9.56349297,194.020518 9.71367488,194.354256 9.88,194.68 C10.08,195.07 10.29,195.45 10.52,195.82 C10.8217583,196.305252 11.1558472,196.769636 11.52,197.21 C13.25803,199.224538 15.6263669,200.591971 18.24,201.09 C18.7812917,201.193308 19.3294262,201.256811 19.88,201.28 L86.18,201.28 C86.5744168,201.281605 86.9685392,201.258225 87.36,201.21 C87.6980391,201.185743 88.0329351,201.128811 88.36,201.04 L89.28,200.81 L90.1,200.5 L90.85,200.18 L91.54,199.82 C91.76,199.7 91.97,199.56 92.18,199.42 L92.78,199 C92.97,198.86 93.15,198.71 93.32,198.56 C93.49,198.41 93.67,198.25 93.83,198.09 L94.31,197.59 C94.46,197.42 94.61,197.25 94.75,197.07 L95.15,196.54 L95.52,195.99 C95.63,195.81 95.75,195.61 95.85,195.42 L96.14,194.82 C96.2410418,194.623099 96.3279284,194.419249 96.4,194.21 C96.4933333,194.003333 96.5733333,193.793333 96.64,193.58 C96.71,193.38 96.77,193.14 96.84,192.92 C96.9016257,192.699429 96.9516938,192.475792 96.99,192.25 C97.0412538,192.022564 97.0779946,191.792099 97.1,191.56 L97.1,190.08 L97.1,18.24 C97.1684041,18.0682941 97.2023818,17.8848144 97.2,17.7 Z' id='_Path_12' fill='%23FFFFFF'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_16' transform='translate(26.000000, 36.000000)' fill-rule='nonzero'%3E %3Cg id='_Group_17'%3E %3Crect id='_Path_13' fill='url(%23linearGradient-3)' transform='translate(37.327079, 18.950370) rotate(-0.070000) translate(-37.327079, -18.950370) ' x='0.547079346' y='0.390369517' width='73.56' height='37.12' rx='3.42'%3E%3C/rect%3E %3Cg id='_Group_18' transform='translate(7.000000, 5.000000)'%3E %3Cg id='_Group_19'%3E %3Crect id='_Rectangle_' fill='url(%23linearGradient-4)' transform='translate(16.517563, 2.057257) rotate(-0.070000) translate(-16.517563, -2.057257) ' x='0.452563284' y='0.287256593' width='32.13' height='3.54'%3E%3C/rect%3E %3Crect id='_Rectangle_2' fill='url(%23linearGradient-5)' transform='translate(16.524515, 7.747240) rotate(-0.070000) translate(-16.524515, -7.747240) ' x='0.459514922' y='5.97724013' width='32.13' height='3.54'%3E%3C/rect%3E %3Crect id='_Rectangle_3' fill='url(%23linearGradient-5)' transform='translate(16.541479, 13.447211) rotate(-0.070000) translate(-16.541479, -13.447211) ' x='0.476478769' y='11.6772114' width='32.13' height='3.54'%3E%3C/rect%3E %3Crect id='_Rectangle_4' fill='url(%23linearGradient-5)' transform='translate(16.548430, 19.137207) rotate(-0.070000) translate(-16.548430, -19.137207) ' x='0.483430413' y='17.3672072' width='32.13' height='3.54'%3E%3C/rect%3E %3Crect id='_Rectangle_5' fill='url(%23linearGradient-6)' transform='translate(9.925387, 24.825291) rotate(-0.070000) translate(-9.925387, -24.825291) ' x='0.500386999' y='23.0552908' width='18.85' height='3.54'%3E%3C/rect%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_20' transform='translate(43.000000, 4.000000)' fill='%23FADD74'%3E %3Cpath d='M8.6,4.75 C8.60404674,6.49009195 7.55895499,8.06109445 5.95247967,8.7298047 C4.34600435,9.39851496 2.49485989,9.03309765 1.26299418,7.80409675 C0.0311284662,6.57509584 -0.338597843,4.72480719 0.326370267,3.11677928 C0.991338378,1.50875137 2.55990335,0.460004706 4.3,0.46 C5.44032302,0.454668188 6.53562648,0.904615348 7.34290358,1.71001506 C8.15018068,2.51541477 8.6026768,3.60966766 8.6,4.75 Z' id='_Path_14'%3E%3C/path%3E %3C/g%3E %3Cpath d='M61.32,8.74 C61.3199743,11.1122153 59.3988481,13.0362876 57.0266357,13.0399484 C54.6544232,13.0436091 52.7273678,11.1254753 52.7200206,8.75327134 C52.7126735,6.38106744 54.6278104,4.45103356 57,4.44 C58.1438922,4.43467951 59.2427591,4.88536405 60.0534963,5.69234787 C60.8642336,6.49933169 61.3200124,7.5960954 61.32,8.74 Z' id='_Path_15' fill='%23E6332A'%3E%3C/path%3E %3Cg id='_Group_21' transform='translate(62.000000, 4.000000)' fill='%23FADD74'%3E %3Cpath d='M9.05,4.72 C9.05404674,6.46009195 8.00895499,8.03109445 6.40247967,8.6998047 C4.79600435,9.36851496 2.94485989,9.00309765 1.71299418,7.77409675 C0.481128466,6.54509584 0.111402157,4.69480719 0.776370267,3.08677928 C1.44133838,1.47875137 3.00990335,0.430004706 4.75,0.43 C7.11865618,0.435470264 9.03901484,2.35136298 9.05,4.72 Z' id='_Path_16'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_22' transform='translate(43.000000, 15.000000)' fill='%2334525C'%3E %3Cpath d='M8.61,4.31 C8.60447678,6.68221188 6.67889203,8.60182812 4.30667443,8.59998705 C1.93445684,8.59814598 0.0118540237,6.67554316 0.01001295,4.30332557 C0.00817187637,1.93110797 1.92778812,0.00552321661 4.3,-1.41454909e-14 C5.44471456,-0.00534922119 6.54409067,0.447020806 7.35353493,1.25646507 C8.16297919,2.06590933 8.61534922,3.16528544 8.61,4.31 Z' id='_Path_17'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_23' transform='translate(52.000000, 15.000000)' fill='%23FADD74'%3E %3Cpath d='M9.33,4.29 C9.32989723,6.65407192 7.41726991,8.57251405 5.05320919,8.57979318 C2.68914847,8.58707231 0.764743452,6.6804447 0.7500825,4.31641824 C0.735421549,1.95239178 2.63603084,0.0220426309 5,-6.96109294e-15 C6.14469346,-0.0106735975 7.24617596,0.436590881 8.05937908,1.24228172 C8.87258219,2.04797257 9.33004976,3.14525678 9.33,4.29 Z' id='_Path_18'%3E%3C/path%3E %3C/g%3E %3Cpath d='M71.06,19.29 C71.0640442,21.031001 70.017868,22.6026348 68.4101633,23.2707565 C66.8024586,23.9388783 64.9505294,23.5716245 63.7194524,22.3405476 C62.4883755,21.1094706 62.1211217,19.2575414 62.7892435,17.6498367 C63.4573652,16.042132 65.028999,14.9959558 66.77,15 C69.1370204,15.0054983 71.0545017,16.9229796 71.06,19.29 Z' id='_Path_19' fill='%23FFFFFF'%3E%3C/path%3E %3Cg id='_Group_24' transform='translate(43.000000, 25.000000)' fill='%23FADD74'%3E %3Cpath d='M8.62,4.88 C8.62,7.24930158 6.69930158,9.17 4.33,9.17 C1.96069842,9.17 0.04,7.24930158 0.04,4.88 C0.04,2.51069842 1.96069842,0.59 4.33,0.59 C5.46594098,0.587336587 6.55612391,1.03740853 7.35935769,1.84064231 C8.16259147,2.64387609 8.61266341,3.73405902 8.61,4.87 L8.62,4.88 Z' id='_Path_20'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_25' transform='translate(52.000000, 25.000000)' fill='%2334525C'%3E %3Cpath d='M9.35,4.87 C9.34999529,6.61009665 8.30124863,8.17866162 6.69322072,8.84362973 C5.08519281,9.50859784 3.23490416,9.13887153 2.00590325,7.90700582 C0.776902347,6.67514011 0.411485041,4.82399565 1.0801953,3.21752033 C1.74890555,1.61104501 3.31990805,0.565953264 5.06,0.57 C7.43091825,0.575513778 9.35000641,2.49907534 9.35,4.87 Z' id='_Path_21'%3E%3C/path%3E %3C/g%3E %3Cpath d='M71.07,29.85 C71.0780887,31.5941183 70.0342176,33.1711876 68.4255688,33.8451782 C66.8169201,34.5191688 64.9606343,34.1572054 63.7230535,32.9282189 C62.4854727,31.6992324 62.1105824,29.845514 62.7733467,28.2322076 C63.4361109,26.6189012 65.0058677,25.5640655 66.75,25.56 C67.8929678,25.552007 68.9918689,26.0004568 69.8029001,26.8058558 C70.6139313,27.6112549 71.0700279,28.7070043 71.07,29.85 Z' id='_Path_22' fill='%23FFFFFF'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_26' transform='translate(0.000000, 43.000000)'%3E %3Crect id='_Path_23' fill='url(%23linearGradient-7)' transform='translate(37.339529, 18.839589) rotate(-89.930000) translate(-37.339529, -18.839589) ' x='18.7795287' y='-17.9404112' width='37.12' height='73.56' rx='3.42'%3E%3C/rect%3E %3Cg id='_Group_27' transform='translate(35.000000, 5.000000)'%3E %3Cg id='_Group_28'%3E %3Crect id='_Rectangle_6' fill='url(%23linearGradient-8)' transform='translate(16.151410, 1.925042) rotate(-89.930000) translate(-16.151410, -1.925042) ' x='14.3814097' y='-14.1399578' width='3.54' height='32.13'%3E%3C/rect%3E %3Crect id='_Rectangle_7' fill='url(%23linearGradient-9)' transform='translate(16.141393, 7.621994) rotate(-89.930000) translate(-16.141393, -7.621994) ' x='14.3713932' y='-8.44300616' width='3.54' height='32.13'%3E%3C/rect%3E %3Crect id='_Rectangle_8' fill='url(%23linearGradient-10)' transform='translate(16.141389, 13.298945) rotate(-89.930000) translate(-16.141389, -13.298945) ' x='14.3713889' y='-2.76605451' width='3.54' height='32.13'%3E%3C/rect%3E %3Crect id='_Rectangle_9' fill='url(%23linearGradient-10)' transform='translate(16.121372, 18.995897) rotate(-89.930000) translate(-16.121372, -18.995897) ' x='14.3513725' y='2.93089713' width='3.54' height='32.13'%3E%3C/rect%3E %3Crect id='_Rectangle_10' fill='url(%23linearGradient-11)' transform='translate(22.759468, 24.702866) rotate(-89.930000) translate(-22.759468, -24.702866) ' x='20.9894683' y='15.2778659' width='3.54' height='18.85'%3E%3C/rect%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_29' transform='translate(23.000000, 4.000000)' fill='%23FADD74'%3E %3Cpath d='M0.06,4.61 C0.0380130065,6.979151 1.9407288,8.91757025 4.30987916,8.9396259 C6.67902953,8.96168155 8.61750391,7.05902193 8.63962822,4.68987221 C8.66175252,2.32072248 6.75914908,0.382192961 4.39,0.36 C2.02288681,0.343325493 0.087466526,2.24298744 0.06,4.61 Z' id='_Path_24'%3E%3C/path%3E %3C/g%3E %3Cpath d='M13.35,8.59 C13.3170994,10.9589639 15.2107703,12.9061019 17.579732,12.939157 C19.9486938,12.9722121 21.8959553,11.0786681 21.9291649,8.70970857 C21.9623744,6.340749 20.0689574,4.39336401 17.7,4.36 L17.64,4.36 C15.2939335,4.35977053 13.3828121,6.24416292 13.35,8.59 Z' id='_Path_25' fill='%23E6332A'%3E%3C/path%3E %3Cg id='_Group_30' transform='translate(3.000000, 4.000000)' fill='%23FADD74'%3E %3Cpath d='M0.62,4.53 C0.567606368,6.27270475 1.57270834,7.87455753 3.16466816,8.58549274 C4.75662797,9.29642796 6.62030807,8.97571191 7.88304254,7.7735195 C9.14577701,6.5713271 9.55760034,4.72563919 8.92567676,3.10069688 C8.29375317,1.47575457 6.74317557,0.393224481 5,0.36 L4.88,0.36 C2.56843758,0.375262014 0.684610115,2.21929031 0.62,4.53 Z' id='_Path_26'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_31' transform='translate(23.000000, 14.000000)' fill='%2334525C'%3E %3Cpath d='M0.05,5.18 C0.0500064334,7.54799842 1.96867673,9.46815141 4.33667443,9.46998706 C6.70467214,9.47182271 8.6263171,7.55464669 8.62999483,5.18665113 C8.63367256,2.81865557 6.71799198,0.89551981 4.35,0.89 C3.21048962,0.887343791 2.11674056,1.33815175 1.31004538,2.14297089 C0.503350204,2.94779003 0.0499969042,4.04048653 0.05,5.18 Z' id='_Path_27'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_32' transform='translate(13.000000, 14.000000)' fill='%23FADD74'%3E %3Cpath d='M0.33,5.17 C0.33,7.54482442 2.25517558,9.47 4.63,9.47 C7.00482442,9.47 8.93,7.54482442 8.93,5.17 C8.93,2.79517558 7.00482442,0.87 4.63,0.87 C2.26458647,0.864460525 0.341021113,2.77460566 0.33,5.14 L0.33,5.17 Z' id='_Path_28'%3E%3C/path%3E %3C/g%3E %3Cpath d='M3.61,19.15 C3.61,21.5193016 5.53069842,23.44 7.9,23.44 C10.2693016,23.44 12.19,21.5193016 12.19,19.15 C12.19,16.7806984 10.2693016,14.86 7.9,14.86 C5.53069842,14.86 3.61,16.7806984 3.61,19.15 Z' id='_Path_29' fill='%23FFFFFF'%3E%3C/path%3E %3Cg id='_Group_33' transform='translate(23.000000, 25.000000)' fill='%23FADD74'%3E %3Cpath d='M8.20944332e-17,4.74 C-0.0080887052,6.4841183 1.03578244,8.06118761 2.64443117,8.73517821 C4.25307989,9.4091688 6.10936571,9.04720537 7.34694652,7.81821887 C8.58452733,6.58923238 8.95941761,4.73551399 8.29665333,3.12220758 C7.63388906,1.50890117 6.06413231,0.454065478 4.32,0.45 C1.94354085,0.444460602 0.0110212266,2.36355995 8.20944332e-17,4.74 Z' id='_Path_30'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_34' transform='translate(13.000000, 25.000000)' fill='%2334525C'%3E %3Ccircle id='_Path_31' cx='4.62' cy='4.74' r='4.29'%3E%3C/circle%3E %3C/g%3E %3Cpath d='M3.6,29.73 C3.60552322,32.096689 5.52663081,34.0118281 7.89332555,34.009987 C10.2600203,34.0081459 12.1781459,32.0900203 12.179987,29.7233255 C12.1818281,27.3566308 10.266689,25.4355232 7.9,25.43 C6.75875469,25.4273366 5.66348472,25.8795157 4.85650023,26.6865002 C4.04951573,27.4934847 3.59733664,28.5887547 3.6,29.73 Z' id='_Path_32' fill='%23FFFFFF'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_35'%3E %3Cg id='_Group_36' transform='translate(33.000000, 147.000000)' fill='%23FFCB9C' fill-rule='nonzero'%3E %3Cg id='_Group_37' transform='translate(30.000000, 0.000000)'%3E %3Cg id='_Group_38'%3E %3Cpath d='M90.92,44.37 C84.92,8.06 69.81,0.44 69.81,0.44 L61.09,10.64 C61.3273295,11.3012336 61.4523882,11.9975065 61.46,12.7 C61.46,18.96 61.15,26.29 55.62,30.15 C57.8042301,33.1441812 59.181684,36.6498015 59.62,40.33 C60.47,47.6 58.23,55.61 47.56,61.17 C34.8,67.81 8.8,67.48 8.8,67.48 L0.09,76.79 C58.07,98.32 95.37,71.23 90.92,44.37 Z' id='_Path_33'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_39' transform='translate(0.000000, 56.000000)'%3E %3Cpath d='M28,8.7 C28,8.7 5.77,2.42 3.76,2.7 C1.75,2.98 2.04,5.55 5.9,6.42 C9.54111146,7.43698392 13.1175993,8.67255863 16.61,10.12 C16.61,10.12 2,7.35 0.94,8.24 C-0.12,9.13 0.19,11.02 2.86,11.24 C5.53,11.46 16.1,14.02 16.1,14.02 C12.2045798,13.8781524 8.30414845,13.9716559 4.42,14.3 C1.96,14.82 4.96,16.77 7.42,16.8 C9.88,16.83 17.92,18 17.92,18 C17.92,18 10.92,19.59 10.02,20.63 C9.12,21.67 10.02,22.29 11.15,22.25 C12.28,22.21 22,19.84 22,19.84 C22,19.84 31,22.84 36,19.23 C41,15.62 39.81,12.14 39,11.58 C38.19,11.02 25.64,1.52 23,0.79 C20.36,0.06 19.67,2.09 23.45,4.31 C27.23,6.53 29.23,8.07 28,8.7 Z' id='_Path_34'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cpath d='M229.4,203.35 C229.4,203.35 211.69,119 164.47,115.1 C117.25,111.2 100.06,207.41 126,267.92 C126,268 176.93,248.34 229.4,203.35 Z' id='_Path_35' fill='%23000000' fill-rule='nonzero'%3E%3C/path%3E %3Cg id='_Group_40' transform='translate(0.000000, 120.000000)' fill-rule='nonzero'%3E %3Crect id='_Path_36' fill='url(%23linearGradient-12)' transform='translate(52.706832, 54.579139) rotate(-48.540000) translate(-52.706832, -54.579139) ' x='2.98183231' y='29.4891389' width='99.45' height='50.18' rx='3.42'%3E%3C/rect%3E %3Cg id='_Group_41' transform='translate(36.000000, 12.000000)'%3E %3Cg id='_Group_42'%3E %3Crect id='_Rectangle_11' fill='url(%23linearGradient-13)' transform='translate(16.998626, 17.921553) rotate(-48.540000) translate(-16.998626, -17.921553) ' x='-4.72137414' y='15.5265528' width='43.44' height='4.79'%3E%3C/rect%3E %3Crect id='_Rectangle_12' fill='url(%23linearGradient-14)' transform='translate(22.810461, 23.414570) rotate(-48.650000) translate(-22.810461, -23.414570) ' x='1.11046057' y='21.0195704' width='43.4' height='4.79'%3E%3C/rect%3E %3Crect id='_Rectangle_13' fill='url(%23linearGradient-15)' transform='translate(28.580059, 28.498339) rotate(-48.650000) translate(-28.580059, -28.498339) ' x='6.88005948' y='26.1033386' width='43.4' height='4.79'%3E%3C/rect%3E %3Crect id='_Rectangle_14' fill='url(%23linearGradient-16)' transform='translate(34.310634, 33.205967) rotate(-48.540000) translate(-34.310634, -33.205967) ' x='12.5906343' y='30.8109673' width='43.44' height='4.79'%3E%3C/rect%3E %3Crect id='_Rectangle_15' fill='url(%23linearGradient-17)' transform='translate(46.016423, 31.581431) rotate(-48.540000) translate(-46.016423, -31.581431) ' x='33.2714225' y='29.1864309' width='25.49' height='4.79'%3E%3C/rect%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_43' transform='translate(27.000000, 49.000000)' fill='%23FADD74'%3E %3Cpath d='M2.61,10.93 C4.37152259,12.4855173 6.89663748,12.8266981 9.00780733,11.7944395 C11.1189772,10.762181 12.4004081,8.55978585 12.2545302,6.21429751 C12.1086522,3.86880918 10.564196,1.84217045 8.34138813,1.07946415 C6.11858022,0.316757858 3.65520156,0.968198644 2.1,2.73 C-0.0232405071,5.13530109 0.205079486,8.80632843 2.61,10.93 Z' id='_Path_37'%3E%3C/path%3E %3C/g%3E %3Cpath d='M20.9,69.78 C22.6595742,71.3378403 25.1843505,71.6822435 27.2968825,70.6525949 C29.4094145,69.6229463 30.6936107,67.422049 30.5505776,65.0763062 C30.4075445,62.7305635 28.8654544,60.7020007 26.6434713,59.9366518 C24.4214882,59.1713029 21.9572616,59.8199136 20.4,61.58 C18.2798754,63.9845618 18.5034294,67.6508464 20.9,69.78 Z' id='_Path_38' fill='%23E6332A'%3E%3C/path%3E %3Cg id='_Group_44' transform='translate(10.000000, 69.000000)' fill='%23FADD74'%3E %3Cpath d='M2.22,10.63 C3.97957419,12.1878403 6.50435047,12.5322435 8.61688247,11.5025949 C10.7294145,10.4729463 12.0136107,8.27204903 11.8705776,5.92630624 C11.7275445,3.58056346 10.1854544,1.5520007 7.9634713,0.786651811 C5.74148824,0.0213029222 3.27726159,0.669913638 1.72,2.43 C-0.400124571,4.8345618 -0.176570629,8.50084645 2.22,10.63 Z' id='_Path_39'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_45' transform='translate(38.000000, 59.000000)' fill='%2334525C'%3E %3Cpath d='M2.31,10.37 C4.70653907,12.4948103 8.37173527,12.2748653 10.4969753,9.87870736 C12.6222154,7.48254941 12.4029278,3.81731382 10.007151,1.69164406 C7.61137427,-0.434025705 3.94609941,-0.215395468 1.82,2.18 C0.795990055,3.32970173 0.272050099,4.83990371 0.363999321,6.37676927 C0.455948542,7.91363484 1.15621436,9.35059374 2.31,10.37 Z' id='_Path_40'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_46' transform='translate(29.000000, 69.000000)' fill='%23FADD74'%3E %3Cpath d='M2.67,10.22 C5.0718481,12.3384679 8.73616288,12.1092629 10.8552995,9.70800473 C12.9744361,7.30674658 12.7462513,3.64236812 10.3455833,1.52256301 C7.94491532,-0.597242103 4.28047347,-0.370077676 2.16,2.03 C1.14095641,3.18341399 0.622137697,4.69456719 0.7177935,6.23068685 C0.813449304,7.76680652 1.51573519,9.20192023 2.67,10.22 Z' id='_Path_41'%3E%3C/path%3E %3C/g%3E %3Cpath d='M22.91,89.07 C24.6707122,90.628372 27.197117,90.9718748 29.3099884,89.9401747 C31.4228599,88.9084747 32.7055925,86.7049974 32.5594573,84.3582389 C32.4133222,82.0114805 30.8671335,79.9841631 28.6425911,79.2225584 C26.4180486,78.4609537 23.9537767,79.1152312 22.4,80.88 C20.2835019,83.2839039 20.5116218,86.9472422 22.91,89.07 Z' id='_Path_42' fill='%23FFFFFF'%3E%3C/path%3E %3Cg id='_Group_47' transform='translate(49.000000, 68.000000)' fill='%23FADD74'%3E %3Cpath d='M2,10.83 C3.76266438,12.3860417 6.2894055,12.7263137 8.40090874,11.6919997 C10.512412,10.6576857 11.7923716,8.45271197 11.6433875,6.10621349 C11.4944035,3.75971501 9.94584969,1.73432943 7.72048793,0.975371956 C5.49512618,0.216414484 3.03171074,0.873521824 1.48,2.64 C0.459631235,3.79353998 -0.0591287289,5.30606215 0.0384568164,6.84303449 C0.136042362,8.38000683 0.841931774,9.81477348 2,10.83 Z' id='_Path_43'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_48' transform='translate(40.000000, 78.000000)' fill='%2334525C'%3E %3Cpath d='M2.32,10.68 C4.08071217,12.238372 6.60711696,12.5818748 8.71998842,11.5501747 C10.8328599,10.5184747 12.1155925,8.31499738 11.9694573,5.96823892 C11.8233222,3.62148046 10.2771335,1.59416307 8.05259106,0.832558401 C5.82804862,0.0709537365 3.36377667,0.725231232 1.81,2.49 C0.790956414,3.64341399 0.272137697,5.15456719 0.3677935,6.69068685 C0.463449304,8.22680652 1.16573519,9.66192023 2.32,10.68 Z' id='_Path_44'%3E%3C/path%3E %3C/g%3E %3Cpath d='M33.61,98.53 C35.3687577,100.090697 37.8948205,100.437427 40.0090549,99.4083424 C42.1232894,98.3792577 43.4087919,96.1772817 43.2655065,93.8302682 C43.1222212,91.4832548 41.5784024,89.454009 39.3546846,88.6897565 C37.1309668,87.925504 34.6658426,88.5769468 33.11,90.34 C32.0897407,91.4921372 31.5691955,93.0025193 31.6629736,94.5386036 C31.7567516,96.0746879 32.457164,97.5105304 33.61,98.53 Z' id='_Path_45' fill='%23FFFFFF'%3E%3C/path%3E %3C/g%3E %3Cg id='_Group_49' transform='translate(67.000000, 126.000000)' fill='%23FFCB9C' fill-rule='nonzero'%3E %3Cg id='_Group_50' transform='translate(14.000000, 33.000000)'%3E %3Cg id='_Group_51'%3E %3Cpath d='M103.11,8.77 C103.11,8.77 106.27,25.44 81.11,52.3 C62.53,72.18 18.33,59.12 0.11,0.06 L12.8,1.28 C12.8,1.28 28.39,22.12 41.42,28.18 C52.28,33.24 60.06,30.18 65.3,25.04 C70.0242032,20.3472676 72.407621,13.7910354 71.8,7.16 L103.11,8.77 Z' id='_Path_46'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_52'%3E %3Cpath d='M22.38,24 C22.38,24 13.83,2.6 12.38,1.13 C10.93,-0.34 9.07,1.51 10.72,5.13 C12.1484845,8.63374678 13.3542186,12.2242292 14.33,15.88 C14.33,15.88 7.67,2.67 6.33,2.33 C4.99,1.99 3.65,3.44 5.1,5.69 C6.55,7.94 10.93,17.92 10.93,17.92 C10.93,17.92 5.49,10.46 3.63,8.82 C1.77,7.18 1.99,10.75 3.5,12.75 C5.01,14.75 8.93,21.75 8.93,21.75 C8.93,21.75 3.44,17.21 1.99,17.07 C0.54,16.93 0.68,18.07 1.39,18.97 C2.1,19.87 9.95,26.12 9.95,26.12 C9.95,26.12 13.04,35.12 18.95,36.85 C24.86,38.58 26.89,35.56 26.85,34.56 C26.81,33.56 26.67,17.89 25.67,15.35 C24.67,12.81 22.61,13.5 23.17,17.85 C23.73,22.2 23.63,24.57 22.38,24 Z' id='_Path_47'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cg id='_Group_53' transform='translate(109.000000, 0.000000)'%3E %3Ccircle id='_Path_48' fill='%23191919' fill-rule='nonzero' cx='42.99' cy='23.4' r='23.4'%3E%3C/circle%3E %3Ccircle id='_Path_49' fill='%23191919' fill-rule='nonzero' cx='30.96' cy='46.87' r='14.66'%3E%3C/circle%3E %3Ccircle id='_Path_50' fill='%23191919' fill-rule='nonzero' transform='translate(62.672542, 47.532505) rotate(-80.780000) translate(-62.672542, -47.532505) ' cx='62.6725416' cy='47.5325054' r='19.89'%3E%3C/circle%3E %3Cg id='_Group_54' transform='translate(0.000000, 30.000000)'%3E %3Cg id='_Group_55'%3E %3Cpath d='M6.83,47 C7.33,58.76 10.26,69.38 27.9,77.33 C27.9,77.33 36.96,86.42 34.31,98.91 C31.66,111.4 65.83,110.46 60.7,93.24 C55.57,76.02 64.07,56.13 70.25,44.83 C76.43,33.53 73.88,10 59.64,2.3 C54.08,-0.7 40.19,0.66 31.07,5.08 C15.75,12.65 6.11,29.93 6.83,47 Z' id='_Path_51' fill='%23FFCB9C' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M66.73,34.7 C69.3708619,32.7175404 72.7457166,31.9870524 75.97,32.7 C81.09,34.09 81.97,52.7 69.97,56 C57.97,59.3 62.31,47.53 62.31,47.53 L66.73,34.7 Z' id='_Path_52' fill='%23FFCB9C' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M6.2,45 C6.66049562,45.0664313 7.12478743,45.1031738 7.59,45.11 C8.53477632,45.1201603 9.4745387,44.9714209 10.37,44.67 C14.37,46.67 21.18,48.84 27.93,45.35 C38.38,39.9 47.63,39.11 52.51,41.49 C60.84,45.57 70.57,43.38 73.35,30.37 C73.35,30.37 74.53,40.67 68.15,46.06 C61.77,51.45 61.5,60 62.5,67 C63.5,74 68.5,82 62.08,90.83 C55.66,99.66 45.19,90.83 37.32,92.94 C29.45,95.05 12.12,97.27 8.5,82.94 C4.88,68.61 9.57,63.27 8.5,57.34 C7.59,52.38 5.59,49.37 6.2,45 Z' id='_Path_53' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cg id='_Group_56' transform='translate(15.000000, 49.000000)' fill='url(%23linearGradient-18)' fill-rule='nonzero'%3E %3Cg id='_Group_57'%3E %3Cpath d='M15.86,3 C17.3164426,1.77144179 19.0224757,0.874068394 20.86,0.37 C23.31,-0.09 25.86,0.37 26.86,3.37 C27.86,6.37 25.29,9.18 21.94,11.71 C19.94,13.2 12.86,15.71 8.54,14.49 C4.22,13.27 1.88,12.13 0.54,9.58 C-0.8,7.03 0.84,3.94 2.83,2.79 C4.59125656,1.90897983 6.6753152,1.96145613 8.39,2.93 C10.6584044,4.3910779 13.5646134,4.41831145 15.86,3 Z' id='_Path_54'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cpath d='M37.32,28.67 C37.32,30.67 38.18,32.37 39.24,32.37 C40.3,32.37 41.16,30.71 41.16,28.67 C41.16,26.63 40.3,24.97 39.24,24.97 C38.18,24.97 37.32,26.63 37.32,28.67 Z' id='_Path_55' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M16.44,31.13 C16.44,33.13 17.3,34.84 18.36,34.84 C19.42,34.84 20.28,33.17 20.28,31.13 C20.28,29.09 19.42,27.43 18.36,27.43 C17.3,27.43 16.44,29 16.44,31.13 Z' id='_Path_56' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M3.24,28.67 C3.24002744,33.4462886 6.11935236,37.7515058 10.5336229,39.575553 C14.9478935,41.3996003 20.0264069,40.3826893 23.3980141,36.9996141 C26.7696213,33.6165388 27.7692819,28.5346017 25.9302562,24.1265502 C24.0912305,19.7184988 19.7762612,16.8538092 15,16.87 C11.8696319,16.8673438 8.86671213,18.1097015 6.65320681,20.3232068 C4.43970148,22.5367121 3.19734377,25.5396319 3.2,28.67 L3.24,28.67 Z' id='_Path_57' stroke='%231D1D1B' stroke-width='2'%3E%3C/path%3E %3Cpolygon id='_Path_58' fill='%23FF6252' fill-rule='nonzero' points='26.51 18.69 20.28 43.42 33.11 42.02'%3E%3C/polygon%3E %3Ccircle id='_Path_59' stroke='%231D1D1B' stroke-width='2' cx='41.15' cy='26.78' r='11.8'%3E%3C/circle%3E %3Cpath d='M23.89,20.88 L30.96,20.88' id='_Path_60' stroke='%231D1D1B' stroke-width='2'%3E%3C/path%3E %3Cpath d='M52.49,23.58 L74.47,30.45' id='_Path_61' stroke='%231D1D1B' stroke-width='2'%3E%3C/path%3E %3Cpath d='M62.58,48.47 C62.5855206,51.6056697 65.1309825,54.1436748 68.2666549,54.1399961 C71.4023273,54.1363173 73.9418272,51.5923466 73.9399902,48.4566725 C73.9381533,45.3209985 71.3956746,42.7800049 68.26,42.78 C66.7518361,42.7799977 65.3055884,43.379797 64.2400938,44.4471675 C63.1745993,45.5145379 62.5773448,46.9618385 62.58,48.47 Z' id='_Path_62' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M60.64,55.2 C60.64,57.9614237 62.8785763,60.2 65.64,60.2 C68.4014237,60.2 70.64,57.9614237 70.64,55.2 C70.64,52.4385763 68.4014237,50.2 65.64,50.2 C62.8785763,50.2 60.64,52.4385763 60.64,55.2 Z' id='_Path_63' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M58.91,63.08 C58.9019111,65.7907916 60.5280927,68.2393483 63.0298303,69.2832666 C65.531568,70.3271849 68.4158418,69.7607388 70.3369592,67.8482105 C72.2580767,65.9356823 72.8374413,63.0539757 71.8047436,60.5475854 C70.7720459,58.0411952 68.3308006,56.404058 65.62,56.4 C63.8431617,56.3920201 62.1363603,57.0922794 60.8771214,58.3458884 C59.6178824,59.5994973 58.9099821,61.3031437 58.91,63.08 Z' id='_Path_64' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M58.91,73.89 C58.8858008,76.6006576 60.4973564,79.058809 62.9927941,80.1176012 C65.4882318,81.1763935 68.3757877,80.6271756 70.30827,78.7261856 C72.2407522,76.8251957 72.8373359,73.9470526 71.8196842,71.4345567 C70.8020326,68.9220609 68.3706894,67.2703376 65.66,67.25 L65.6,67.25 C61.9246535,67.2498973 58.937469,70.2147561 58.91,73.89 Z' id='_Path_65' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M55.88,85.78 C55.875954,88.4908034 57.5057889,90.9369339 60.0090843,91.9771181 C62.5123798,93.0173024 65.3958079,92.4465498 67.3140685,90.5311523 C69.2323291,88.6157548 69.8073879,85.7331824 68.7709438,83.2283361 C67.7344998,80.7234897 65.2908064,79.090003 62.58,79.09 C58.8835939,79.0899959 55.885517,82.083598 55.88,85.78 Z' id='_Path_66' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M48.2,93.13 C48.195954,95.8408034 49.8257889,98.2869339 52.3290843,99.3271181 C54.8323798,100.367302 57.7158079,99.7965498 59.6340685,97.8811523 C61.5523291,95.9657548 62.1273879,93.0831824 61.0909438,90.5783361 C60.0544998,88.0734897 57.6108064,86.440003 54.9,86.44 C53.1239697,86.4373452 51.4197719,87.1410104 50.1629898,88.3959166 C48.9062078,89.6508228 48.199998,91.3539677 48.2,93.13 Z' id='_Path_67' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M35.42,92.47 C35.4144956,96.1689972 38.4076827,99.1726053 42.1066767,99.1799569 C45.8056707,99.1873085 48.8107731,96.1956216 48.8199719,92.4966318 C48.8291706,88.7976419 45.8389848,85.7910459 42.14,85.78 C40.3613183,85.7746885 38.6535217,86.4768612 37.3929877,87.7317679 C36.1324536,88.9866745 35.4226468,90.6913123 35.42,92.47 Z' id='_Path_68' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Ccircle id='_Path_69' fill='%23191919' fill-rule='nonzero' cx='29.52' cy='94.9' r='6.7'%3E%3C/circle%3E %3Cpath d='M10.19,91 C10.1844813,94.7003018 13.1796933,97.7044636 16.879995,97.7099851 C20.5802968,97.7155065 23.5844609,94.7202968 23.5899851,91.019995 C23.5955093,87.3196932 20.6003018,84.315527 16.9,84.31 C15.1230489,84.3073459 13.417823,85.0106925 12.1594535,86.2653113 C10.9010839,87.5199301 10.1926502,89.2230489 10.19,91 Z' id='_Path_70' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M4,81.52 C4.00000302,84.2308064 5.63348973,86.6744998 8.13833605,87.7109438 C10.6431824,88.7473879 13.5257548,88.1723291 15.4411523,86.2540685 C17.3565498,84.3358079 17.9273024,81.4523798 16.8871181,78.9490843 C15.8469339,76.4457889 13.4008034,74.815954 10.69,74.82 C8.91396771,74.819998 7.21082281,75.5262078 5.95591659,76.7829898 C4.70101036,78.0397719 3.99734524,79.7439697 4,81.52 Z' id='_Path_71' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Ccircle id='_Path_72' fill='%23191919' fill-rule='nonzero' cx='6.79' cy='69.72' r='6.7'%3E%3C/circle%3E %3Cpath d='M1,58.29 C1.00000302,61.0008064 2.63348973,63.4444998 5.13833605,64.4809438 C7.64318238,65.5173879 10.5257548,64.9423291 12.4411523,63.0240685 C14.3565498,61.1058079 14.9273024,58.2223798 13.8871181,55.7190843 C12.8469339,53.2157889 10.4008034,51.585954 7.69,51.59 C5.91835324,51.5873458 4.21821438,52.2885854 2.96359558,53.5394534 C1.70897678,54.7903215 1.00265018,56.4883532 1,58.26 L1,58.29 Z' id='_Path_73' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3Cpath d='M0.63,50.19 C0.426077522,52.8994422 1.87626488,55.4644225 4.30301018,56.686539 C6.72975548,57.9086555 9.65398455,57.5466449 11.7094484,55.7696447 C13.7649123,53.9926445 14.5458331,51.1514599 13.6873514,48.57354 C12.8288698,45.9956202 10.5004623,44.1898833 7.79,44 L7.31,44 C3.76231185,43.8815463 0.781640681,46.6435754 0.63,50.19 Z' id='_Path_74' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3Cpath d='M71.72,65.42 C71.72,65.42 75.32,37.51 50.16,38.64 C33.57,39.36 27.16,41.05 21.71,34.05 C16.26,27.05 20.57,3.49 43.34,3.38 C66.11,3.27 65.76,29.77 65.76,29.77 C65.76,29.77 87,38.3 73.47,62.63 L71.72,65.42 Z' id='_Path_75' fill='%23191919' fill-rule='nonzero'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/g%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/pinterest.svg":
+/*!*******************************!*\
+  !*** ./src/img/pinterest.svg ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='26px' height='26px' viewBox='0 0 26 26' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Epinterest%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='pinterest' fill='%23FFFFFF' fill-rule='nonzero'%3E %3Cpath d='M19.48,0 L6.5,0 C2.90919977,0.0164928064 0.00546111025,2.92916605 0,6.52 L0,19.52 C0.0273388392,23.0952131 2.92471965,25.9836789 6.5,26 L19.5,26 C23.0908002,25.9835072 25.9945389,23.0708339 26,19.48 L26,6.48 C25.9725685,2.89701754 23.0630834,0.00538210981 19.48,0 Z M14.3,16.61 C13.3922361,16.6221996 12.5348986,16.1935309 12,15.46 C12,15.46 11.44,17.6 11.32,18.01 C10.9217186,19.1231301 10.3329528,20.1585458 9.58,21.07 C9.56067003,21.1445584 9.48455844,21.18933 9.41,21.17 C9.33544156,21.15067 9.29067003,21.0745584 9.31,21 C9.11363262,19.8248132 9.11363262,18.6251868 9.31,17.45 C9.49,16.68 10.55,12.37 10.55,12.37 C10.3416799,11.9116819 10.2358855,11.413424 10.24,10.91 C10.24,9.52 11.06,8.49 12.09,8.49 C12.45579,8.47941767 12.8083672,8.62713527 13.0573736,8.89529597 C13.3063799,9.16345668 13.4276118,9.52599494 13.39,9.89 C13.2081478,11.0159435 12.9270523,12.1235937 12.55,13.2 C12.4342718,13.6566014 12.54755,14.1409651 12.8537706,14.4988852 C13.1599911,14.8568053 13.62099,15.0436746 14.09,15 C15.91,15 17.15,12.73 17.15,10.05 C17.15,8.05 15.72,6.48 13.15,6.48 C11.9200004,6.40863989 10.714718,6.84585185 9.81652758,7.68920538 C8.91833715,8.53255892 8.40616379,9.70794755 8.4,10.94 C8.36538152,11.6034004 8.57930964,12.2558812 9,12.77 C9.15667616,12.8932016 9.21364218,13.1047896 9.14,13.29 C9.14,13.45 9,13.87 8.94,14.03 C8.92057673,14.133319 8.85308778,14.2212013 8.75828084,14.2666296 C8.6634739,14.3120579 8.55269494,14.3095957 8.46,14.26 C7.11190535,13.6058248 6.31384622,12.1812892 6.46,10.69 C6.46,8.05 8.77,4.87 13.33,4.87 C17.01,4.87 19.42,7.45 19.42,10.21 C19.48,13.89 17.4,16.61 14.3,16.61 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/twitter.svg":
+/*!*****************************!*\
+  !*** ./src/img/twitter.svg ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='26px' height='26px' viewBox='0 0 26 26' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Etwitter%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='twitter' fill='%23FFFFFF' fill-rule='nonzero'%3E %3Cpath d='M19.46,7.28306304e-16 L6.52,7.28306304e-16 C2.92138684,0.00550668626 0.00550668626,2.92138684 0,6.52 L0,19.52 C0.0274315433,23.1029825 2.93691658,25.9946179 6.52,26 L19.52,26 C23.1107807,25.9725091 26.0056043,23.0508815 26,19.46 L26,6.52 C25.9780675,2.92042909 23.0596212,0.0109076877 19.46,7.28306304e-16 Z M19.46,9.73 L19.46,10.16 C19.4602817,12.6562666 18.4591612,15.048311 16.680925,16.8002308 C14.9026889,18.5521506 12.4959849,19.5174976 10,19.48 C8.19000448,19.4867595 6.41622306,18.9730224 4.89,18 C5.15,18 5.4,18 5.67,18 C7.16223419,18.0132772 8.61479321,17.5196892 9.79,16.6 C8.37561454,16.5831002 7.12725167,15.6719157 6.68,14.33 C6.88427783,14.3697436 7.09189196,14.3898353 7.3,14.39 C7.60084102,14.3921681 7.90047618,14.3517678 8.19,14.27 C6.66427306,13.9526392 5.57050009,12.6083839 5.57,11.05 C6.0217923,11.3070617 6.53033511,11.4479418 7.05,11.46 C5.59406692,10.5233733 5.13165333,8.60765978 6,7.11 C7.7046071,9.15917995 10.1880503,10.4027143 12.85,10.54 C12.7856439,10.2953301 12.7553582,10.0429497 12.76,9.79 C12.7652348,8.91217787 13.1210623,8.07285034 13.7483257,7.45873325 C14.375589,6.84461615 15.2222639,6.50664339 16.1,6.52 C17.01496,6.51037738 17.8949546,6.87103093 18.54,7.52 C19.2825303,7.37679112 19.9936288,7.1025103 20.64,6.71 C20.3847923,7.47073445 19.86727,8.11586494 19.18,8.53 C19.8393074,8.44842923 20.4829326,8.26983166 21.09,8 C20.6493718,8.67188324 20.0902844,9.25807788 19.44,9.73 L19.46,9.73 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/upload.svg":
+/*!****************************!*\
+  !*** ./src/img/upload.svg ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/svg+xml,%3C?xml version='1.0' encoding='UTF-8'?%3E %3Csvg width='20px' height='24px' viewBox='0 0 20 24' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E %3C!-- Generator: Sketch 50.2 (55047) - http://www.bohemiancoding.com/sketch --%3E %3Ctitle%3Eupload%3C/title%3E %3Cdesc%3ECreated with Sketch.%3C/desc%3E %3Cdefs%3E%3C/defs%3E %3Cg id='Page-1' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E %3Cg id='upload' fill='%23EF6C00' fill-rule='nonzero'%3E %3Cpath d='M18.12,14.2 C18.0551642,14.222096 17.9848358,14.222096 17.92,14.2 C17.86,14.2 17.81,14.2 17.78,14.31 C17.75,14.42 17.71,14.43 17.69,14.43 C17.67,14.43 17.69,14.49 17.69,14.61 L17.69,14.79 L17.69,19.56 C17.6847889,20.2177137 17.4164079,20.8459493 16.9447897,21.3044148 C16.4731715,21.7628804 15.837598,22.0133892 15.18,22 L4.41,22 C3.75845014,22.0102355 3.13190144,21.7494753 2.68,21.28 C2.23532929,20.8310068 1.99022381,20.2218476 2,19.59 L2,14.69 C2.00654693,14.5778048 1.97087459,14.4672205 1.9,14.38 C1.82129123,14.2955515 1.71478409,14.2422979 1.6,14.23 C1.48132462,14.2048911 1.3610262,14.188183 1.24,14.18 L0.49,14.18 C0.360349482,14.1786835 0.236431451,14.2333533 0.15,14.33 C0.0544088005,14.4171944 -4.1366484e-05,14.5406148 2.03938429e-16,14.67 L2.03938429e-16,19.57 C-0.0168652328,20.7430529 0.449651354,21.8713721 1.29,22.69 C2.1052145,23.5377036 3.23397252,24.0116372 4.41,24 L15.18,24 C16.3504191,24.0026631 17.4736678,23.5388946 18.3012812,22.7112812 C19.1288946,21.8836678 19.5926631,20.7604191 19.59,19.59 L19.59,14.69 C19.5965469,14.5778048 19.5608746,14.4672205 19.49,14.38 C19.4144273,14.2914523 19.3061818,14.2373295 19.19,14.23 C19.0713246,14.2048911 18.9510262,14.188183 18.83,14.18 L18.12,14.18 L18.12,14.2 Z' id='Shape'%3E%3C/path%3E %3Cpath d='M9.11,0.29 L0.78,8.62 C0.411745823,9.00629829 0.411745823,9.61370171 0.78,10 C0.956726196,10.1937775 1.20775326,10.3029197 1.47,10.3 L5.88,10.3 L5.88,17.15 C5.88,17.7022847 6.32771525,18.15 6.88,18.15 L12.75,18.15 C13.3022847,18.15 13.75,17.7022847 13.75,17.15 L13.75,10.29 L18.16,10.29 C18.4222467,10.2929197 18.6732738,10.1837775 18.85,9.99 C19.2119426,9.60504999 19.2119426,9.00495001 18.85,8.62 L10.48,0.29 C10.09505,-0.0719425778 9.49495001,-0.0719425778 9.11,0.29 Z' id='Shape'%3E%3C/path%3E %3C/g%3E %3C/g%3E %3C/svg%3E"
+
+/***/ }),
+
+/***/ "./src/img/user-superstar-2x.jpg":
+/*!***************************************!*\
+  !*** ./src/img/user-superstar-2x.jpg ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/user-superstar-2x.jpg";
+
+/***/ }),
+
+/***/ "./src/js/comp/AboutMe.jsx":
+/*!*********************************!*\
+  !*** ./src/js/comp/AboutMe.jsx ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Button = __webpack_require__(/*! ./Button.jsx */ "./src/js/comp/Button.jsx");
+
+var _Button2 = _interopRequireDefault(_Button);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var aboutMe = function aboutMe() {
+	return _react2.default.createElement(
+		'div',
+		{ className: 'about' },
+		_react2.default.createElement('a', { className: 'hrefs', id: 'about' }),
+		_react2.default.createElement(
+			'h1',
+			null,
+			'Let\'s get acquainted'
+		),
+		_react2.default.createElement('img', { alt: 'web developer', src: __webpack_require__(/*! ../../img/man-mobile.svg */ "./src/img/man-mobile.svg") }),
+		_react2.default.createElement(
+			'h2',
+			null,
+			'I am cool frontend developer'
+		),
+		_react2.default.createElement(
+			'p',
+			null,
+			'When real users have a slow experience on mobile, they\'re much less likely to find what they are looking for or purchase from you in the future. For many sites this equates to a huge missed opportunity, especially when more than half of visits are abandoned if a mobile page takes over 3 seconds to load.'
+		),
+		_react2.default.createElement(
+			'p',
+			null,
+			'Last week, Google Search and Ads teamsannounced two new speed initiatives to help improve user-experience on the web.'
+		),
+		_react2.default.createElement(
+			'a',
+			{ href: '#registration' },
+			_react2.default.createElement(
+				_Button2.default,
+				null,
+				'Sign Up'
+			)
+		)
+	);
+};
+
+exports.default = aboutMe;
 
 /***/ }),
 
@@ -23485,6 +23680,7 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAaCAYAAAC3
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.logo = undefined;
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -23492,13 +23688,33 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _transactions_card = __webpack_require__(/*! ../transactions_card.json */ "./src/js/transactions_card.json");
+var _Header = __webpack_require__(/*! ./Header.jsx */ "./src/js/comp/Header.jsx");
 
-var _transactions_card2 = _interopRequireDefault(_transactions_card);
+var _Header2 = _interopRequireDefault(_Header);
 
-var _Transactions = __webpack_require__(/*! ./Transactions.jsx */ "./src/js/comp/Transactions.jsx");
+var _AboutMe = __webpack_require__(/*! ./AboutMe.jsx */ "./src/js/comp/AboutMe.jsx");
 
-var _Transactions2 = _interopRequireDefault(_Transactions);
+var _AboutMe2 = _interopRequireDefault(_AboutMe);
+
+var _Relationship = __webpack_require__(/*! ./Relationship.jsx */ "./src/js/comp/Relationship.jsx");
+
+var _Relationship2 = _interopRequireDefault(_Relationship);
+
+var _Requirements = __webpack_require__(/*! ./Requirements.jsx */ "./src/js/comp/Requirements.jsx");
+
+var _Requirements2 = _interopRequireDefault(_Requirements);
+
+var _Users = __webpack_require__(/*! ./Users.jsx */ "./src/js/comp/Users.jsx");
+
+var _Users2 = _interopRequireDefault(_Users);
+
+var _Registration = __webpack_require__(/*! ./Registration.jsx */ "./src/js/comp/Registration.jsx");
+
+var _Registration2 = _interopRequireDefault(_Registration);
+
+var _Footer = __webpack_require__(/*! ./Footer.jsx */ "./src/js/comp/Footer.jsx");
+
+var _Footer2 = _interopRequireDefault(_Footer);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23508,6 +23724,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+var logo = _react2.default.createElement('img', { alt: 'ABZ logo', className: 'logo', src: __webpack_require__(/*! ../../img/logo.svg */ "./src/img/logo.svg") });
+
 var App = function (_React$Component) {
 	_inherits(App, _React$Component);
 
@@ -23516,76 +23734,27 @@ var App = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-		_this.arr = [];
+		_this.state = {};
 		return _this;
 	}
 
 	_createClass(App, [{
 		key: 'render',
 		value: function render() {
-			var _this2 = this;
-
-			var db = _transactions_card2.default.data;
 			return _react2.default.createElement(
 				'div',
-				{ className: 'wrapper' },
+				null,
+				_react2.default.createElement(_Header2.default, null),
 				_react2.default.createElement(
-					'nav',
+					'main',
 					null,
-					'My card'
+					_react2.default.createElement(_AboutMe2.default, null),
+					_react2.default.createElement(_Relationship2.default, null),
+					_react2.default.createElement(_Requirements2.default, null),
+					_react2.default.createElement(_Users2.default, null),
+					_react2.default.createElement(_Registration2.default, null)
 				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'card' },
-					_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/1_objects.png */ "./src/img/1_objects.png") }),
-					_react2.default.createElement(
-						'div',
-						null,
-						'Reissue my',
-						_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/lock.png */ "./src/img/lock.png") })
-					)
-				),
-				_react2.default.createElement(
-					'ul',
-					{ className: 'nav-transfer' },
-					_react2.default.createElement(
-						'li',
-						null,
-						'Last'
-					),
-					_react2.default.createElement(
-						'li',
-						null,
-						'Details'
-					),
-					_react2.default.createElement(
-						'li',
-						null,
-						'Transfer'
-					)
-				),
-				_react2.default.createElement(
-					'ul',
-					{ className: 'history' },
-					db.map(function (i, n, arr) {
-						if (n == 0) {
-							_this2.arr.push(i);return null;
-						};
-						if (new Date(i.dateTime).getDate() == new Date(arr[n - 1].dateTime).getDate()) {
-							_this2.arr.push(i);return null;
-						};
-						var auxiliaryArr = _this2.arr;
-						_this2.arr = [];_this2.arr.push(i);
-						return _react2.default.createElement(_Transactions2.default, { key: i.id, data: auxiliaryArr });
-					})
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'floating-button' },
-					_react2.default.createElement('div', null),
-					_react2.default.createElement('div', null),
-					_react2.default.createElement('div', null)
-				)
+				_react2.default.createElement(_Footer2.default, null)
 			);
 		}
 	}]);
@@ -23594,13 +23763,48 @@ var App = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = App;
+;
+
+exports.logo = logo;
 
 /***/ }),
 
-/***/ "./src/js/comp/Transaction.jsx":
-/*!*************************************!*\
-  !*** ./src/js/comp/Transaction.jsx ***!
-  \*************************************/
+/***/ "./src/js/comp/Button.jsx":
+/*!********************************!*\
+  !*** ./src/js/comp/Button.jsx ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Button = function Button(props) {
+	return _react2.default.createElement(
+		'button',
+		{ disabled: props.disabled },
+		props.children
+	);
+};
+
+exports.default = Button;
+
+/***/ }),
+
+/***/ "./src/js/comp/Footer.jsx":
+/*!********************************!*\
+  !*** ./src/js/comp/Footer.jsx ***!
+  \********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -23617,6 +23821,12 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _App = __webpack_require__(/*! ./App.jsx */ "./src/js/comp/App.jsx");
+
+var _Navigation = __webpack_require__(/*! ./Navigation.jsx */ "./src/js/comp/Navigation.jsx");
+
+var _Navigation2 = _interopRequireDefault(_Navigation);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -23625,80 +23835,354 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Transaction = function (_React$Component) {
-	_inherits(Transaction, _React$Component);
+var Footer = function (_React$Component) {
+	_inherits(Footer, _React$Component);
 
-	function Transaction(props) {
-		_classCallCheck(this, Transaction);
+	function Footer(props) {
+		_classCallCheck(this, Footer);
 
-		var _this = _possibleConstructorReturn(this, (Transaction.__proto__ || Object.getPrototypeOf(Transaction)).call(this, props));
+		var _this = _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).call(this, props));
 
 		_this.state = {};
 		return _this;
 	}
 
-	_createClass(Transaction, [{
+	_createClass(Footer, [{
 		key: 'render',
 		value: function render() {
-			var data = this.props.data;
 			return _react2.default.createElement(
-				'div',
-				{ className: 'transaction' },
+				'footer',
+				null,
+				_react2.default.createElement(
+					'div',
+					null,
+					_App.logo,
+					_react2.default.createElement(_Navigation2.default, null)
+				),
+				_react2.default.createElement('div', { className: 'hr' }),
 				_react2.default.createElement(
 					'div',
 					null,
 					_react2.default.createElement(
 						'div',
-						{ className: 'shape' },
-						_react2.default.createElement('img', { src: __webpack_require__("./src/img sync recursive ^\\.\\/.*\\.png$")("./" + (data.type == 'SPECIAL' ? 'arrow-up' : 'arrow-down') + ".png") })
+						{ className: 'contacts' },
+						_react2.default.createElement(
+							'div',
+							null,
+							'work.of.future@gmail.com'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							'+38 (050) 789 24 98'
+						),
+						_react2.default.createElement(
+							'div',
+							null,
+							'+38 (095) 556 08 45'
+						)
+					),
+					_react2.default.createElement(
+						'ul',
+						null,
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'a',
+								{ href: '#' },
+								_react2.default.createElement('img', { alt: 'facebook', src: __webpack_require__(/*! ../../img/facebook.svg */ "./src/img/facebook.svg") })
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'a',
+								{ href: '#' },
+								_react2.default.createElement('img', { alt: 'linkedin', src: __webpack_require__(/*! ../../img/linkedin.svg */ "./src/img/linkedin.svg") })
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'a',
+								{ href: '#' },
+								_react2.default.createElement('img', { alt: 'instagram', src: __webpack_require__(/*! ../../img/instagram.svg */ "./src/img/instagram.svg") })
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'a',
+								{ href: '#' },
+								_react2.default.createElement('img', { alt: 'twitter', src: __webpack_require__(/*! ../../img/twitter.svg */ "./src/img/twitter.svg") })
+							)
+						),
+						_react2.default.createElement(
+							'li',
+							null,
+							_react2.default.createElement(
+								'a',
+								{ href: '#' },
+								_react2.default.createElement('img', { alt: 'pinterest', src: __webpack_require__(/*! ../../img/pinterest.svg */ "./src/img/pinterest.svg") })
+							)
+						)
 					),
 					_react2.default.createElement(
 						'div',
-						{ className: 'time' },
-						new Date(data.dateTime).toLocaleString("en-us", { hour: "2-digit", minute: "numeric" })
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'description' },
-					_react2.default.createElement(
-						'div',
-						null,
-						data.description
-					),
-					_react2.default.createElement(
-						'span',
-						null,
-						'#9004567896'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'amount' },
-					data.amount < 0 ? '-' : null,
-					data.currency == 'USD' ? '$' : '₴',
-					Number.parseInt(data.amount < 0 ? data.amount * -1 : data.amount),
-					'.',
-					_react2.default.createElement(
-						'span',
-						null,
-						data.amount.toFixed(2).slice(-2)
+						{ className: 'tm' },
+						'\xA9abz.agency specially for the best task'
 					)
 				)
 			);
 		}
 	}]);
 
-	return Transaction;
+	return Footer;
 }(_react2.default.Component);
 
-exports.default = Transaction;
+exports.default = Footer;
 
 /***/ }),
 
-/***/ "./src/js/comp/Transactions.jsx":
+/***/ "./src/js/comp/Header.jsx":
+/*!********************************!*\
+  !*** ./src/js/comp/Header.jsx ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Button = __webpack_require__(/*! ./Button.jsx */ "./src/js/comp/Button.jsx");
+
+var _Button2 = _interopRequireDefault(_Button);
+
+var _Navigation = __webpack_require__(/*! ./Navigation.jsx */ "./src/js/comp/Navigation.jsx");
+
+var _Navigation2 = _interopRequireDefault(_Navigation);
+
+var _App = __webpack_require__(/*! ./App.jsx */ "./src/js/comp/App.jsx");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Header = function (_React$Component) {
+	_inherits(Header, _React$Component);
+
+	function Header(props) {
+		_classCallCheck(this, Header);
+
+		var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
+
+		_this.state = {
+			user: {}
+		};
+		_this.burger = _react2.default.createRef();
+		return _this;
+	}
+
+	_createClass(Header, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users/1').then(function (res) {
+				return res.json();
+			}).then(function (res) {
+				_this2.setState({ user: res.user });
+			});
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this3 = this;
+
+			return _react2.default.createElement(
+				'header',
+				null,
+				_react2.default.createElement(
+					'aside',
+					null,
+					_App.logo,
+					_react2.default.createElement(
+						'div',
+						{ className: 'nav', ref: this.burger },
+						_react2.default.createElement(
+							'div',
+							{ className: 'cabinet' },
+							_react2.default.createElement('img', { alt: 'my profile photo', src: this.state.user.photo || null }),
+							_react2.default.createElement(
+								'div',
+								{ className: 'cabinet-user' },
+								this.state.user.name || 'loading..'
+							),
+							_react2.default.createElement(
+								'div',
+								{ className: 'cabinet-mail' },
+								this.state.user.email || 'loading..'
+							)
+						),
+						_react2.default.createElement(
+							'div',
+							{ style: { display: 'inline-block' },
+								onClick: function onClick() {
+									return _this3.burger.current.classList.toggle('active');
+								} },
+							_react2.default.createElement(_Navigation2.default, null)
+						)
+					),
+					_react2.default.createElement('img', { alt: 'burger', className: 'burger', src: __webpack_require__(/*! ../../img/line-menu.svg */ "./src/img/line-menu.svg"),
+						onClick: function onClick() {
+							return _this3.burger.current.classList.toggle('active');
+						}
+					})
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'title' },
+					_react2.default.createElement(
+						'h2',
+						null,
+						'Test assigment for Frontend Developer position'
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						'We kindly remind you that your test assignment should be submitted as a link to github/bitbucket repository.'
+					),
+					_react2.default.createElement(
+						'a',
+						{ href: '#registration' },
+						_react2.default.createElement(
+							_Button2.default,
+							null,
+							'Sign Up'
+						)
+					)
+				)
+			);
+		}
+	}]);
+
+	return Header;
+}(_react2.default.Component);
+
+exports.default = Header;
+
+/***/ }),
+
+/***/ "./src/js/comp/Navigation.jsx":
+/*!************************************!*\
+  !*** ./src/js/comp/Navigation.jsx ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Navigation = function Navigation() {
+	return _react2.default.createElement(
+		'nav',
+		null,
+		_react2.default.createElement(
+			'ul',
+			null,
+			_react2.default.createElement(
+				'li',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ href: '#about' },
+					'About me'
+				)
+			),
+			_react2.default.createElement(
+				'li',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ href: '#relationship' },
+					'Relationship'
+				)
+			),
+			_react2.default.createElement(
+				'li',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ href: '#requirements' },
+					'Requirements'
+				)
+			),
+			_react2.default.createElement(
+				'li',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ href: '#users' },
+					'Users'
+				)
+			),
+			_react2.default.createElement(
+				'li',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ href: '#registration' },
+					'Sign Up'
+				)
+			),
+			_react2.default.createElement(
+				'li',
+				null,
+				_react2.default.createElement(
+					'a',
+					{ href: '#' },
+					'Sign Out'
+				)
+			)
+		)
+	);
+};
+
+exports.default = Navigation;
+
+/***/ }),
+
+/***/ "./src/js/comp/Registration.jsx":
 /*!**************************************!*\
-  !*** ./src/js/comp/Transactions.jsx ***!
+  !*** ./src/js/comp/Registration.jsx ***!
   \**************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
@@ -23716,9 +24200,9 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
-var _Transaction = __webpack_require__(/*! ./Transaction.jsx */ "./src/js/comp/Transaction.jsx");
+var _Button = __webpack_require__(/*! ./Button.jsx */ "./src/js/comp/Button.jsx");
 
-var _Transaction2 = _interopRequireDefault(_Transaction);
+var _Button2 = _interopRequireDefault(_Button);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23728,42 +24212,473 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var Transactions = function (_React$Component) {
-	_inherits(Transactions, _React$Component);
+var Registration = function (_React$Component) {
+	_inherits(Registration, _React$Component);
 
-	function Transactions(props) {
-		_classCallCheck(this, Transactions);
+	function Registration(props) {
+		_classCallCheck(this, Registration);
 
-		var _this = _possibleConstructorReturn(this, (Transactions.__proto__ || Object.getPrototypeOf(Transactions)).call(this, props));
+		var _this = _possibleConstructorReturn(this, (Registration.__proto__ || Object.getPrototypeOf(Registration)).call(this, props));
 
-		_this.state = {};
+		_this.state = {
+			positions: [],
+			disabled: true,
+			form: {
+				name: false,
+				email: false,
+				phone: false,
+				// position_id: false,
+				photo: false
+			}
+		};
+		_this.toSubmit = _this.toSubmit.bind(_this);
+		_this.toCheckForm = _this.toCheckForm.bind(_this);
 		return _this;
 	}
 
-	_createClass(Transactions, [{
+	_createClass(Registration, [{
+		key: 'toSubmit',
+		value: function toSubmit(e) {
+			e.preventDefault();
+			console.log('test');
+			// fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users');
+		}
+	}, {
+		key: 'toCheckForm',
+		value: function toCheckForm(e) {
+			var trg = e.target;
+			switch (trg.placeholder) {
+				case 'Your name':
+					if (trg.value.length <= 2) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { name: false }) });
+					trg.parentElement.className = 'well';
+					this.setState({ form: Object.assign(this.state.form, { name: trg.value }) });
+					break;
+				case 'Your email':
+					if (!/[\w\d\.]+\@[\w\d]+\.[\w\d]+/i.test(trg.value)) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { email: false }) });
+					trg.parentElement.className = 'well';
+					this.setState({ form: Object.assign(this.state.form, { email: trg.value }) });
+					break;
+				case '+38(___)___ __ __':
+					if (!/^\+380\d{9}$/.test(trg.value)) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { phone: false }) });
+					trg.parentElement.className = 'well';
+					this.setState({ form: Object.assign(this.state.form, { phone: trg.value }) });
+					break;
+				case 'Upload your photo':
+					if (trg.files.length == 1 && /\image\/\jpeg|\jpg/i.test(trg.files[0].type) && trg.files[0].size < 5000000) return trg.parentElement.className = 'well', this.setState({ form: Object.assign(this.state.form, { photo: trg.files[0] }) });
+					trg.parentElement.className = 'error';
+					this.setState({ form: Object.assign(this.state.form, { photo: false }) });;
+					break;
+				default:
+					trg.value == 'Select your position' ? trg.parentElement.className = 'error' : trg.parentElement.className = 'well';
+			}
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			var _this2 = this;
+
+			fetch('https://frontend-test-assignment-api.abz.agency/api/v1/positions').then(function (res) {
+				return res.json();
+			}).then(function (res) {
+				_this2.setState({ positions: res.positions });
+			});
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				'li',
-				null,
+				'div',
+				{ className: 'registration' },
+				_react2.default.createElement('a', { className: 'hrefs', id: 'registration' }),
 				_react2.default.createElement(
-					'div',
-					{ className: 'day' },
-					new Date(this.props.data[0].dateTime).getDate(),
-					'\xA0',
-					new Date(this.props.data[0].dateTime).toLocaleString("en-us", { month: "long" })
+					'h1',
+					null,
+					'Register to get a work'
 				),
-				this.props.data.map(function (i, n) {
-					return _react2.default.createElement(_Transaction2.default, { key: n, data: i });
-				})
+				_react2.default.createElement(
+					'h2',
+					null,
+					'Attention! After successfull registration and alert, update the list of users in the block from the top'
+				),
+				_react2.default.createElement(
+					'form',
+					{ onChange: this.toCheckForm },
+					_react2.default.createElement(
+						'label',
+						null,
+						_react2.default.createElement('input', { maxLength: '60', placeholder: 'Your name', type: 'text' })
+					),
+					_react2.default.createElement(
+						'label',
+						null,
+						_react2.default.createElement('input', { placeholder: 'Your email', type: 'text' })
+					),
+					_react2.default.createElement(
+						'label',
+						null,
+						_react2.default.createElement('input', { placeholder: '+38(___)___ __ __', type: 'phone' })
+					),
+					_react2.default.createElement(
+						'label',
+						null,
+						_react2.default.createElement(
+							'select',
+							null,
+							_react2.default.createElement(
+								'option',
+								null,
+								'Select your position'
+							),
+							this.state.positions.map(function (i, n) {
+								return _react2.default.createElement(
+									'option',
+									{ key: n },
+									i.name
+								);
+							})
+						)
+					),
+					_react2.default.createElement(
+						'label',
+						null,
+						_react2.default.createElement('input', { placeholder: 'Upload your photo', type: 'file' }),
+						_react2.default.createElement(
+							'div',
+							null,
+							_react2.default.createElement(
+								'span',
+								null,
+								'Upload your photo'
+							),
+							_react2.default.createElement(
+								'div',
+								null,
+								_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/upload.svg */ "./src/img/upload.svg"), alt: 'upload photo' })
+							)
+						)
+					),
+					_react2.default.createElement(
+						'div',
+						null,
+						_react2.default.createElement(
+							_Button2.default,
+							{ onSubmit: this.toSubmit, disabled: Object.values(this.state.form).some(function (i) {
+									return !i;
+								}) },
+							'Sign Up'
+						)
+					)
+				)
 			);
 		}
 	}]);
 
-	return Transactions;
+	return Registration;
 }(_react2.default.Component);
 
-exports.default = Transactions;
+exports.default = Registration;
+
+/***/ }),
+
+/***/ "./src/js/comp/Relationship.jsx":
+/*!**************************************!*\
+  !*** ./src/js/comp/Relationship.jsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var relationshipDB = [{
+	img: 'html.svg',
+	title: 'I\'m in love with HTML',
+	text: 'Hypertext Markup Language(HTML) is the standard Markup\
+			language for creating web pages and web application'
+}, {
+	img: 'css.svg',
+	title: 'CSS is my best friend',
+	text: 'Cascading Style Sheets (CSS) is a style sheet language\
+			used for describing the presentation of a document written in\
+			a markup language like HTML'
+}, {
+	img: 'javascript.svg',
+	title: 'Javascript is my passion',
+	text: 'JavaScript is a high-level, interpreted programming language.\
+			It is a language which ia also characterized as dynamic, weakly typed,\
+			prototype-based and multi-paradigm.'
+}];
+
+var relationship = function relationship() {
+	return _react2.default.createElement(
+		'div',
+		{ className: 'relationship' },
+		_react2.default.createElement('a', { className: 'hrefs', id: 'relationship' }),
+		_react2.default.createElement(
+			'h1',
+			null,
+			'About my relationships with web-development'
+		),
+		relationshipDB.map(function (i, n) {
+			return _react2.default.createElement(
+				'div',
+				{ key: n },
+				_react2.default.createElement('img', { alt: i.img, src: __webpack_require__("./src/img sync recursive ^\\.\\/.*$")("./" + i.img) }),
+				_react2.default.createElement(
+					'h2',
+					null,
+					i.title
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					i.text
+				)
+			);
+		})
+	);
+};
+
+exports.default = relationship;
+
+/***/ }),
+
+/***/ "./src/js/comp/Requirements.jsx":
+/*!**************************************!*\
+  !*** ./src/js/comp/Requirements.jsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Requirements = function Requirements() {
+	return _react2.default.createElement(
+		'div',
+		{ className: 'requirements' },
+		_react2.default.createElement('a', { className: 'hrefs', id: 'requirements' }),
+		_react2.default.createElement(
+			'h1',
+			null,
+			'General requirements for the test task'
+		),
+		_react2.default.createElement('img', { alt: 'front-end developer', src: __webpack_require__(/*! ../../img/man-laptop-v1.svg */ "./src/img/man-laptop-v1.svg") }),
+		_react2.default.createElement(
+			'p',
+			null,
+			'Users want to find answers to their questions quickly and data shows that people really care about how quickly their pages load. The Search team announced speed would be a ranking signal for desktop searches in 2010 and as of this month (July 2018), pages speed will be a ranking factor for mobile searches too.'
+		),
+		_react2.default.createElement(
+			'p',
+			null,
+			'If you\'re a developer working on a site, now is a good time to evaluate your performance using our speed tools. Think about how performance affects the user experience of your pages and consider measuring a variety of real-world user-centric performance metrics.'
+		),
+		_react2.default.createElement(
+			'p',
+			null,
+			'Are you shipping too much JavaScript? Too many images? Images and JavaScript are the most significant contributors to the page weight thaat affect page load time based on data from HTTP Archive and the Chrome User Experience Report - our public dataset for UX metrics as experienced by Chrome users under real-world conditions.'
+		)
+	);
+};
+
+exports.default = Requirements;
+
+/***/ }),
+
+/***/ "./src/js/comp/User.jsx":
+/*!******************************!*\
+  !*** ./src/js/comp/User.jsx ***!
+  \******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var User = function User(props) {
+	return _react2.default.createElement(
+		'ul',
+		{ className: 'user' },
+		_react2.default.createElement(
+			'li',
+			null,
+			_react2.default.createElement('img', { alt: props.info.name, src: props.info.photo })
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			props.info.name
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			props.info.position
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			props.info.email
+		),
+		_react2.default.createElement(
+			'li',
+			null,
+			props.info.phone
+		)
+	);
+};
+
+exports.default = User;
+
+/***/ }),
+
+/***/ "./src/js/comp/Users.jsx":
+/*!*******************************!*\
+  !*** ./src/js/comp/Users.jsx ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Button = __webpack_require__(/*! ./Button.jsx */ "./src/js/comp/Button.jsx");
+
+var _Button2 = _interopRequireDefault(_Button);
+
+var _User = __webpack_require__(/*! ./User.jsx */ "./src/js/comp/User.jsx");
+
+var _User2 = _interopRequireDefault(_User);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var currentUsers = 'https://frontend-test-assignment-api.abz.agency/api/v1/users?page=1&count=5';
+
+var Users = function (_React$Component) {
+	_inherits(Users, _React$Component);
+
+	function Users(props) {
+		_classCallCheck(this, Users);
+
+		var _this = _possibleConstructorReturn(this, (Users.__proto__ || Object.getPrototypeOf(Users)).call(this, props));
+
+		_this.state = {
+			users: [],
+			nextUrl: 'lalala'
+		};
+		_this.loadUsers = _this.loadUsers.bind(_this);
+		return _this;
+	}
+
+	_createClass(Users, [{
+		key: 'loadUsers',
+		value: function loadUsers(url) {
+			var _this2 = this;
+
+			fetch(url).then(function (res) {
+				return res.json();
+			}).then(function (res) {
+				_this2.setState({
+					users: _this2.state.users.concat(res.users),
+					nextUrl: res.links.next_url
+				});
+			});
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.loadUsers(currentUsers);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this3 = this;
+
+			var users = this.state.users.sort(function (a, b) {
+				return b.registration_timestamp - a.registration_timestamp;
+			});
+			return _react2.default.createElement(
+				'div',
+				{ className: 'users' },
+				_react2.default.createElement('a', { className: 'hrefs', id: 'users' }),
+				_react2.default.createElement(
+					'h1',
+					null,
+					'Our cheerful users'
+				),
+				_react2.default.createElement(
+					'h2',
+					null,
+					'Attention! Sorting users by registration date'
+				),
+				users.map(function (i, n) {
+					return _react2.default.createElement(_User2.default, { info: i, key: i.id });
+				}),
+				this.state.nextUrl && _react2.default.createElement(
+					'div',
+					{ onClick: function onClick() {
+							return _this3.loadUsers(_this3.state.nextUrl);
+						} },
+					_react2.default.createElement(
+						_Button2.default,
+						null,
+						'Show more'
+					)
+				)
+			);
+		}
+	}]);
+
+	return Users;
+}(_react2.default.Component);
+
+exports.default = Users;
 
 /***/ }),
 
@@ -23796,17 +24711,6 @@ var _App2 = _interopRequireDefault(_App);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 _reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.getElementById('root'));
-
-/***/ }),
-
-/***/ "./src/js/transactions_card.json":
-/*!***************************************!*\
-  !*** ./src/js/transactions_card.json ***!
-  \***************************************/
-/*! exports provided: data, default */
-/***/ (function(module) {
-
-module.exports = {"data":[{"id":"9993oND6G9RavIPLdXymybaSy3AXLmBKKHqjNaVW","description":"Uber 072515 SF**POOL**","type":"SPECIAL","status":"POSTED","dateTime":"2018-09-06T19:59:00","amount":-6.33,"currency":"USD","from":"ins_5"},{"id":"999xyJZpgQjoXflNVJ3j3WMTpMK9bgxjjcnzWEKg","description":"Uber 063015 SF**POOL**","type":"SPECIAL","status":"POSTED","dateTime":"2018-08-24T18:48:22","amount":-5.4,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999dBrAqDmLKJud1onD8DP5Sp9r8E5xeecZbA3nr","description":"United Airlines","type":"SPECIAL","status":"POSTED","dateTime":"2018-08-22T18:28:22","amount":500,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999aKlLwBmZA3HZ1AWyeyDEhaoleZjyEET7EG9KG","description":"McDonald's","type":"PLACE","status":"POSTED","dateTime":"2018-08-21T17:18:22","amount":-12,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"9994DPgXaJR4Vck4pZMxMA6fymkZDda33HdvExRN","description":"Starbucks","type":"PLACE","status":"POSTED","dateTime":"2018-08-21T16:43:22","amount":-4.33,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999N693p7rEdnuMXWxNKNRLfg7o8QP9xxIWGN1Al","description":"SparkFun","type":"PLACE","status":"POSTED","dateTime":"2018-08-20T14:08:22","amount":-89.4,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999Z6JG98m4LjuWm4v313GaF1RQ94DrPzfg6vAn8","description":"Uber 072515 SF**POOL**","type":"SPECIAL","status":"POSTED","dateTime":"2018-08-07T18:38:00","amount":-6.33,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999Q6ka8X3qNWuZoqvNdNmEh49LNqkvrxcp5n4rr","description":"Uber 063015 SF**POOL**","type":"SPECIAL","status":"POSTED","dateTime":"2018-07-25T17:57:22","amount":-5.4,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999e3z8KPmprJHQz5J1y1pMi6dely17k5tL4XRyK","description":"United Airlines","type":"SPECIAL","status":"POSTED","dateTime":"2018-07-23T17:37:22","amount":500,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999jNaKxJ8WdgfkLyeV5Voxf8y1jlxZNAt1Vjzoe","description":"McDonald's","type":"PLACE","status":"POSTED","dateTime":"2018-07-22T12:27:22","amount":-12,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"9997meWwa9KjVUbVXgGZGyPhk9EXgPm4BugoaA4a","description":"Starbucks","type":"PLACE","status":"POSTED","dateTime":"2018-07-22T11:52:22","amount":-4.33,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999P6wdgQBl4EuZzlaNJNQdhrlMXAoRKpc7PnBEa","description":"SparkFun","type":"PLACE","status":"POSTED","dateTime":"2018-07-21T17:17:22","amount":-89.4,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999N693p7rEdnuMXWxNKNRLfg7WX8AEnptW4zBLZ","description":"Uber 072515 SF**POOL**","type":"SPECIAL","status":"POSTED","dateTime":"2018-07-08T17:37:00","amount":-6.33,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"9994DPgXaJR4Vck4pZMxMA6fymoXZNBKvSdQKN8r","description":"Uber 063015 SF**POOL**","type":"SPECIAL","status":"POSTED","dateTime":"2018-06-25T16:56:22","amount":-5.4,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999aKlLwBmZA3HZ1AWyeyDEhaogkeX1PDs7BvlpE","description":"United Airlines","type":"SPECIAL","status":"POSTED","dateTime":"2018-06-23T16:36:22","amount":500,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999xyJZpgQjoXflNVJ3j3WMTpMvZ9aJy6Fn3Zpmo","description":"McDonald's","type":"PLACE","status":"POSTED","dateTime":"2018-06-22T16:26:22","amount":-12,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"999dBrAqDmLKJud1onD8DP5Sp97B8VDqoFZjq5ok","description":"Starbucks","type":"PLACE","status":"POSTED","dateTime":"2018-06-22T16:26:22","amount":-4.33,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"},{"id":"9993oND6G9RavIPLdXymybaSy3RkXZz6VSqDLKG1","description":"SparkFun","type":"PLACE","status":"POSTED","dateTime":"2018-06-21T16:16:22","amount":-89.4,"currency":"USD","from":"Z6JG98m4LjuWm4v313GaF1RmLodGvLIg6vA6k"}]};
 
 /***/ }),
 
