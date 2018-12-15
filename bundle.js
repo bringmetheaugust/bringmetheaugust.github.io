@@ -23742,7 +23742,7 @@ var App = function (_React$Component) {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
-				'div',
+				_react2.default.Fragment,
 				null,
 				_react2.default.createElement(_Header2.default, null),
 				_react2.default.createElement(
@@ -24227,7 +24227,7 @@ var Registration = function (_React$Component) {
 				name: false,
 				email: false,
 				phone: false,
-				// position_id: false,
+				position_id: false,
 				photo: false
 			}
 		};
@@ -24237,42 +24237,6 @@ var Registration = function (_React$Component) {
 	}
 
 	_createClass(Registration, [{
-		key: 'toSubmit',
-		value: function toSubmit(e) {
-			e.preventDefault();
-			console.log('test');
-			// fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users');
-		}
-	}, {
-		key: 'toCheckForm',
-		value: function toCheckForm(e) {
-			var trg = e.target;
-			switch (trg.placeholder) {
-				case 'Your name':
-					if (trg.value.length <= 2) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { name: false }) });
-					trg.parentElement.className = 'well';
-					this.setState({ form: Object.assign(this.state.form, { name: trg.value }) });
-					break;
-				case 'Your email':
-					if (!/[\w\d\.]+\@[\w\d]+\.[\w\d]+/i.test(trg.value)) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { email: false }) });
-					trg.parentElement.className = 'well';
-					this.setState({ form: Object.assign(this.state.form, { email: trg.value }) });
-					break;
-				case '+38(___)___ __ __':
-					if (!/^\+380\d{9}$/.test(trg.value)) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { phone: false }) });
-					trg.parentElement.className = 'well';
-					this.setState({ form: Object.assign(this.state.form, { phone: trg.value }) });
-					break;
-				case 'Upload your photo':
-					if (trg.files.length == 1 && /\image\/\jpeg|\jpg/i.test(trg.files[0].type) && trg.files[0].size < 5000000) return trg.parentElement.className = 'well', this.setState({ form: Object.assign(this.state.form, { photo: trg.files[0] }) });
-					trg.parentElement.className = 'error';
-					this.setState({ form: Object.assign(this.state.form, { photo: false }) });;
-					break;
-				default:
-					trg.value == 'Select your position' ? trg.parentElement.className = 'error' : trg.parentElement.className = 'well';
-			}
-		}
-	}, {
 		key: 'componentDidMount',
 		value: function componentDidMount() {
 			var _this2 = this;
@@ -24281,6 +24245,60 @@ var Registration = function (_React$Component) {
 				return res.json();
 			}).then(function (res) {
 				_this2.setState({ positions: res.positions });
+			});
+		}
+	}, {
+		key: 'toCheckForm',
+		value: function toCheckForm(e) {
+			var trg = e.target;
+			switch (trg.id) {
+				case 'inputName':
+					if (trg.value.length <= 2) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { name: false }) });
+					trg.parentElement.className = 'well';
+					this.setState({ form: Object.assign(this.state.form, { name: trg.value }) });
+					break;
+				case 'inputEmail':
+					if (!/[\w\d\.]+\@[\w\d]+\.[\w\d]+/i.test(trg.value)) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { email: false }) });
+					trg.parentElement.className = 'well';
+					this.setState({ form: Object.assign(this.state.form, { email: trg.value }) });
+					break;
+				case 'inputPhone':
+					if (!/^\+380\d{9}$/.test(trg.value)) return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { phone: false }) });
+					trg.parentElement.className = 'well';
+					this.setState({ form: Object.assign(this.state.form, { phone: trg.value }) });
+					break;
+				case 'inputPhoto':
+					if (trg.files.length == 1 && /\image\/\jpeg|\jpg/i.test(trg.files[0].type) && trg.files[0].size < 5000000) return trg.parentElement.className = 'well', this.setState({ form: Object.assign(this.state.form, { photo: trg.files[0] }) });
+					trg.parentElement.className = 'error';
+					this.setState({ form: Object.assign(this.state.form, { photo: false }) });;
+					break;
+				case 'inputPosition':
+					if (trg.value == 'Select your position') return trg.parentElement.className = 'error', this.setState({ form: Object.assign(this.state.form, { position_id: false }) });;
+					trg.parentElement.className = 'well';
+					this.setState({ form: Object.assign(this.state.form, { position_id: trg.value }) });
+			}
+		}
+	}, {
+		key: 'toSubmit',
+		value: function toSubmit(e) {
+			fetch('https://frontend-test-assignment-api.abz.agency/api/v1/token').then(function (res) {
+				return res.json();
+			}).then(function (res) {
+				var formData = new FormData();
+				formData.append('name', document.getElementById('inputName').value);
+				formData.append('email', document.getElementById('inputEmail').value);
+				formData.append('phone', document.getElementById('inputPhone').value);
+				formData.append('position_id', document.getElementById('inputPosition').value);
+				formData.append('photo', document.getElementById('inputPhoto').files[0]);
+				fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users', {
+					method: 'POST',
+					headers: {
+						'token': res.token
+					},
+					body: formData }).then(function (res) {
+					console.log(res);
+					res.ok ? alert('You have successfully passed the registration') : alert('bad');
+				});
 			});
 		}
 	}, {
@@ -24306,24 +24324,24 @@ var Registration = function (_React$Component) {
 					_react2.default.createElement(
 						'label',
 						null,
-						_react2.default.createElement('input', { maxLength: '60', placeholder: 'Your name', type: 'text' })
+						_react2.default.createElement('input', { id: 'inputName', maxLength: '60', placeholder: 'Your name', type: 'text' })
 					),
 					_react2.default.createElement(
 						'label',
 						null,
-						_react2.default.createElement('input', { placeholder: 'Your email', type: 'text' })
+						_react2.default.createElement('input', { id: 'inputEmail', placeholder: 'Your email', type: 'text' })
 					),
 					_react2.default.createElement(
 						'label',
 						null,
-						_react2.default.createElement('input', { placeholder: '+38(___)___ __ __', type: 'phone' })
+						_react2.default.createElement('input', { id: 'inputPhone', placeholder: '+38(___)___ __ __', type: 'phone' })
 					),
 					_react2.default.createElement(
 						'label',
 						null,
 						_react2.default.createElement(
 							'select',
-							null,
+							{ id: 'inputPosition' },
 							_react2.default.createElement(
 								'option',
 								null,
@@ -24332,7 +24350,7 @@ var Registration = function (_React$Component) {
 							this.state.positions.map(function (i, n) {
 								return _react2.default.createElement(
 									'option',
-									{ key: n },
+									{ key: n, value: i.id },
 									i.name
 								);
 							})
@@ -24341,7 +24359,7 @@ var Registration = function (_React$Component) {
 					_react2.default.createElement(
 						'label',
 						null,
-						_react2.default.createElement('input', { placeholder: 'Upload your photo', type: 'file' }),
+						_react2.default.createElement('input', { id: 'inputPhoto', type: 'file' }),
 						_react2.default.createElement(
 							'div',
 							null,
@@ -24361,8 +24379,8 @@ var Registration = function (_React$Component) {
 						'div',
 						null,
 						_react2.default.createElement(
-							_Button2.default,
-							{ onSubmit: this.toSubmit, disabled: Object.values(this.state.form).some(function (i) {
+							'div',
+							{ onClick: this.toSubmit, disabled: Object.values(this.state.form).some(function (i) {
 									return !i;
 								}) },
 							'Sign Up'
