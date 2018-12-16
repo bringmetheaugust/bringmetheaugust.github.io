@@ -23625,7 +23625,7 @@ var _Button2 = _interopRequireDefault(_Button);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var aboutMe = function aboutMe() {
+var AboutMe = function AboutMe() {
 	return _react2.default.createElement(
 		'div',
 		{ className: 'about' },
@@ -23663,7 +23663,7 @@ var aboutMe = function aboutMe() {
 	);
 };
 
-exports.default = aboutMe;
+exports.default = AboutMe;
 
 /***/ }),
 
@@ -23725,6 +23725,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var logo = _react2.default.createElement('img', { alt: 'ABZ logo', className: 'logo', src: __webpack_require__(/*! ../../img/logo.svg */ "./src/img/logo.svg") });
+var lastUsers = 'https://frontend-test-assignment-api.abz.agency/api/v1/users?page=1&count=5';
 
 var App = function (_React$Component) {
 	_inherits(App, _React$Component);
@@ -23734,25 +23735,64 @@ var App = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
 
-		_this.state = {};
+		_this.state = {
+			users: [],
+			nextUrl: '',
+			currentUser: {}
+		};
+		_this.loadUsers = _this.loadUsers.bind(_this);
+		_this.toRefreshUserList = _this.toRefreshUserList.bind(_this);
 		return _this;
 	}
 
 	_createClass(App, [{
+		key: 'loadUsers',
+		value: function loadUsers(url) {
+			var _this2 = this;
+
+			fetch(url).then(function (res) {
+				return res.json();
+			}).then(function (res) {
+				_this2.setState({
+					users: _this2.state.users.concat(res.users),
+					nextUrl: res.links.next_url
+				});
+			});
+		}
+	}, {
+		key: 'toRefreshUserList',
+		value: function toRefreshUserList(userId) {
+			var _this3 = this;
+
+			//refresh user's list and emulate an authenticated user in the site header
+			fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users/' + userId).then(function (res) {
+				_this3.setState({ users: [] });return res.json();
+			}).then(function (res) {
+				_this3.loadUsers(lastUsers);
+				_this3.setState({ currentUser: res.user });
+			});
+		}
+	}, {
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			this.loadUsers(lastUsers);
+		}
+	}, {
 		key: 'render',
 		value: function render() {
 			return _react2.default.createElement(
 				_react2.default.Fragment,
 				null,
-				_react2.default.createElement(_Header2.default, null),
+				_react2.default.createElement(_Header2.default, { currentUser: this.state.currentUser }),
 				_react2.default.createElement(
 					'main',
 					null,
 					_react2.default.createElement(_AboutMe2.default, null),
 					_react2.default.createElement(_Relationship2.default, null),
 					_react2.default.createElement(_Requirements2.default, null),
-					_react2.default.createElement(_Users2.default, null),
-					_react2.default.createElement(_Registration2.default, null)
+					_react2.default.createElement(_Users2.default, { loadUsers: this.loadUsers, nextUrl: this.state.nextUrl,
+						users: this.state.users }),
+					_react2.default.createElement(_Registration2.default, { toRefreshUserList: this.toRefreshUserList })
 				),
 				_react2.default.createElement(_Footer2.default, null)
 			);
@@ -23815,8 +23855,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -23829,120 +23867,96 @@ var _Navigation2 = _interopRequireDefault(_Navigation);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Footer = function (_React$Component) {
-	_inherits(Footer, _React$Component);
-
-	function Footer(props) {
-		_classCallCheck(this, Footer);
-
-		var _this = _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).call(this, props));
-
-		_this.state = {};
-		return _this;
-	}
-
-	_createClass(Footer, [{
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'footer',
+var Footer = function Footer() {
+	return _react2.default.createElement(
+		'footer',
+		null,
+		_react2.default.createElement(
+			'div',
+			null,
+			_App.logo,
+			_react2.default.createElement(_Navigation2.default, null)
+		),
+		_react2.default.createElement('div', { className: 'hr' }),
+		_react2.default.createElement(
+			'div',
+			null,
+			_react2.default.createElement(
+				'div',
+				{ className: 'contacts' },
+				_react2.default.createElement(
+					'div',
+					null,
+					'work.of.future@gmail.com'
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					'+38 (050) 789 24 98'
+				),
+				_react2.default.createElement(
+					'div',
+					null,
+					'+38 (095) 556 08 45'
+				)
+			),
+			_react2.default.createElement(
+				'ul',
 				null,
 				_react2.default.createElement(
-					'div',
+					'li',
 					null,
-					_App.logo,
-					_react2.default.createElement(_Navigation2.default, null)
+					_react2.default.createElement(
+						'a',
+						{ href: '#' },
+						_react2.default.createElement('img', { alt: 'facebook', src: __webpack_require__(/*! ../../img/facebook.svg */ "./src/img/facebook.svg") })
+					)
 				),
-				_react2.default.createElement('div', { className: 'hr' }),
 				_react2.default.createElement(
-					'div',
+					'li',
 					null,
 					_react2.default.createElement(
-						'div',
-						{ className: 'contacts' },
-						_react2.default.createElement(
-							'div',
-							null,
-							'work.of.future@gmail.com'
-						),
-						_react2.default.createElement(
-							'div',
-							null,
-							'+38 (050) 789 24 98'
-						),
-						_react2.default.createElement(
-							'div',
-							null,
-							'+38 (095) 556 08 45'
-						)
-					),
+						'a',
+						{ href: '#' },
+						_react2.default.createElement('img', { alt: 'linkedin', src: __webpack_require__(/*! ../../img/linkedin.svg */ "./src/img/linkedin.svg") })
+					)
+				),
+				_react2.default.createElement(
+					'li',
+					null,
 					_react2.default.createElement(
-						'ul',
-						null,
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								'a',
-								{ href: '#' },
-								_react2.default.createElement('img', { alt: 'facebook', src: __webpack_require__(/*! ../../img/facebook.svg */ "./src/img/facebook.svg") })
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								'a',
-								{ href: '#' },
-								_react2.default.createElement('img', { alt: 'linkedin', src: __webpack_require__(/*! ../../img/linkedin.svg */ "./src/img/linkedin.svg") })
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								'a',
-								{ href: '#' },
-								_react2.default.createElement('img', { alt: 'instagram', src: __webpack_require__(/*! ../../img/instagram.svg */ "./src/img/instagram.svg") })
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								'a',
-								{ href: '#' },
-								_react2.default.createElement('img', { alt: 'twitter', src: __webpack_require__(/*! ../../img/twitter.svg */ "./src/img/twitter.svg") })
-							)
-						),
-						_react2.default.createElement(
-							'li',
-							null,
-							_react2.default.createElement(
-								'a',
-								{ href: '#' },
-								_react2.default.createElement('img', { alt: 'pinterest', src: __webpack_require__(/*! ../../img/pinterest.svg */ "./src/img/pinterest.svg") })
-							)
-						)
-					),
+						'a',
+						{ href: '#' },
+						_react2.default.createElement('img', { alt: 'instagram', src: __webpack_require__(/*! ../../img/instagram.svg */ "./src/img/instagram.svg") })
+					)
+				),
+				_react2.default.createElement(
+					'li',
+					null,
 					_react2.default.createElement(
-						'div',
-						{ className: 'tm' },
-						'\xA9abz.agency specially for the best task'
+						'a',
+						{ href: '#' },
+						_react2.default.createElement('img', { alt: 'twitter', src: __webpack_require__(/*! ../../img/twitter.svg */ "./src/img/twitter.svg") })
+					)
+				),
+				_react2.default.createElement(
+					'li',
+					null,
+					_react2.default.createElement(
+						'a',
+						{ href: '#' },
+						_react2.default.createElement('img', { alt: 'pinterest', src: __webpack_require__(/*! ../../img/pinterest.svg */ "./src/img/pinterest.svg") })
 					)
 				)
-			);
-		}
-	}]);
-
-	return Footer;
-}(_react2.default.Component);
+			),
+			_react2.default.createElement(
+				'div',
+				{ className: 'tm' },
+				'\xA9abz.agency specially for the best task'
+			)
+		)
+	);
+};
 
 exports.default = Footer;
 
@@ -23994,9 +24008,7 @@ var Header = function (_React$Component) {
 
 		var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
 
-		_this.state = {
-			user: {}
-		};
+		_this.state = { user: {} };
 		_this.burger = _react2.default.createRef();
 		return _this;
 	}
@@ -24006,6 +24018,7 @@ var Header = function (_React$Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
+			//get initial user for header
 			fetch('https://frontend-test-assignment-api.abz.agency/api/v1/users/1').then(function (res) {
 				return res.json();
 			}).then(function (res) {
@@ -24030,16 +24043,16 @@ var Header = function (_React$Component) {
 						_react2.default.createElement(
 							'div',
 							{ className: 'cabinet' },
-							_react2.default.createElement('img', { alt: 'my profile photo', src: this.state.user.photo || null }),
+							_react2.default.createElement('img', { alt: 'my profile photo', src: this.props.currentUser.photo || this.state.user.photo || null }),
 							_react2.default.createElement(
 								'div',
 								{ className: 'cabinet-user' },
-								this.state.user.name || 'loading..'
+								this.props.currentUser.name || this.state.user.name || 'loading..'
 							),
 							_react2.default.createElement(
 								'div',
 								{ className: 'cabinet-mail' },
-								this.state.user.email || 'loading..'
+								this.props.currentUser.email || this.state.user.email || 'loading..'
 							)
 						),
 						_react2.default.createElement(
@@ -24241,6 +24254,7 @@ var Registration = function (_React$Component) {
 		value: function componentDidMount() {
 			var _this2 = this;
 
+			//load list of positions
 			fetch('https://frontend-test-assignment-api.abz.agency/api/v1/positions').then(function (res) {
 				return res.json();
 			}).then(function (res) {
@@ -24281,6 +24295,9 @@ var Registration = function (_React$Component) {
 	}, {
 		key: 'toSubmit',
 		value: function toSubmit(e) {
+			var _this3 = this;
+
+			e.preventDefault();
 			fetch('https://frontend-test-assignment-api.abz.agency/api/v1/token').then(function (res) {
 				return res.json();
 			}).then(function (res) {
@@ -24296,8 +24313,10 @@ var Registration = function (_React$Component) {
 						'token': res.token
 					},
 					body: formData }).then(function (res) {
-					console.log(res);
-					res.ok ? alert('You have successfully passed the registration') : alert('bad');
+					res.ok ? alert('You have successfully passed the registration') : alert('sorry, something gonna wrong :(');
+					return res.json();
+				}).then(function (res) {
+					return _this3.props.toRefreshUserList(res.user_id);
 				});
 			});
 		}
@@ -24379,7 +24398,7 @@ var Registration = function (_React$Component) {
 						'div',
 						null,
 						_react2.default.createElement(
-							'div',
+							'button',
 							{ onClick: this.toSubmit, disabled: Object.values(this.state.form).some(function (i) {
 									return !i;
 								}) },
@@ -24594,8 +24613,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -24610,91 +24627,40 @@ var _User2 = _interopRequireDefault(_User);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var currentUsers = 'https://frontend-test-assignment-api.abz.agency/api/v1/users?page=1&count=5';
-
-var Users = function (_React$Component) {
-	_inherits(Users, _React$Component);
-
-	function Users(props) {
-		_classCallCheck(this, Users);
-
-		var _this = _possibleConstructorReturn(this, (Users.__proto__ || Object.getPrototypeOf(Users)).call(this, props));
-
-		_this.state = {
-			users: [],
-			nextUrl: 'lalala'
-		};
-		_this.loadUsers = _this.loadUsers.bind(_this);
-		return _this;
-	}
-
-	_createClass(Users, [{
-		key: 'loadUsers',
-		value: function loadUsers(url) {
-			var _this2 = this;
-
-			fetch(url).then(function (res) {
-				return res.json();
-			}).then(function (res) {
-				_this2.setState({
-					users: _this2.state.users.concat(res.users),
-					nextUrl: res.links.next_url
-				});
-			});
-		}
-	}, {
-		key: 'componentDidMount',
-		value: function componentDidMount() {
-			this.loadUsers(currentUsers);
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			var _this3 = this;
-
-			var users = this.state.users.sort(function (a, b) {
-				return b.registration_timestamp - a.registration_timestamp;
-			});
-			return _react2.default.createElement(
-				'div',
-				{ className: 'users' },
-				_react2.default.createElement('a', { className: 'hrefs', id: 'users' }),
-				_react2.default.createElement(
-					'h1',
-					null,
-					'Our cheerful users'
-				),
-				_react2.default.createElement(
-					'h2',
-					null,
-					'Attention! Sorting users by registration date'
-				),
-				users.map(function (i, n) {
-					return _react2.default.createElement(_User2.default, { info: i, key: i.id });
-				}),
-				this.state.nextUrl && _react2.default.createElement(
-					'div',
-					{ onClick: function onClick() {
-							return _this3.loadUsers(_this3.state.nextUrl);
-						} },
-					_react2.default.createElement(
-						_Button2.default,
-						null,
-						'Show more'
-					)
-				)
-			);
-		}
-	}]);
-
-	return Users;
-}(_react2.default.Component);
+var Users = function Users(props) {
+	var users = props.users.sort(function (a, b) {
+		return b.registration_timestamp - a.registration_timestamp;
+	});
+	return _react2.default.createElement(
+		'div',
+		{ className: 'users' },
+		_react2.default.createElement('a', { className: 'hrefs', id: 'users' }),
+		_react2.default.createElement(
+			'h1',
+			null,
+			'Our cheerful users'
+		),
+		_react2.default.createElement(
+			'h2',
+			null,
+			'Attention! Sorting users by registration date'
+		),
+		users.map(function (i, n) {
+			return _react2.default.createElement(_User2.default, { info: i, key: i.id });
+		}),
+		props.nextUrl && _react2.default.createElement(
+			'div',
+			{ onClick: function onClick() {
+					return props.loadUsers(props.nextUrl);
+				} },
+			_react2.default.createElement(
+				_Button2.default,
+				null,
+				'Show more'
+			)
+		)
+	);
+};
 
 exports.default = Users;
 
