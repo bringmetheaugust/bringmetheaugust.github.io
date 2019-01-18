@@ -28243,6 +28243,10 @@ module.exports = template;
 var map = {
 	"./arrow.png": "./src/img/arrow.png",
 	"./basket.png": "./src/img/basket.png",
+	"./basket/cross.png": "./src/img/basket/cross.png",
+	"./basket/master.png": "./src/img/basket/master.png",
+	"./basket/paypal.png": "./src/img/basket/paypal.png",
+	"./basket/visa.png": "./src/img/basket/visa.png",
 	"./bi/07.jpg": "./src/img/bi/07.jpg",
 	"./bi/20150511150957.png": "./src/img/bi/20150511150957.png",
 	"./bi/58731274.png": "./src/img/bi/58731274.png",
@@ -28252,14 +28256,9 @@ var map = {
 	"./bi/940x1410_0xc0a839a4_6912462991475681269.jpeg": "./src/img/bi/940x1410_0xc0a839a4_6912462991475681269.jpeg",
 	"./bi/955d2f975523a5150c87db74ddqi--tsvety-i-floristika-tsvetochnyj-gorshok.jpg": "./src/img/bi/955d2f975523a5150c87db74ddqi--tsvety-i-floristika-tsvetochnyj-gorshok.jpg",
 	"./bi/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png": "./src/img/bi/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png",
-	"./bi/about.jpg": "./src/img/bi/about.jpg",
 	"./bi/al_ovchinnikova.jpg": "./src/img/bi/al_ovchinnikova.jpg",
 	"./bi/avgust_26_2016_stranica_2_willow.png": "./src/img/bi/avgust_26_2016_stranica_2_willow.png",
-	"./bi/basket.jpg": "./src/img/bi/basket.jpg",
 	"./bi/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg": "./src/img/bi/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg",
-	"./bi/classic.jpg": "./src/img/bi/classic.jpg",
-	"./bi/contact.jpg": "./src/img/bi/contact.jpg",
-	"./bi/decorative.jpg": "./src/img/bi/decorative.jpg",
 	"./bi/delivery.jpg": "./src/img/bi/delivery.jpg",
 	"./bi/depositphotos_47009329-stock-photo-glazed-and-unglazed-ceramic-flower.png": "./src/img/bi/depositphotos_47009329-stock-photo-glazed-and-unglazed-ceramic-flower.png",
 	"./bi/dsfdsfdsf.png": "./src/img/bi/dsfdsfdsf.png",
@@ -28267,11 +28266,8 @@ var map = {
 	"./bi/img_12394_4.png": "./src/img/bi/img_12394_4.png",
 	"./bi/intime.png": "./src/img/bi/intime.png",
 	"./bi/np.png": "./src/img/bi/np.png",
-	"./bi/pots.jpg": "./src/img/bi/pots.jpg",
 	"./bi/service.jpg": "./src/img/bi/service.jpg",
 	"./bi/urk.png": "./src/img/bi/urk.png",
-	"./bi/wrap.png": "./src/img/bi/wrap.png",
-	"./cross.png": "./src/img/cross.png",
 	"./db/101/101-1.jpg": "./src/img/db/101/101-1.jpg",
 	"./db/101/101-2.jpg": "./src/img/db/101/101-2.jpg",
 	"./db/101/101-3.jpg": "./src/img/db/101/101-3.jpg",
@@ -28435,13 +28431,17 @@ var map = {
 	"./db/313/313-2.jpg": "./src/img/db/313/313-2.jpg",
 	"./db/313/313-3.jpg": "./src/img/db/313/313-3.jpg",
 	"./db/313/313-4.jpg": "./src/img/db/313/313-4.jpg",
-	"./facebook.png": "./src/img/facebook.png",
+	"./footer/facebook.png": "./src/img/footer/facebook.png",
+	"./footer/instagramm.png": "./src/img/footer/instagramm.png",
+	"./footer/telegram.png": "./src/img/footer/telegram.png",
 	"./icon.png": "./src/img/icon.png",
-	"./instagramm.png": "./src/img/instagramm.png",
-	"./master.png": "./src/img/master.png",
-	"./paypal.png": "./src/img/paypal.png",
-	"./telegram.png": "./src/img/telegram.png",
-	"./visa.png": "./src/img/visa.png"
+	"./wrap.png": "./src/img/wrap.png",
+	"./wrapper/about.jpg": "./src/img/wrapper/about.jpg",
+	"./wrapper/basket.jpg": "./src/img/wrapper/basket.jpg",
+	"./wrapper/classic.jpg": "./src/img/wrapper/classic.jpg",
+	"./wrapper/contact.jpg": "./src/img/wrapper/contact.jpg",
+	"./wrapper/decorative.jpg": "./src/img/wrapper/decorative.jpg",
+	"./wrapper/pots.jpg": "./src/img/wrapper/pots.jpg"
 };
 
 
@@ -28486,6 +28486,50 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAYAAABc
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "img/basket.png";
+
+/***/ }),
+
+/***/ "./src/img/basket/cross.png":
+/*!**********************************!*\
+  !*** ./src/img/basket/cross.png ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+
+/***/ "./src/img/basket/master.png":
+/*!***********************************!*\
+  !*** ./src/img/basket/master.png ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/master.png";
+
+/***/ }),
+
+/***/ "./src/img/basket/paypal.png":
+/*!***********************************!*\
+  !*** ./src/img/basket/paypal.png ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/paypal.png";
+
+/***/ }),
+
+/***/ "./src/img/basket/visa.png":
+/*!*********************************!*\
+  !*** ./src/img/basket/visa.png ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/visa.png";
 
 /***/ }),
 
@@ -28588,17 +28632,6 @@ module.exports = __webpack_require__.p + "img/BDC3E9E1-19B7-4ABA-8B45-41693D938D
 
 /***/ }),
 
-/***/ "./src/img/bi/about.jpg":
-/*!******************************!*\
-  !*** ./src/img/bi/about.jpg ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/about.jpg";
-
-/***/ }),
-
 /***/ "./src/img/bi/al_ovchinnikova.jpg":
 /*!****************************************!*\
   !*** ./src/img/bi/al_ovchinnikova.jpg ***!
@@ -28621,17 +28654,6 @@ module.exports = __webpack_require__.p + "img/avgust_26_2016_stranica_2_willow.p
 
 /***/ }),
 
-/***/ "./src/img/bi/basket.jpg":
-/*!*******************************!*\
-  !*** ./src/img/bi/basket.jpg ***!
-  \*******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/basket.jpg";
-
-/***/ }),
-
 /***/ "./src/img/bi/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg":
 /*!**********************************************************************************************!*\
   !*** ./src/img/bi/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg ***!
@@ -28640,39 +28662,6 @@ module.exports = __webpack_require__.p + "img/basket.jpg";
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "img/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg";
-
-/***/ }),
-
-/***/ "./src/img/bi/classic.jpg":
-/*!********************************!*\
-  !*** ./src/img/bi/classic.jpg ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/classic.jpg";
-
-/***/ }),
-
-/***/ "./src/img/bi/contact.jpg":
-/*!********************************!*\
-  !*** ./src/img/bi/contact.jpg ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/contact.jpg";
-
-/***/ }),
-
-/***/ "./src/img/bi/decorative.jpg":
-/*!***********************************!*\
-  !*** ./src/img/bi/decorative.jpg ***!
-  \***********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/decorative.jpg";
 
 /***/ }),
 
@@ -28753,17 +28742,6 @@ module.exports = __webpack_require__.p + "img/np.png";
 
 /***/ }),
 
-/***/ "./src/img/bi/pots.jpg":
-/*!*****************************!*\
-  !*** ./src/img/bi/pots.jpg ***!
-  \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/pots.jpg";
-
-/***/ }),
-
 /***/ "./src/img/bi/service.jpg":
 /*!********************************!*\
   !*** ./src/img/bi/service.jpg ***!
@@ -28783,28 +28761,6 @@ module.exports = __webpack_require__.p + "img/service.jpg";
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "img/urk.png";
-
-/***/ }),
-
-/***/ "./src/img/bi/wrap.png":
-/*!*****************************!*\
-  !*** ./src/img/bi/wrap.png ***!
-  \*****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/wrap.png";
-
-/***/ }),
-
-/***/ "./src/img/cross.png":
-/*!***************************!*\
-  !*** ./src/img/cross.png ***!
-  \***************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,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"
 
 /***/ }),
 
@@ -30601,14 +30557,36 @@ module.exports = __webpack_require__.p + "img/313-4.jpg";
 
 /***/ }),
 
-/***/ "./src/img/facebook.png":
-/*!******************************!*\
-  !*** ./src/img/facebook.png ***!
-  \******************************/
+/***/ "./src/img/footer/facebook.png":
+/*!*************************************!*\
+  !*** ./src/img/footer/facebook.png ***!
+  \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
 module.exports = "data:image/png;base64,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9n1P/xunPPr7f+D8Zzxzo8+znv09e7pHcQiiZgHPee7f/FsnXfC85zeGfDfnv2Bv91C2JGpmduELf/BFz37xS7oT3sxLX9g9nK2Imkld9EP3fdnFnX9kj7z8b3ePaAuiZj6XXPrkZ79i5p4POO6Huwe1OVEzl8uO/5GXzt/zAZf/ne5pbUrUzOOKHz3vgsu7S92J+zyme2SbETVz2PvKV/3Yq7sj3bEf7x7bZkTNBC668u/+RHefh+eq7tFtQtR0u/o117y2u83D9pPd09uEqGl19bUvva47zCPyuu4JHkzU9Lns773+uO4oj9Qbuod4MFHTZN/ZJ13fXeQu+KnuOR5M1LT46Z+5oTvH3fH8+b4DLmruefu+940ndMe4a47tnuZBRM097erzfrY7xN30pu55HkTU3LOe+4j1vmJySE/tnuhBRM09aM85b+5uUNSwe258y/O6CxQ17J63vuVt3f2JGnbP465d9MvdoobNXPRzU96RSNRwePaec3p3eaKGXXR23jveoube7Glv765O1LCLjjpp7R9WihruYs+5L+9OTtSwi97xA93BiRp20dGnntndm6hhF131zu7aRA276Of/fndroobddM67ulMTNeyi0x7cHZqoYTcdn/rTDVFz73TFqTm3HxM13O9+l57fHZmoRc1uOjfsBmSi5l7uond3Fybq+4maXfTz7+kOTNRF1OyWK2/q7kvU+4ma3bH3vPgfWYqae5WzfqE7LlHfRtTshmOzb1kkau51fvGXutMS9R1EzZE7+73dZYn6TkTNEXv6M7vDEvWdiZojtPd93VmJ+q5EzZHZ9/7uqkR9N6LmiOw7sTuqbqImy40f6G6qnaiJ8taHdyfVT9QkueSXu4uagKgJctkbu4OagajJcdkHu3uagqiJceOvdOc0B1GTYs8Du2uahKhJ8avdMc1C1IR4Q3dL0xA1GT7UndI8RE2ED99Lb120GVGT4Ph79W8t70bUBPjIvfO2oVsQNes75te6O5qKqFnevtd3ZzQXUbO8U7srmoyoWd3TuyOajahZ3I9e3h3RbETN2j76jO6GpiNqlrbnY90JzUfULO1V3QVNSNSs7B+c2V3QhETNwj5+Q3dAMxI169r7D7v7mZKoWdevd+czJ1GzrJv9NGtTomZVl/yj7nomJWpW9YnueGYlahb1j4/rjmdWomZNl3yyu51piZo1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6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog4iaoqog4iaIuogoqaIOoioKaIOImqKqIOImiLqIKKmiDqIqCmiDiJqiqiDiJoi6iCipog6iKgpog6ysaf7BMxA1Dn2bPxO9xGYgahznLZxVPcRmIGoc3x546HdR2AGos5x9sb9u4/ADESd4zMbJ3YfgRmIOscHNm7w9jeiDnLjuzY2zug+BBMQdYyrvjUkf38j6iDXfGtIz/xy9ynoJ+oUb7qupvSy7mPQT9Qprtk/petu7j4H7UQd4spbx/S2s7pPQjdRZ/j4T9w2p0fs7T4LzUQd4cYL7hjUV7oPQzNRJ9j7/jtP6i/8X33vJuoAN/7hXUd14mXdJ6KTqNd39cfuPqtPvqP7TDQS9fK+cMPBwzrz/1zdfSzaiHpxj//m5uP62v/9f91Ho4moV3bjD37zuq0n9rxv/Omb3tp9RO55ol7UaY89+9qT3zUe22s/fzr3Mi/vbpXd8/8B8XZVS9gJ/Y4AAAAldEVYdGRhdGU6Y3JlYXRlADIwMTctMDYtMTJUMDM6MzU6MDgrMDg6MDC2ICO/AAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE2LTA0LTE2VDE1OjI4OjE4KzA4OjAwteDf8AAAAFR0RVh0c3ZnOmJhc2UtdXJpAGZpbGU6Ly8vaG9tZS9kYi9zdmdfaW5mby9zdmcvNGUvODUvNGU4NWZhM2E3YmI2NGZmZmRlMzMwN2NhNzJmMmFlYjUuc3ZnblMq1AAAAABJRU5ErkJggg=="
+
+/***/ }),
+
+/***/ "./src/img/footer/instagramm.png":
+/*!***************************************!*\
+  !*** ./src/img/footer/instagramm.png ***!
+  \***************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/instagramm.png";
+
+/***/ }),
+
+/***/ "./src/img/footer/telegram.png":
+/*!*************************************!*\
+  !*** ./src/img/footer/telegram.png ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/telegram.png";
 
 /***/ }),
 
@@ -30623,58 +30601,273 @@ module.exports = __webpack_require__.p + "img/icon.png";
 
 /***/ }),
 
-/***/ "./src/img/instagramm.png":
-/*!********************************!*\
-  !*** ./src/img/instagramm.png ***!
-  \********************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/instagramm.png";
-
-/***/ }),
-
-/***/ "./src/img/master.png":
-/*!****************************!*\
-  !*** ./src/img/master.png ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/master.png";
-
-/***/ }),
-
-/***/ "./src/img/paypal.png":
-/*!****************************!*\
-  !*** ./src/img/paypal.png ***!
-  \****************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/paypal.png";
-
-/***/ }),
-
-/***/ "./src/img/telegram.png":
-/*!******************************!*\
-  !*** ./src/img/telegram.png ***!
-  \******************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__.p + "img/telegram.png";
-
-/***/ }),
-
-/***/ "./src/img/visa.png":
+/***/ "./src/img/wrap.png":
 /*!**************************!*\
-  !*** ./src/img/visa.png ***!
+  !*** ./src/img/wrap.png ***!
   \**************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__.p + "img/visa.png";
+module.exports = __webpack_require__.p + "img/wrap.png";
+
+/***/ }),
+
+/***/ "./src/img/wrapper/about.jpg":
+/*!***********************************!*\
+  !*** ./src/img/wrapper/about.jpg ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/about.jpg";
+
+/***/ }),
+
+/***/ "./src/img/wrapper/basket.jpg":
+/*!************************************!*\
+  !*** ./src/img/wrapper/basket.jpg ***!
+  \************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/basket.jpg";
+
+/***/ }),
+
+/***/ "./src/img/wrapper/classic.jpg":
+/*!*************************************!*\
+  !*** ./src/img/wrapper/classic.jpg ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/classic.jpg";
+
+/***/ }),
+
+/***/ "./src/img/wrapper/contact.jpg":
+/*!*************************************!*\
+  !*** ./src/img/wrapper/contact.jpg ***!
+  \*************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/contact.jpg";
+
+/***/ }),
+
+/***/ "./src/img/wrapper/decorative.jpg":
+/*!****************************************!*\
+  !*** ./src/img/wrapper/decorative.jpg ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/decorative.jpg";
+
+/***/ }),
+
+/***/ "./src/img/wrapper/pots.jpg":
+/*!**********************************!*\
+  !*** ./src/img/wrapper/pots.jpg ***!
+  \**********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__.p + "img/pots.jpg";
+
+/***/ }),
+
+/***/ "./src/js/aboutDescriptionDB/1.js":
+/*!****************************************!*\
+  !*** ./src/js/aboutDescriptionDB/1.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var one = {
+	title: '`housing` - це ремесло',
+	img: ['bi/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg', 'bi/8529-1487603.jpg', 'bi/07.jpg', 'bi/955d2f975523a5150c87db74ddqi--tsvety-i-floristika-tsvetochnyj-gorshok.jpg'],
+	text: 'Для нас `HOUSING` - це більше, ніж просто робота. Це наша\
+		улюблена справа, наша мрія, до реалізації якої ми щиро прагнули\
+		і результати якої наразі Ви можете побачити та оцінити.\
+		З кожним днем ми хочемо дарувати Вам приємні емоції та\
+		наповнювати оселі затишком і теплом. Асортимент нашої Компанії\
+		дозволяє забезпечити гідний вибір навіть вкрай вибагливим покупцям,\
+		догодити людині, яка шукає щось цікаве та нетривіальне, аби\
+		урізноманітнити простір навколо себе чи лише трішки оновити\
+		інтер’єр, додавши йому яскравого акценту. Ми завжди намагаємося\
+		прислухатися до кожного покупця, розуміти його потреби і в якомога\
+		коротший термін надавати необхідні товари за доступними цінами. '
+};
+
+exports.default = one;
+
+/***/ }),
+
+/***/ "./src/js/aboutDescriptionDB/2.js":
+/*!****************************************!*\
+  !*** ./src/js/aboutDescriptionDB/2.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var two = {
+	title: '`housing` - це дизайн',
+	img: ['bi/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png', 'bi/service.jpg', 'bi/20150511150957.png', 'bi/img_12394_4.png'],
+	text: 'Наші товари - проектуються та розробляються у відповідності з Вашими\
+		потребами та побажаннями. Багато з них представлені виключно у нас.\
+		Ми постійно працюємо над розширенням асортименту та намагаємося\
+		вдосконалювати наші пропозиції, враховуючи новітні віяння у сфері\
+		садівництва та дизайну приміщень. Декоративні якості нашої продуції\
+		дозволять Вам створити прекрасні композиції, вдало доповнять\
+		будь-який стильний і сучасний інтер`єр, а також гідно підкреслять рослину в ньому.'
+};
+
+exports.default = two;
+
+/***/ }),
+
+/***/ "./src/js/aboutDescriptionDB/3.js":
+/*!****************************************!*\
+  !*** ./src/js/aboutDescriptionDB/3.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var three = {
+	title: '`housing` - це гарантiя',
+	img: ['bi/avgust_26_2016_stranica_2_willow.png', 'bi/dsfdsfdsf.png', 'bi/6d464069f3ce6c83d4e51a33736817f0.jpg', 'bi/depositphotos_47009329-stock-photo-glazed-and-unglazed-ceramic-flower.png'],
+	text: 'Продукція нашої Компанії виготовляється з якісних та екологічно\
+		безпечних матеріалів. Також ми завжди готові піти Вам назустріч та,\
+		при необхідності, зробити заміну товару, який, з тої чи\
+		іншої причини, Вам не підійшов. '
+};
+
+exports.default = three;
+
+/***/ }),
+
+/***/ "./src/js/aboutDescriptionDB/4.js":
+/*!****************************************!*\
+  !*** ./src/js/aboutDescriptionDB/4.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var four = {
+	title: '`housing` - це зручно',
+	img: ['bi/np.png', 'bi/delivery.jpg', 'bi/intime.png', 'bi/urk.png'],
+	text: 'Ми створили нашу Компанію та цей сайт, щоб Вам було зручно і легко в одному\
+		місці вибрати все, що необхідно для пересадки рослин, оновлення домашнього\
+		чи садового інтер’єру, або прикраси Вашої оселі. У відповідних розділах\
+		основного меню Ви знайдете всю необхідну інформацію по всім видам продукції,\
+		якими займається наша Компанія, з фотографіями, характеристиками товарів та\
+		актуальними цінами. Одразу після отримання замовлення наші менеджери\
+		зв’яжуться з Вами, аби обрати найбільш комфортний для Вас спосіб оплати та доставки.\
+		Ми намагалися зробити процес вибору та купівлі товару якомога зручнішим для Вас і\
+		сподіваємося, що наші зусилля не лишилися марними.'
+};
+
+exports.default = four;
+
+/***/ }),
+
+/***/ "./src/js/aboutDescriptionDB/5.js":
+/*!****************************************!*\
+  !*** ./src/js/aboutDescriptionDB/5.js ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var five = {
+	title: '`housing` - це ми',
+	img: ['bi/al_ovchinnikova.jpg', 'bi/940x1410_0xc0a839a4_6912462991475681269.jpeg', 'bi/58731274.png', 'bi/7a7478039_2376672.png'],
+	text: '`HOUSING` - це, перш за все, люди, котрі роблять свою справу\
+		з любов’ю і більш за все прагнуть поділитися цим почуттям із кожним клієнтом,\
+		завітавшим до нас. Наші менеджери завжди готові відповісти на будь-які Ваші\
+		запитання та надати вичерпну професійну консультацію з приводу товару,\
+		який Вас зацікавив. Ваша довіра до нас та зацікавленість в нашій продукції\
+		спонукає нас до постійного розвитку та самовдосконалення. Наша основна мета –\
+		задовольнити Ваші найвибагливіші потреби та допомогти у разі необхідності.\
+		Звертайтеся до нас за номерами телефонів, які Ви знайдете в розділі «наші контакти»,\
+		чи в соціальних мережах. Також ми завжди будемо раді почути Ваші відгуки\
+		щодо нашої роботи та можливі зауваження чи побажання, щодо її покращення!'
+};
+
+exports.default = five;
+
+/***/ }),
+
+/***/ "./src/js/aboutDescriptionDB/aboutDescriptionDB.js":
+/*!*********************************************************!*\
+  !*** ./src/js/aboutDescriptionDB/aboutDescriptionDB.js ***!
+  \*********************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _ = __webpack_require__(/*! ./1.js */ "./src/js/aboutDescriptionDB/1.js");
+
+var _2 = _interopRequireDefault(_);
+
+var _3 = __webpack_require__(/*! ./2.js */ "./src/js/aboutDescriptionDB/2.js");
+
+var _4 = _interopRequireDefault(_3);
+
+var _5 = __webpack_require__(/*! ./3.js */ "./src/js/aboutDescriptionDB/3.js");
+
+var _6 = _interopRequireDefault(_5);
+
+var _7 = __webpack_require__(/*! ./4.js */ "./src/js/aboutDescriptionDB/4.js");
+
+var _8 = _interopRequireDefault(_7);
+
+var _9 = __webpack_require__(/*! ./5.js */ "./src/js/aboutDescriptionDB/5.js");
+
+var _10 = _interopRequireDefault(_9);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var aboutDescriptionDB = [_2.default, _4.default, _6.default, _8.default, _10.default];
+
+exports.default = aboutDescriptionDB;
 
 /***/ }),
 
@@ -30692,7 +30885,49 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _AboutSection = __webpack_require__(/*! ./AboutSection.jsx */ "./src/js/comp/AboutSection.jsx");
+
+var _AboutSection2 = _interopRequireDefault(_AboutSection);
+
+var _aboutDescriptionDB = __webpack_require__(/*! ../aboutDescriptionDB/aboutDescriptionDB.js */ "./src/js/aboutDescriptionDB/aboutDescriptionDB.js");
+
+var _aboutDescriptionDB2 = _interopRequireDefault(_aboutDescriptionDB);
+
+__webpack_require__(/*! ../../img/bi/delivery.jpg */ "./src/img/bi/delivery.jpg");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var About = function About() {
+	return _react2.default.createElement(
+		'section',
+		{ className: 'about' },
+		_aboutDescriptionDB2.default.map(function (i, n) {
+			return _react2.default.createElement(_AboutSection2.default, { key: n, showAnime: n == 0 ? true : false, data: i });
+		})
+	);
+};
+
+exports.default = About;
+
+/***/ }),
+
+/***/ "./src/js/comp/AboutSection.jsx":
+/*!**************************************!*\
+  !*** ./src/js/comp/AboutSection.jsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
@@ -30702,123 +30937,27 @@ var _Slider = __webpack_require__(/*! ./Slider.jsx */ "./src/js/comp/Slider.jsx"
 
 var _Slider2 = _interopRequireDefault(_Slider);
 
-__webpack_require__(/*! ../../img/bi/delivery.jpg */ "./src/img/bi/delivery.jpg");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var AboutSection = function AboutSection(props) {
+	return _react2.default.createElement(
+		'div',
+		null,
+		_react2.default.createElement(
+			'div',
+			{ className: 'h anime ' + (props.showAnime ? 'show' : '') },
+			props.data.title
+		),
+		_react2.default.createElement(_Slider2.default, { img: props.data.img, arrow: true, showAnime: props.showAnime }),
+		_react2.default.createElement(
+			'div',
+			{ className: 'des anime ' + (props.showAnime ? 'show' : '') },
+			props.data.text
+		)
+	);
+};
 
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var one = ['bi/cbf6e81d34dabf9c21277dc9e48g--tsvety-i-floristika-tsvetochnyj-gorshok.jpg', 'bi/8529-1487603.jpg', 'bi/07.jpg', 'bi/955d2f975523a5150c87db74ddqi--tsvety-i-floristika-tsvetochnyj-gorshok.jpg'];
-var two = ['bi/BDC3E9E1-19B7-4ABA-8B45-41693D938DC8-232-00000044612F7663-1.png', 'bi/service.jpg', 'bi/20150511150957.png', 'bi/img_12394_4.png'];
-var three = ['bi/avgust_26_2016_stranica_2_willow.png', 'bi/dsfdsfdsf.png', 'bi/6d464069f3ce6c83d4e51a33736817f0.jpg', 'bi/depositphotos_47009329-stock-photo-glazed-and-unglazed-ceramic-flower.png'];
-var four = ['bi/np.png', 'bi/delivery.jpg', 'bi/intime.png', 'bi/urk.png'];
-var five = ['bi/al_ovchinnikova.jpg', 'bi/940x1410_0xc0a839a4_6912462991475681269.jpeg', 'bi/58731274.png', 'bi/7a7478039_2376672.png'];
-
-var About = function (_React$Component) {
-	_inherits(About, _React$Component);
-
-	function About(props) {
-		_classCallCheck(this, About);
-
-		var _this = _possibleConstructorReturn(this, (About.__proto__ || Object.getPrototypeOf(About)).call(this, props));
-
-		_this.state = {};
-		return _this;
-	}
-
-	_createClass(About, [{
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'section',
-				{ className: 'about' },
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						{ className: 'h anime show' },
-						'`housing` - \u0446\u0435 \u0440\u0435\u043C\u0435\u0441\u043B\u043E'
-					),
-					_react2.default.createElement(_Slider2.default, { img: one, arrow: true, showAnime: true }),
-					_react2.default.createElement(
-						'div',
-						{ className: 'des anime show' },
-						'\u0414\u043B\u044F \u043D\u0430\u0441 `HOUSING` - \u0446\u0435 \u0431\u0456\u043B\u044C\u0448\u0435, \u043D\u0456\u0436 \u043F\u0440\u043E\u0441\u0442\u043E \u0440\u043E\u0431\u043E\u0442\u0430. \u0426\u0435 \u043D\u0430\u0448\u0430 \u0443\u043B\u044E\u0431\u043B\u0435\u043D\u0430 \u0441\u043F\u0440\u0430\u0432\u0430, \u043D\u0430\u0448\u0430 \u043C\u0440\u0456\u044F, \u0434\u043E \u0440\u0435\u0430\u043B\u0456\u0437\u0430\u0446\u0456\u0457 \u044F\u043A\u043E\u0457 \u043C\u0438 \u0449\u0438\u0440\u043E \u043F\u0440\u0430\u0433\u043D\u0443\u043B\u0438 \u0456 \u0440\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u0438 \u044F\u043A\u043E\u0457 \u043D\u0430\u0440\u0430\u0437\u0456 \u0412\u0438 \u043C\u043E\u0436\u0435\u0442\u0435 \u043F\u043E\u0431\u0430\u0447\u0438\u0442\u0438 \u0442\u0430 \u043E\u0446\u0456\u043D\u0438\u0442\u0438. \u0417 \u043A\u043E\u0436\u043D\u0438\u043C \u0434\u043D\u0435\u043C \u043C\u0438 \u0445\u043E\u0447\u0435\u043C\u043E \u0434\u0430\u0440\u0443\u0432\u0430\u0442\u0438 \u0412\u0430\u043C \u043F\u0440\u0438\u0454\u043C\u043D\u0456 \u0435\u043C\u043E\u0446\u0456\u0457 \u0442\u0430 \u043D\u0430\u043F\u043E\u0432\u043D\u044E\u0432\u0430\u0442\u0438 \u043E\u0441\u0435\u043B\u0456 \u0437\u0430\u0442\u0438\u0448\u043A\u043E\u043C \u0456 \u0442\u0435\u043F\u043B\u043E\u043C. \u0410\u0441\u043E\u0440\u0442\u0438\u043C\u0435\u043D\u0442 \u043D\u0430\u0448\u043E\u0457 \u041A\u043E\u043C\u043F\u0430\u043D\u0456\u0457 \u0434\u043E\u0437\u0432\u043E\u043B\u044F\u0454 \u0437\u0430\u0431\u0435\u0437\u043F\u0435\u0447\u0438\u0442\u0438 \u0433\u0456\u0434\u043D\u0438\u0439 \u0432\u0438\u0431\u0456\u0440 \u043D\u0430\u0432\u0456\u0442\u044C \u0432\u043A\u0440\u0430\u0439 \u0432\u0438\u0431\u0430\u0433\u043B\u0438\u0432\u0438\u043C \u043F\u043E\u043A\u0443\u043F\u0446\u044F\u043C, \u0434\u043E\u0433\u043E\u0434\u0438\u0442\u0438 \u043B\u044E\u0434\u0438\u043D\u0456, \u044F\u043A\u0430 \u0448\u0443\u043A\u0430\u0454 \u0449\u043E\u0441\u044C \u0446\u0456\u043A\u0430\u0432\u0435 \u0442\u0430 \u043D\u0435\u0442\u0440\u0438\u0432\u0456\u0430\u043B\u044C\u043D\u0435, \u0430\u0431\u0438 \u0443\u0440\u0456\u0437\u043D\u043E\u043C\u0430\u043D\u0456\u0442\u043D\u0438\u0442\u0438 \u043F\u0440\u043E\u0441\u0442\u0456\u0440 \u043D\u0430\u0432\u043A\u043E\u043B\u043E \u0441\u0435\u0431\u0435 \u0447\u0438 \u043B\u0438\u0448\u0435 \u0442\u0440\u0456\u0448\u043A\u0438 \u043E\u043D\u043E\u0432\u0438\u0442\u0438 \u0456\u043D\u0442\u0435\u0440\u2019\u0454\u0440, \u0434\u043E\u0434\u0430\u0432\u0448\u0438 \u0439\u043E\u043C\u0443 \u044F\u0441\u043A\u0440\u0430\u0432\u043E\u0433\u043E \u0430\u043A\u0446\u0435\u043D\u0442\u0443. \u041C\u0438 \u0437\u0430\u0432\u0436\u0434\u0438 \u043D\u0430\u043C\u0430\u0433\u0430\u0454\u043C\u043E\u0441\u044F \u043F\u0440\u0438\u0441\u043B\u0443\u0445\u0430\u0442\u0438\u0441\u044F \u0434\u043E \u043A\u043E\u0436\u043D\u043E\u0433\u043E \u043F\u043E\u043A\u0443\u043F\u0446\u044F, \u0440\u043E\u0437\u0443\u043C\u0456\u0442\u0438 \u0439\u043E\u0433\u043E \u043F\u043E\u0442\u0440\u0435\u0431\u0438 \u0456 \u0432 \u044F\u043A\u043E\u043C\u043E\u0433\u0430 \u043A\u043E\u0440\u043E\u0442\u0448\u0438\u0439 \u0442\u0435\u0440\u043C\u0456\u043D \u043D\u0430\u0434\u0430\u0432\u0430\u0442\u0438 \u043D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u0456 \u0442\u043E\u0432\u0430\u0440\u0438 \u0437\u0430 \u0434\u043E\u0441\u0442\u0443\u043F\u043D\u0438\u043C\u0438 \u0446\u0456\u043D\u0430\u043C\u0438.'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						{ className: 'h anime' },
-						'`housing` - \u0446\u0435 \u0434\u0438\u0437\u0430\u0439\u043D'
-					),
-					_react2.default.createElement(_Slider2.default, { img: two, arrow: true, showAnime: false }),
-					_react2.default.createElement(
-						'div',
-						{ className: 'des anime' },
-						'\u041D\u0430\u0448\u0456 \u0442\u043E\u0432\u0430\u0440\u0438 - \u043F\u0440\u043E\u0435\u043A\u0442\u0443\u044E\u0442\u044C\u0441\u044F \u0442\u0430 \u0440\u043E\u0437\u0440\u043E\u0431\u043B\u044F\u044E\u0442\u044C\u0441\u044F \u0443 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u043D\u043E\u0441\u0442\u0456 \u0437 \u0412\u0430\u0448\u0438\u043C\u0438 \u043F\u043E\u0442\u0440\u0435\u0431\u0430\u043C\u0438 \u0442\u0430 \u043F\u043E\u0431\u0430\u0436\u0430\u043D\u043D\u044F\u043C\u0438. \u0411\u0430\u0433\u0430\u0442\u043E \u0437 \u043D\u0438\u0445 \u043F\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043B\u0435\u043D\u0456 \u0432\u0438\u043A\u043B\u044E\u0447\u043D\u043E \u0443 \u043D\u0430\u0441. \u041C\u0438 \u043F\u043E\u0441\u0442\u0456\u0439\u043D\u043E \u043F\u0440\u0430\u0446\u044E\u0454\u043C\u043E \u043D\u0430\u0434 \u0440\u043E\u0437\u0448\u0438\u0440\u0435\u043D\u043D\u044F\u043C \u0430\u0441\u043E\u0440\u0442\u0438\u043C\u0435\u043D\u0442\u0443 \u0442\u0430 \u043D\u0430\u043C\u0430\u0433\u0430\u0454\u043C\u043E\u0441\u044F \u0432\u0434\u043E\u0441\u043A\u043E\u043D\u0430\u043B\u044E\u0432\u0430\u0442\u0438 \u043D\u0430\u0448\u0456 \u043F\u0440\u043E\u043F\u043E\u0437\u0438\u0446\u0456\u0457, \u0432\u0440\u0430\u0445\u043E\u0432\u0443\u044E\u0447\u0438 \u043D\u043E\u0432\u0456\u0442\u043D\u0456 \u0432\u0456\u044F\u043D\u043D\u044F \u0443 \u0441\u0444\u0435\u0440\u0456 \u0441\u0430\u0434\u0456\u0432\u043D\u0438\u0446\u0442\u0432\u0430 \u0442\u0430 \u0434\u0438\u0437\u0430\u0439\u043D\u0443 \u043F\u0440\u0438\u043C\u0456\u0449\u0435\u043D\u044C. \u0414\u0435\u043A\u043E\u0440\u0430\u0442\u0438\u0432\u043D\u0456 \u044F\u043A\u043E\u0441\u0442\u0456 \u043D\u0430\u0448\u043E\u0457 \u043F\u0440\u043E\u0434\u0443\u043A\u0446\u0456\u0457 \u0434\u043E\u0437\u0432\u043E\u043B\u044F\u0442\u044C \u0412\u0430\u043C \u0441\u0442\u0432\u043E\u0440\u0438\u0442\u0438 \u043F\u0440\u0435\u043A\u0440\u0430\u0441\u043D\u0456 \u043A\u043E\u043C\u043F\u043E\u0437\u0438\u0446\u0456\u0457, \u0432\u0434\u0430\u043B\u043E \u0434\u043E\u043F\u043E\u0432\u043D\u044F\u0442\u044C \u0431\u0443\u0434\u044C-\u044F\u043A\u0438\u0439 \u0441\u0442\u0438\u043B\u044C\u043D\u0438\u0439 \u0456 \u0441\u0443\u0447\u0430\u0441\u043D\u0438\u0439 \u0456\u043D\u0442\u0435\u0440\'\u0454\u0440, \u0430 \u0442\u0430\u043A\u043E\u0436 \u0433\u0456\u0434\u043D\u043E \u043F\u0456\u0434\u043A\u0440\u0435\u0441\u043B\u044F\u0442\u044C \u0440\u043E\u0441\u043B\u0438\u043D\u0443 \u0432 \u043D\u044C\u043E\u043C\u0443.'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						{ className: 'h anime' },
-						'`housing` - \u0446\u0435 \u0433\u0430\u0440\u0430\u043D\u0442i\u044F'
-					),
-					_react2.default.createElement(_Slider2.default, { img: three, arrow: true, showAnime: false }),
-					_react2.default.createElement(
-						'div',
-						{ className: 'des anime' },
-						'\u041F\u0440\u043E\u0434\u0443\u043A\u0446\u0456\u044F \u043D\u0430\u0448\u043E\u0457 \u041A\u043E\u043C\u043F\u0430\u043D\u0456\u0457 \u0432\u0438\u0433\u043E\u0442\u043E\u0432\u043B\u044F\u0454\u0442\u044C\u0441\u044F \u0437 \u044F\u043A\u0456\u0441\u043D\u0438\u0445 \u0442\u0430 \u0435\u043A\u043E\u043B\u043E\u0433\u0456\u0447\u043D\u043E \u0431\u0435\u0437\u043F\u0435\u0447\u043D\u0438\u0445 \u043C\u0430\u0442\u0435\u0440\u0456\u0430\u043B\u0456\u0432. \u0422\u0430\u043A\u043E\u0436 \u043C\u0438 \u0437\u0430\u0432\u0436\u0434\u0438 \u0433\u043E\u0442\u043E\u0432\u0456 \u043F\u0456\u0442\u0438 \u0412\u0430\u043C \u043D\u0430\u0437\u0443\u0441\u0442\u0440\u0456\u0447 \u0442\u0430, \u043F\u0440\u0438 \u043D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u043E\u0441\u0442\u0456, \u0437\u0440\u043E\u0431\u0438\u0442\u0438 \u0437\u0430\u043C\u0456\u043D\u0443 \u0442\u043E\u0432\u0430\u0440\u0443, \u044F\u043A\u0438\u0439, \u0437 \u0442\u043E\u0457 \u0447\u0438 \u0456\u043D\u0448\u043E\u0457 \u043F\u0440\u0438\u0447\u0438\u043D\u0438, \u0412\u0430\u043C \u043D\u0435 \u043F\u0456\u0434\u0456\u0439\u0448\u043E\u0432.'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						{ className: 'h anime' },
-						'`housing` - \u0446\u0435 \u0437\u0440\u0443\u0447\u043D\u043E'
-					),
-					_react2.default.createElement(_Slider2.default, { img: four, arrow: true, showAnime: false }),
-					_react2.default.createElement(
-						'div',
-						{ className: 'des anime' },
-						'\u041C\u0438 \u0441\u0442\u0432\u043E\u0440\u0438\u043B\u0438 \u043D\u0430\u0448\u0443 \u041A\u043E\u043C\u043F\u0430\u043D\u0456\u044E \u0442\u0430 \u0446\u0435\u0439 \u0441\u0430\u0439\u0442, \u0449\u043E\u0431 \u0412\u0430\u043C \u0431\u0443\u043B\u043E \u0437\u0440\u0443\u0447\u043D\u043E \u0456 \u043B\u0435\u0433\u043A\u043E \u0432 \u043E\u0434\u043D\u043E\u043C\u0443 \u043C\u0456\u0441\u0446\u0456 \u0432\u0438\u0431\u0440\u0430\u0442\u0438 \u0432\u0441\u0435, \u0449\u043E \u043D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u043E \u0434\u043B\u044F \u043F\u0435\u0440\u0435\u0441\u0430\u0434\u043A\u0438 \u0440\u043E\u0441\u043B\u0438\u043D, \u043E\u043D\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u0434\u043E\u043C\u0430\u0448\u043D\u044C\u043E\u0433\u043E \u0447\u0438 \u0441\u0430\u0434\u043E\u0432\u043E\u0433\u043E \u0456\u043D\u0442\u0435\u0440\u2019\u0454\u0440\u0443, \u0430\u0431\u043E \u043F\u0440\u0438\u043A\u0440\u0430\u0441\u0438 \u0412\u0430\u0448\u043E\u0457 \u043E\u0441\u0435\u043B\u0456. \u0423 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0434\u043D\u0438\u0445 \u0440\u043E\u0437\u0434\u0456\u043B\u0430\u0445 \u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0433\u043E \u043C\u0435\u043D\u044E \u0412\u0438 \u0437\u043D\u0430\u0439\u0434\u0435\u0442\u0435 \u0432\u0441\u044E \u043D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u0443 \u0456\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0456\u044E \u043F\u043E \u0432\u0441\u0456\u043C \u0432\u0438\u0434\u0430\u043C \u043F\u0440\u043E\u0434\u0443\u043A\u0446\u0456\u0457, \u044F\u043A\u0438\u043C\u0438 \u0437\u0430\u0439\u043C\u0430\u0454\u0442\u044C\u0441\u044F \u043D\u0430\u0448\u0430 \u041A\u043E\u043C\u043F\u0430\u043D\u0456\u044F, \u0437 \u0444\u043E\u0442\u043E\u0433\u0440\u0430\u0444\u0456\u044F\u043C\u0438, \u0445\u0430\u0440\u0430\u043A\u0442\u0435\u0440\u0438\u0441\u0442\u0438\u043A\u0430\u043C\u0438 \u0442\u043E\u0432\u0430\u0440\u0456\u0432 \u0442\u0430 \u0430\u043A\u0442\u0443\u0430\u043B\u044C\u043D\u0438\u043C\u0438 \u0446\u0456\u043D\u0430\u043C\u0438. \u041E\u0434\u0440\u0430\u0437\u0443 \u043F\u0456\u0441\u043B\u044F \u043E\u0442\u0440\u0438\u043C\u0430\u043D\u043D\u044F \u0437\u0430\u043C\u043E\u0432\u043B\u0435\u043D\u043D\u044F \u043D\u0430\u0448\u0456 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0438 \u0437\u0432\u2019\u044F\u0436\u0443\u0442\u044C\u0441\u044F \u0437 \u0412\u0430\u043C\u0438, \u0430\u0431\u0438 \u043E\u0431\u0440\u0430\u0442\u0438 \u043D\u0430\u0439\u0431\u0456\u043B\u044C\u0448 \u043A\u043E\u043C\u0444\u043E\u0440\u0442\u043D\u0438\u0439 \u0434\u043B\u044F \u0412\u0430\u0441 \u0441\u043F\u043E\u0441\u0456\u0431 \u043E\u043F\u043B\u0430\u0442\u0438 \u0442\u0430 \u0434\u043E\u0441\u0442\u0430\u0432\u043A\u0438. \u041C\u0438 \u043D\u0430\u043C\u0430\u0433\u0430\u043B\u0438\u0441\u044F \u0437\u0440\u043E\u0431\u0438\u0442\u0438 \u043F\u0440\u043E\u0446\u0435\u0441 \u0432\u0438\u0431\u043E\u0440\u0443 \u0442\u0430 \u043A\u0443\u043F\u0456\u0432\u043B\u0456 \u0442\u043E\u0432\u0430\u0440\u0443 \u044F\u043A\u043E\u043C\u043E\u0433\u0430 \u0437\u0440\u0443\u0447\u043D\u0456\u0448\u0438\u043C \u0434\u043B\u044F \u0412\u0430\u0441 \u0456 \u0441\u043F\u043E\u0434\u0456\u0432\u0430\u0454\u043C\u043E\u0441\u044F, \u0449\u043E \u043D\u0430\u0448\u0456 \u0437\u0443\u0441\u0438\u043B\u043B\u044F \u043D\u0435 \u043B\u0438\u0448\u0438\u043B\u0438\u0441\u044F \u043C\u0430\u0440\u043D\u0438\u043C\u0438.'
-					)
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					_react2.default.createElement(
-						'div',
-						{ className: 'h anime' },
-						'`housing` - \u0446\u0435 \u043C\u0438'
-					),
-					_react2.default.createElement(_Slider2.default, { img: five, arrow: true, showAnime: false }),
-					_react2.default.createElement(
-						'div',
-						{ className: 'des' },
-						'`HOUSING` - \u0446\u0435, \u043F\u0435\u0440\u0448 \u0437\u0430 \u0432\u0441\u0435, \u043B\u044E\u0434\u0438, \u043A\u043E\u0442\u0440\u0456 \u0440\u043E\u0431\u043B\u044F\u0442\u044C \u0441\u0432\u043E\u044E \u0441\u043F\u0440\u0430\u0432\u0443 \u0437 \u043B\u044E\u0431\u043E\u0432\u2019\u044E \u0456 \u0431\u0456\u043B\u044C\u0448 \u0437\u0430 \u0432\u0441\u0435 \u043F\u0440\u0430\u0433\u043D\u0443\u0442\u044C \u043F\u043E\u0434\u0456\u043B\u0438\u0442\u0438\u0441\u044F \u0446\u0438\u043C \u043F\u043E\u0447\u0443\u0442\u0442\u044F\u043C \u0456\u0437 \u043A\u043E\u0436\u043D\u0438\u043C \u043A\u043B\u0456\u0454\u043D\u0442\u043E\u043C, \u0437\u0430\u0432\u0456\u0442\u0430\u0432\u0448\u0438\u043C \u0434\u043E \u043D\u0430\u0441. \u041D\u0430\u0448\u0456 \u043C\u0435\u043D\u0435\u0434\u0436\u0435\u0440\u0438 \u0437\u0430\u0432\u0436\u0434\u0438 \u0433\u043E\u0442\u043E\u0432\u0456 \u0432\u0456\u0434\u043F\u043E\u0432\u0456\u0441\u0442\u0438 \u043D\u0430 \u0431\u0443\u0434\u044C-\u044F\u043A\u0456 \u0412\u0430\u0448\u0456 \u0437\u0430\u043F\u0438\u0442\u0430\u043D\u043D\u044F \u0442\u0430 \u043D\u0430\u0434\u0430\u0442\u0438 \u0432\u0438\u0447\u0435\u0440\u043F\u043D\u0443 \u043F\u0440\u043E\u0444\u0435\u0441\u0456\u0439\u043D\u0443 \u043A\u043E\u043D\u0441\u0443\u043B\u044C\u0442\u0430\u0446\u0456\u044E \u0437 \u043F\u0440\u0438\u0432\u043E\u0434\u0443 \u0442\u043E\u0432\u0430\u0440\u0443, \u044F\u043A\u0438\u0439 \u0412\u0430\u0441 \u0437\u0430\u0446\u0456\u043A\u0430\u0432\u0438\u0432. \u0412\u0430\u0448\u0430 \u0434\u043E\u0432\u0456\u0440\u0430 \u0434\u043E \u043D\u0430\u0441 \u0442\u0430 \u0437\u0430\u0446\u0456\u043A\u0430\u0432\u043B\u0435\u043D\u0456\u0441\u0442\u044C \u0432 \u043D\u0430\u0448\u0456\u0439 \u043F\u0440\u043E\u0434\u0443\u043A\u0446\u0456\u0457 \u0441\u043F\u043E\u043D\u0443\u043A\u0430\u0454 \u043D\u0430\u0441 \u0434\u043E \u043F\u043E\u0441\u0442\u0456\u0439\u043D\u043E\u0433\u043E \u0440\u043E\u0437\u0432\u0438\u0442\u043A\u0443 \u0442\u0430 \u0441\u0430\u043C\u043E\u0432\u0434\u043E\u0441\u043A\u043E\u043D\u0430\u043B\u0435\u043D\u043D\u044F. \u041D\u0430\u0448\u0430 \u043E\u0441\u043D\u043E\u0432\u043D\u0430 \u043C\u0435\u0442\u0430 \u2013 \u0437\u0430\u0434\u043E\u0432\u043E\u043B\u044C\u043D\u0438\u0442\u0438 \u0412\u0430\u0448\u0456 \u043D\u0430\u0439\u0432\u0438\u0431\u0430\u0433\u043B\u0438\u0432\u0456\u0448\u0456 \u043F\u043E\u0442\u0440\u0435\u0431\u0438 \u0442\u0430 \u0434\u043E\u043F\u043E\u043C\u043E\u0433\u0442\u0438 \u0443 \u0440\u0430\u0437\u0456 \u043D\u0435\u043E\u0431\u0445\u0456\u0434\u043D\u043E\u0441\u0442\u0456. \u0417\u0432\u0435\u0440\u0442\u0430\u0439\u0442\u0435\u0441\u044F \u0434\u043E \u043D\u0430\u0441 \u0437\u0430 \u043D\u043E\u043C\u0435\u0440\u0430\u043C\u0438 \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0456\u0432, \u044F\u043A\u0456 \u0412\u0438 \u0437\u043D\u0430\u0439\u0434\u0435\u0442\u0435 \u0432 \u0440\u043E\u0437\u0434\u0456\u043B\u0456 \xAB\u043D\u0430\u0448\u0456 \u043A\u043E\u043D\u0442\u0430\u043A\u0442\u0438\xBB, \u0447\u0438 \u0432 \u0441\u043E\u0446\u0456\u0430\u043B\u044C\u043D\u0438\u0445 \u043C\u0435\u0440\u0435\u0436\u0430\u0445. \u0422\u0430\u043A\u043E\u0436 \u043C\u0438 \u0437\u0430\u0432\u0436\u0434\u0438 \u0431\u0443\u0434\u0435\u043C\u043E \u0440\u0430\u0434\u0456 \u043F\u043E\u0447\u0443\u0442\u0438 \u0412\u0430\u0448\u0456 \u0432\u0456\u0434\u0433\u0443\u043A\u0438 \u0449\u043E\u0434\u043E \u043D\u0430\u0448\u043E\u0457 \u0440\u043E\u0431\u043E\u0442\u0438 \u0442\u0430 \u043C\u043E\u0436\u043B\u0438\u0432\u0456 \u0437\u0430\u0443\u0432\u0430\u0436\u0435\u043D\u043D\u044F \u0447\u0438 \u043F\u043E\u0431\u0430\u0436\u0430\u043D\u043D\u044F, \u0449\u043E\u0434\u043E \u0457\u0457 \u043F\u043E\u043A\u0440\u0430\u0449\u0435\u043D\u043D\u044F!'
-					)
-				)
-			);
-		}
-	}]);
-
-	return About;
-}(_react2.default.Component);
-
-exports.default = About;
+exports.default = AboutSection;
 
 /***/ }),
 
@@ -31010,17 +31149,17 @@ var _react2 = _interopRequireDefault(_react);
 
 var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
 
-__webpack_require__(/*! ../../img/bi/contact.jpg */ "./src/img/bi/contact.jpg");
+__webpack_require__(/*! ../../img/wrapper/contact.jpg */ "./src/img/wrapper/contact.jpg");
 
-__webpack_require__(/*! ../../img/bi/about.jpg */ "./src/img/bi/about.jpg");
+__webpack_require__(/*! ../../img/wrapper/about.jpg */ "./src/img/wrapper/about.jpg");
 
-__webpack_require__(/*! ../../img/bi/decorative.jpg */ "./src/img/bi/decorative.jpg");
+__webpack_require__(/*! ../../img/wrapper/decorative.jpg */ "./src/img/wrapper/decorative.jpg");
 
-__webpack_require__(/*! ../../img/bi/classic.jpg */ "./src/img/bi/classic.jpg");
+__webpack_require__(/*! ../../img/wrapper/classic.jpg */ "./src/img/wrapper/classic.jpg");
 
-__webpack_require__(/*! ../../img/bi/pots.jpg */ "./src/img/bi/pots.jpg");
+__webpack_require__(/*! ../../img/wrapper/pots.jpg */ "./src/img/wrapper/pots.jpg");
 
-__webpack_require__(/*! ../../img/bi/basket.jpg */ "./src/img/bi/basket.jpg");
+__webpack_require__(/*! ../../img/wrapper/basket.jpg */ "./src/img/wrapper/basket.jpg");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -31252,15 +31391,15 @@ var Basket = function (_React$Component) {
 					_react2.default.createElement('img', { onClick: function onClick() {
 							return alert('paysystems are not working yet');
 						},
-						src: __webpack_require__(/*! ../../img/visa.png */ "./src/img/visa.png") }),
+						src: __webpack_require__(/*! ../../img/basket/visa.png */ "./src/img/basket/visa.png") }),
 					_react2.default.createElement('img', { onClick: function onClick() {
 							return alert('paysystems are not working yet');
 						},
-						src: __webpack_require__(/*! ../../img/paypal.png */ "./src/img/paypal.png") }),
+						src: __webpack_require__(/*! ../../img/basket/paypal.png */ "./src/img/basket/paypal.png") }),
 					_react2.default.createElement('img', { onClick: function onClick() {
 							return alert('paysystems are not working yet');
 						},
-						src: __webpack_require__(/*! ../../img/master.png */ "./src/img/master.png") })
+						src: __webpack_require__(/*! ../../img/basket/master.png */ "./src/img/basket/master.png") })
 				)
 			);
 		}
@@ -31297,8 +31436,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -31309,86 +31446,60 @@ var _redux = __webpack_require__(/*! ../redux.js */ "./src/js/redux.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var BasketProduct = function (_React$Component) {
-	_inherits(BasketProduct, _React$Component);
-
-	function BasketProduct(props) {
-		_classCallCheck(this, BasketProduct);
-
-		var _this = _possibleConstructorReturn(this, (BasketProduct.__proto__ || Object.getPrototypeOf(BasketProduct)).call(this, props));
-
-		_this.state = {};
-		return _this;
-	}
-
-	_createClass(BasketProduct, [{
-		key: 'render',
-		value: function render() {
-			var _this2 = this;
-
-			return _react2.default.createElement(
+var BasketProduct = function BasketProduct(props) {
+	return _react2.default.createElement(
+		'div',
+		{ className: 'prod' },
+		_react2.default.createElement('img', { src: __webpack_require__("./src/img sync recursive ^\\.\\/.*$")("./" + props.product.img) }),
+		_react2.default.createElement(
+			'div',
+			{ className: 'name' },
+			props.product.name
+		),
+		_react2.default.createElement(
+			'div',
+			null,
+			'\u0446i\u043D\u0430 : ',
+			props.product.price,
+			'$'
+		),
+		_react2.default.createElement(
+			'div',
+			{ className: 'price' },
+			_react2.default.createElement('img', {
+				onClick: function onClick() {
+					return props.changeQuantity(props.product.name, -1);
+				},
+				className: 'arrow left', src: __webpack_require__(/*! ../../img/arrow.png */ "./src/img/arrow.png") }),
+			_react2.default.createElement(
 				'div',
-				{ className: 'prod' },
-				_react2.default.createElement('img', { src: __webpack_require__("./src/img sync recursive ^\\.\\/.*$")("./" + this.props.product.img) }),
-				_react2.default.createElement(
-					'div',
-					{ className: 'name' },
-					this.props.product.name
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					'\u0446i\u043D\u0430 : ',
-					this.props.product.price,
-					'$'
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'price' },
-					_react2.default.createElement('img', {
-						onClick: function onClick() {
-							return _this2.props.changeQuantity(_this2.props.product.name, -1);
-						},
-						className: 'arrow left', src: __webpack_require__(/*! ../../img/arrow.png */ "./src/img/arrow.png") }),
-					_react2.default.createElement(
-						'div',
-						null,
-						'\u043Ai\u043B\u044C\u043Ai\u0441\u0442\u044C : ',
-						this.props.product.quantity,
-						'\u0448\u0442'
-					),
-					_react2.default.createElement('img', {
-						onClick: function onClick() {
-							return _this2.props.changeQuantity(_this2.props.product.name, 1);
-						},
-						className: 'arrow right', src: __webpack_require__(/*! ../../img/arrow.png */ "./src/img/arrow.png") })
-				),
-				_react2.default.createElement(
-					'div',
-					null,
-					'\u0441\u0443\u043C\u043C\u0430 : ',
-					this.props.product.price * this.props.product.quantity,
-					'$'
-				),
-				_react2.default.createElement(
-					'div',
-					{ onClick: function onClick() {
-							return _this2.props.deleteItem(_this2.props.product.name);
-						}, className: 'reset' },
-					_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/cross.png */ "./src/img/cross.png") })
-				)
-			);
-		}
-	}]);
-
-	return BasketProduct;
-}(_react2.default.Component);
+				null,
+				'\u043Ai\u043B\u044C\u043Ai\u0441\u0442\u044C : ',
+				props.product.quantity,
+				'\u0448\u0442'
+			),
+			_react2.default.createElement('img', {
+				onClick: function onClick() {
+					return props.changeQuantity(props.product.name, 1);
+				},
+				className: 'arrow right', src: __webpack_require__(/*! ../../img/arrow.png */ "./src/img/arrow.png") })
+		),
+		_react2.default.createElement(
+			'div',
+			null,
+			'\u0441\u0443\u043C\u043C\u0430 : ',
+			props.product.price * props.product.quantity,
+			'$'
+		),
+		_react2.default.createElement(
+			'div',
+			{ onClick: function onClick() {
+					return props.deleteItem(props.product.name);
+				}, className: 'reset' },
+			_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/basket/cross.png */ "./src/img/basket/cross.png") })
+		)
+	);
+};
 
 exports.default = (0, _reactRedux.connect)(function (state) {
 	return {
@@ -31421,8 +31532,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -31437,42 +31546,16 @@ var _CategoryItems2 = _interopRequireDefault(_CategoryItems);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Category = function (_React$Component) {
-	_inherits(Category, _React$Component);
-
-	function Category(props) {
-		_classCallCheck(this, Category);
-
-		var _this = _possibleConstructorReturn(this, (Category.__proto__ || Object.getPrototypeOf(Category)).call(this, props));
-
-		_this.state = {};
-		return _this;
-	}
-
-	_createClass(Category, [{
-		key: 'render',
-		value: function render() {
-			var _this2 = this;
-
-			var category = (0, _db2.default)(this.props.category);
-			return _react2.default.createElement(
-				'section',
-				{ className: 'category' },
-				category.map(function (i, n) {
-					return _react2.default.createElement(_CategoryItems2.default, { match: _this2.props.match, key: n, n: n, product: i });
-				})
-			);
-		}
-	}]);
-
-	return Category;
-}(_react2.default.Component);
+var Category = function Category(props) {
+	var category = (0, _db2.default)(props.category);
+	return _react2.default.createElement(
+		'section',
+		{ className: 'category' },
+		category.map(function (i, n) {
+			return _react2.default.createElement(_CategoryItems2.default, { match: props.match, key: n, n: n, product: i });
+		})
+	);
+};
 
 exports.default = Category;
 
@@ -31492,8 +31575,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -31506,39 +31587,15 @@ var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_module
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var CategoryItems = function (_React$Component) {
-	_inherits(CategoryItems, _React$Component);
-
-	function CategoryItems(props) {
-		_classCallCheck(this, CategoryItems);
-
-		var _this = _possibleConstructorReturn(this, (CategoryItems.__proto__ || Object.getPrototypeOf(CategoryItems)).call(this, props));
-
-		_this.state = {};
-		return _this;
-	}
-
-	_createClass(CategoryItems, [{
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				_reactRouterDom.Link,
-				{ to: this.props.match.match.path + '/' + this.props.product.name, className: 'category-item' },
-				_react2.default.createElement(_Slider2.default, { img: this.props.product.img,
-					showAnime: this.props.n < 4 ? true : false,
-					product: this.props.product, arrow: false })
-			);
-		}
-	}]);
-
-	return CategoryItems;
-}(_react2.default.Component);
+var CategoryItems = function CategoryItems(props) {
+	return _react2.default.createElement(
+		_reactRouterDom.Link,
+		{ to: props.match.match.path + '/' + props.product.name, className: 'category-item' },
+		_react2.default.createElement(_Slider2.default, { img: props.product.img,
+			showAnime: props.n < 4 ? true : false,
+			product: props.product, arrow: false })
+	);
+};
 
 exports.default = CategoryItems;
 
@@ -31558,8 +31615,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -31568,109 +31623,85 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var Footer = function (_React$Component) {
-	_inherits(Footer, _React$Component);
-
-	function Footer(props) {
-		_classCallCheck(this, Footer);
-
-		var _this = _possibleConstructorReturn(this, (Footer.__proto__ || Object.getPrototypeOf(Footer)).call(this, props));
-
-		_this.state = {};
-		return _this;
-	}
-
-	_createClass(Footer, [{
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'footer',
-				null,
+var Footer = function Footer() {
+	return _react2.default.createElement(
+		'footer',
+		null,
+		_react2.default.createElement(
+			'ul',
+			{ className: 'contact' },
+			_react2.default.createElement(
+				'li',
+				{ className: 'address' },
+				'\u043D\u0430\u0448\u0430 \u0430\u0434\u0440\u0435\u0441\u0430',
+				_react2.default.createElement('div', { className: 'line' }),
+				_react2.default.createElement(
+					'div',
+					{ className: 'txt' },
+					'\u041A\u0430\u043Di\u0432',
+					_react2.default.createElement('br', null),
+					'\u0427\u0435\u0440\u043A\u0430\u0441\u044C\u043A\u0430\u044F \u043E\u0431\u043B',
+					_react2.default.createElement('br', null),
+					'\u0432\u0443\u043B. I\u043B\u044C\u044D\u043D\u043A\u0430 33/\u0430'
+				)
+			),
+			_react2.default.createElement(
+				'li',
+				{ className: 'soc' },
 				_react2.default.createElement(
 					'ul',
-					{ className: 'contact' },
+					null,
 					_react2.default.createElement(
 						'li',
-						{ className: 'address' },
-						'\u043D\u0430\u0448\u0430 \u0430\u0434\u0440\u0435\u0441\u0430',
-						_react2.default.createElement('div', { className: 'line' }),
+						null,
 						_react2.default.createElement(
-							'div',
-							{ className: 'txt' },
-							'\u041A\u0430\u043Di\u0432',
-							_react2.default.createElement('br', null),
-							'\u0427\u0435\u0440\u043A\u0430\u0441\u044C\u043A\u0430\u044F \u043E\u0431\u043B',
-							_react2.default.createElement('br', null),
-							'\u0432\u0443\u043B. I\u043B\u044C\u044D\u043D\u043A\u0430 33/\u0430'
+							'a',
+							{ href: '' },
+							_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/footer/telegram.png */ "./src/img/footer/telegram.png"), alt: '' })
 						)
 					),
 					_react2.default.createElement(
 						'li',
-						{ className: 'soc' },
+						null,
 						_react2.default.createElement(
-							'ul',
-							null,
-							_react2.default.createElement(
-								'li',
-								null,
-								_react2.default.createElement(
-									'a',
-									{ href: '' },
-									_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/telegram.png */ "./src/img/telegram.png"), alt: '' })
-								)
-							),
-							_react2.default.createElement(
-								'li',
-								null,
-								_react2.default.createElement(
-									'a',
-									{ href: '' },
-									_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/facebook.png */ "./src/img/facebook.png"), alt: '' })
-								)
-							),
-							_react2.default.createElement(
-								'li',
-								null,
-								_react2.default.createElement(
-									'a',
-									{ href: '' },
-									_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/instagramm.png */ "./src/img/instagramm.png"), alt: '' })
-								)
-							)
+							'a',
+							{ href: '' },
+							_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/footer/facebook.png */ "./src/img/footer/facebook.png"), alt: '' })
 						)
 					),
 					_react2.default.createElement(
 						'li',
-						{ className: 'tel' },
-						'\u043D\u0430\u0448i \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0438',
-						_react2.default.createElement('div', { className: 'line' }),
+						null,
 						_react2.default.createElement(
-							'div',
-							{ className: 'txt' },
-							'+38(093)981-84-47',
-							_react2.default.createElement('br', null),
-							'+38(068)723-24-11'
+							'a',
+							{ href: '' },
+							_react2.default.createElement('img', { src: __webpack_require__(/*! ../../img/footer/instagramm.png */ "./src/img/footer/instagramm.png"), alt: '' })
 						)
 					)
-				),
-				_react2.default.createElement('iframe', { src: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d554886.425432003!2d31.141649767097405!3d49.757264460688575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d40c75f1ebb33d%3A0x9b9f7a7b0b4859a8!2sKaniv%2C+Cherkasy+Oblast%2C+19000!5e0!3m2!1sen!2sua!4v1539466978930', allowFullScreen: true }),
-				_react2.default.createElement(
-					'a',
-					_defineProperty({ className: 'we', href: '' }, 'className', 'we'),
-					'made by BringMeTheAugust.com'
 				)
-			);
-		}
-	}]);
-
-	return Footer;
-}(_react2.default.Component);
+			),
+			_react2.default.createElement(
+				'li',
+				{ className: 'tel' },
+				'\u043D\u0430\u0448i \u0442\u0435\u043B\u0435\u0444\u043E\u043D\u0438',
+				_react2.default.createElement('div', { className: 'line' }),
+				_react2.default.createElement(
+					'div',
+					{ className: 'txt' },
+					'+38(093)981-84-47',
+					_react2.default.createElement('br', null),
+					'+38(068)723-24-11'
+				)
+			)
+		),
+		_react2.default.createElement('iframe', { src: 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d554886.425432003!2d31.141649767097405!3d49.757264460688575!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40d40c75f1ebb33d%3A0x9b9f7a7b0b4859a8!2sKaniv%2C+Cherkasy+Oblast%2C+19000!5e0!3m2!1sen!2sua!4v1539466978930', allowFullScreen: true }),
+		_react2.default.createElement(
+			'a',
+			_defineProperty({ className: 'we', href: 'https://www.facebook.com/bringmetheaugust', target: '_blank' }, 'className', 'we'),
+			'made by BringMeTheAugust'
+		)
+	);
+};
 
 exports.default = Footer;
 
@@ -31690,8 +31721,6 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
@@ -31704,61 +31733,33 @@ var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_module
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var tree = ['tree-1.jpg', 'tree-4.jpg', 'tree-2.jpg', 'tree-3.jpg'];
-var dsp = ['dsp-2.jpg', 'dsp-3.jpg', 'dsp-4.jpg', 'dsp-5.jpg'];
-var fito = ['fito-1.jpg', 'fito-2.jpg', 'fito-3.jpg', 'fito-4.jpg'];
-
-var Header = function (_React$Component) {
-	_inherits(Header, _React$Component);
-
-	function Header(props) {
-		_classCallCheck(this, Header);
-
-		var _this = _possibleConstructorReturn(this, (Header.__proto__ || Object.getPrototypeOf(Header)).call(this, props));
-
-		_this.state = {};
-		return _this;
-	}
-
-	_createClass(Header, [{
-		key: 'render',
-		value: function render() {
-			return _react2.default.createElement(
-				'header',
+var Header = function Header() {
+	return _react2.default.createElement(
+		'header',
+		null,
+		_react2.default.createElement(
+			'div',
+			{ className: 'logo' },
+			'`housing`'
+		),
+		_react2.default.createElement(
+			'div',
+			{ className: 'we' },
+			'\u041C\u0438 \u0435\u043A\u0441\u043F\u043E\u0440\u0442\u0443\u0454\u043C\u043E, \u043F\u0440\u043E\u0435\u043A\u0442\u0443\u0454\u043C\u043E \u0442\u0430 \u0432\u0438\u0433\u043E\u0442\u043E\u0432\u043B\u044F\u0454\u043C \u0441\u0430\u0434\u043E\u0432i \u0433\u043B\u0435\u0447\u0438\u043A\u0438 \u044F\u043A \u0437\u043E\u0432\u043Di\u0448\u043D\u044C\u043E\u0433\u043E, \u0442\u0430\u043A i \u0432\u043D\u0443\u0442\u0440i\u0448\u043D\u044C\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\'\u0454\u0440\u0430 \u0437 2017 \u0440\u043E\u043A\u0443. \u0414\u043E\u0432i\u0440\u0430 \u043D\u0430\u0448\u0438\u0445 \u043A\u043Bi\u0454\u043D\u0442i\u0432 \u0454 \u0433\u043E\u043B\u043E\u0432\u043D\u0438\u043C \u043F\u0440i\u043E\u0440i\u0442\u0435\u0442\u043E\u043C \u0434\u043B\u044F `Housing`. \u0422\u0440\u0438\u043C\u0430\u0442\u0438 \u0447\u0435\u0441\u043D\u0435 i\u043C\'\u044F \u0442\u0430 \u0432i\u0434\u0434\u0430\u043Di\u0441\u0442\u044C \u0441\u0432\u043E\u0439\u043E\u043C\u0443 \u0440\u0435\u043C\u0435\u0441\u043B\u0443 \u0437\u043E\u0431\u043E\u0432\'\u044F\u0437\u0443\u0454 \u043D\u0430\u0441 \u0437\u0443\u0441\u0435\u0440\u0435\u0434\u0436\u0443\u0432\u0430\u0442\u0438\u0441\u044C \u043D\u0430 \u043A\u0430\u0436\u043Di\u0439 \u0434\u0435\u0442\u0430\u043Bi, \u043D\u0430 \u043A\u0430\u0436\u043Di\u0439 \u043B\u0438\u043D\u0438i.'
+		),
+		_react2.default.createElement(
+			'div',
+			{ className: 'founder' },
+			_react2.default.createElement(
+				'span',
 				null,
-				_react2.default.createElement(
-					'div',
-					{ className: 'logo' },
-					'`housing`'
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'we' },
-					'\u041C\u0438 \u0435\u043A\u0441\u043F\u043E\u0440\u0442\u0443\u0454\u043C\u043E, \u043F\u0440\u043E\u0435\u043A\u0442\u0443\u0454\u043C\u043E \u0442\u0430 \u0432\u0438\u0433\u043E\u0442\u043E\u0432\u043B\u044F\u0454\u043C \u0441\u0430\u0434\u043E\u0432i \u0433\u043B\u0435\u0447\u0438\u043A\u0438 \u044F\u043A \u0437\u043E\u0432\u043Di\u0448\u043D\u044C\u043E\u0433\u043E, \u0442\u0430\u043A i \u0432\u043D\u0443\u0442\u0440i\u0448\u043D\u044C\u043E\u0433\u043E \u0438\u043D\u0442\u0435\u0440\'\u0454\u0440\u0430 \u0437 2017 \u0440\u043E\u043A\u0443. \u0414\u043E\u0432i\u0440\u0430 \u043D\u0430\u0448\u0438\u0445 \u043A\u043Bi\u0454\u043D\u0442i\u0432 \u0454 \u0433\u043E\u043B\u043E\u0432\u043D\u0438\u043C \u043F\u0440i\u043E\u0440i\u0442\u0435\u0442\u043E\u043C \u0434\u043B\u044F `Housing`. \u0422\u0440\u0438\u043C\u0430\u0442\u0438 \u0447\u0435\u0441\u043D\u0435 i\u043C\'\u044F \u0442\u0430 \u0432i\u0434\u0434\u0430\u043Di\u0441\u0442\u044C \u0441\u0432\u043E\u0439\u043E\u043C\u0443 \u0440\u0435\u043C\u0435\u0441\u043B\u0443 \u0437\u043E\u0431\u043E\u0432\'\u044F\u0437\u0443\u0454 \u043D\u0430\u0441 \u0437\u0443\u0441\u0435\u0440\u0435\u0434\u0436\u0443\u0432\u0430\u0442\u0438\u0441\u044C \u043D\u0430 \u043A\u0430\u0436\u043Di\u0439 \u0434\u0435\u0442\u0430\u043Bi, \u043D\u0430 \u043A\u0430\u0436\u043Di\u0439 \u043B\u0438\u043D\u0438i.'
-				),
-				_react2.default.createElement(
-					'div',
-					{ className: 'founder' },
-					_react2.default.createElement(
-						'span',
-						null,
-						'\u041E\u043B\u0435\u043A\u0441\u0430\u043D\u0434\u0440 \u041E\u0433\u0440\u0430\u0434\u043A\u0430'
-					),
-					_react2.default.createElement('br', null),
-					'\u0437\u0430\u0441\u043D\u043E\u0432\u043D\u0438\u043A `Housing`'
-				)
-			);
-		}
-	}]);
-
-	return Header;
-}(_react2.default.Component);
+				'\u041E\u043B\u0435\u043A\u0441\u0430\u043D\u0434\u0440 \u041E\u0433\u0440\u0430\u0434\u043A\u0430'
+			),
+			_react2.default.createElement('br', null),
+			'\u0437\u0430\u0441\u043D\u043E\u0432\u043D\u0438\u043A `Housing`'
+		)
+	);
+};
 
 exports.default = Header;
 
