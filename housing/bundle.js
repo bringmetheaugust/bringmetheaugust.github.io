@@ -28435,6 +28435,8 @@ var map = {
 	"./footer/instagramm.png": "./src/img/footer/instagramm.png",
 	"./footer/telegram.png": "./src/img/footer/telegram.png",
 	"./icon.png": "./src/img/icon.png",
+	"./splash/active-cursor.png": "./src/img/splash/active-cursor.png",
+	"./splash/cursor.png": "./src/img/splash/cursor.png",
 	"./wrap.png": "./src/img/wrap.png",
 	"./wrapper/about.jpg": "./src/img/wrapper/about.jpg",
 	"./wrapper/basket.jpg": "./src/img/wrapper/basket.jpg",
@@ -30601,6 +30603,28 @@ module.exports = __webpack_require__.p + "img/icon.png";
 
 /***/ }),
 
+/***/ "./src/img/splash/active-cursor.png":
+/*!******************************************!*\
+  !*** ./src/img/splash/active-cursor.png ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+
+/***/ "./src/img/splash/cursor.png":
+/*!***********************************!*\
+  !*** ./src/img/splash/cursor.png ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,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"
+
+/***/ }),
+
 /***/ "./src/img/wrap.png":
 /*!**************************!*\
   !*** ./src/img/wrap.png ***!
@@ -30981,6 +31005,10 @@ var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 var _react2 = _interopRequireDefault(_react);
 
+var _Splash = __webpack_require__(/*! ./Splash.jsx */ "./src/js/comp/Splash.jsx");
+
+var _Splash2 = _interopRequireDefault(_Splash);
+
 var _Header = __webpack_require__(/*! ./Header.jsx */ "./src/js/comp/Header.jsx");
 
 var _Header2 = _interopRequireDefault(_Header);
@@ -31090,6 +31118,7 @@ var App = function (_React$Component) {
 				_react2.default.createElement(
 					_react2.default.Fragment,
 					null,
+					_react2.default.createElement(_Splash2.default, null),
 					_react2.default.createElement(_Aside2.default, { changeBurg: this.changeBurger, burgOpen: this.state.burgOpen }),
 					_react2.default.createElement(
 						'div',
@@ -32180,6 +32209,111 @@ var Slider = function (_React$Component) {
 }(_react2.default.Component);
 
 exports.default = Slider;
+
+/***/ }),
+
+/***/ "./src/js/comp/Splash.jsx":
+/*!********************************!*\
+  !*** ./src/js/comp/Splash.jsx ***!
+  \********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _Slider = __webpack_require__(/*! ./Slider.jsx */ "./src/js/comp/Slider.jsx");
+
+var _Slider2 = _interopRequireDefault(_Slider);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var splashDB = {
+	img: ['db/101/101-1.jpg', 'db/101/101-2.jpg', 'db/101/101-3.jpg', 'db/101/101-4.jpg'],
+	product: {
+		name: 'Black Vigwam',
+		material: 'порцелян',
+		amount: 10,
+		diametr: 0,
+		height: 9,
+		price: 5
+	}
+};
+
+var Splash = function (_React$Component) {
+	_inherits(Splash, _React$Component);
+
+	function Splash(props) {
+		_classCallCheck(this, Splash);
+
+		var _this = _possibleConstructorReturn(this, (Splash.__proto__ || Object.getPrototypeOf(Splash)).call(this, props));
+
+		_this.state = { unmount: false };
+		return _this;
+	}
+
+	_createClass(Splash, [{
+		key: 'componentDidMount',
+		value: function componentDidMount() {
+			setTimeout(function () {
+				return document.querySelector('.cube').style.animation = 'none';
+			}, 6000);
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			var _this2 = this;
+
+			if (this.state.unmount) return null;
+			return _react2.default.createElement(
+				'div',
+				{ id: 'splash' },
+				_react2.default.createElement(
+					'div',
+					{ className: 'splash__animation' },
+					_react2.default.createElement(_Slider2.default, { arrow: false, img: splashDB.img, showAnime: true, product: splashDB.product }),
+					_react2.default.createElement('div', { className: 'splash__aimation__cursor' })
+				),
+				_react2.default.createElement(
+					'div',
+					{ className: 'splash__title' },
+					_react2.default.createElement(
+						'div',
+						{ className: 'splash__title__hint' },
+						'try to clamp and rotate cubes for Your comfort'
+					),
+					_react2.default.createElement(
+						'div',
+						{ onClick: function onClick() {
+								return _this2.setState({ unmount: true });
+							}, className: 'splash__title__go' },
+						'visit website'
+					)
+				)
+			);
+		}
+	}]);
+
+	return Splash;
+}(_react2.default.Component);
+
+exports.default = Splash;
 
 /***/ }),
 
