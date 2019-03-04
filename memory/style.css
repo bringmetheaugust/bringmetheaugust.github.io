@@ -99,7 +99,8 @@ blockquote:before, blockquote:after, q:before, q:after {
         animation: title 3s both;
         animation-delay: 6s;
         font-size: 1.5rem;
-        letter-spacing: 1rem; }
+        letter-spacing: 1rem;
+        text-align: center; }
         .wrapper #splash .title .exclamation div {
           animation: exclamation 0.7s both cubic-bezier(0, 1.01, 0.63, 0.96);
           animation-delay: 9s; }
@@ -546,6 +547,12 @@ blockquote:before, blockquote:after, q:before, q:after {
     transform: rotateY(0deg); }
   to {
     transform: rotateY(90deg); } }
+  @media only screen and (max-width: 600px) {
+    .wrapper #splash .title {
+      font-size: 2.5rem; }
+      .wrapper #splash .title .exclamation {
+        font-size: 1rem;
+        letter-spacing: 3px; } }
   .wrapper #alert {
     perspective: 3000px;
     display: none;
