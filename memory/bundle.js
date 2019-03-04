@@ -393,7 +393,7 @@ pug_html = pug_html + "\u003Cdiv class=\"splash\"\u003E\u003C\u002Fdiv\u003E";
   }
 }).call(this);
 
-pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";}.call(this,"Array" in locals_for_with?locals_for_with.Array:typeof Array!=="undefined"?Array:undefined));;return pug_html;};
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003Cdiv id=\"close\"\u003Eclose\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";}.call(this,"Array" in locals_for_with?locals_for_with.Array:typeof Array!=="undefined"?Array:undefined));;return pug_html;};
 module.exports = template;
 
 /***/ }),
@@ -743,6 +743,7 @@ function gameOver(abort){
 	gs.gameState.play = false;
 	document.getElementById('play').classList.remove('abort');
 	setInitialsettings();
+	document.getElementById('game-field').classList.remove('play');
 }
 
 alert.lastElementChild.addEventListener('click', function(e){
@@ -782,16 +783,20 @@ var gameState = {
 
 window.addEventListener('load', function(e){
 	setInitialsettings(gameState.settings);
-	try{
 		setTimeout(function(){
-			splash.style.opacity = 0;
-			setTimeout(function(){
-				splash.remove();
-			}, 1000);
+		hideSplash();
 	}, 11000)
-	}catch(e){
-		console.log('splach is off')
-	}
+});
+
+function hideSplash(){
+	splash.style.opacity = 0;
+	setTimeout(function(){
+		splash.remove();
+	}, 1000);
+}
+
+document.getElementById('close').addEventListener('click', function(){
+	hideSplash();
 });
 
 module.exports.gameState = gameState;
@@ -820,7 +825,6 @@ gameField.addEventListener('click', function(e){
 
 function toActiveCard(){
 	try{
-		console.log(this);
 		var img = document.createElement('img');
 		img.setAttribute('src', this.get.getImg());
 		this.appendChild(img);
@@ -850,6 +854,7 @@ function runGame(settings){
 	showStartImgs(settings.hiding);
 	startCounter(settings.time);
 	gs.gameState.play = true;
+	gameField.classList.add('play');
 }
 
 function showStartImgs(time){
