@@ -65,7 +65,7 @@ blockquote:before, blockquote:after, q:before, q:after {
     height: 100vh;
     z-index: 10;
     background-color: white;
-    transition: opacity 1s;
+    transition: opacity .7s;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-pack: center;
@@ -102,7 +102,7 @@ blockquote:before, blockquote:after, q:before, q:after {
         letter-spacing: 1rem;
         text-align: center; }
         .wrapper #splash .title .exclamation div {
-          animation: exclamation 0.7s both cubic-bezier(0, 1.01, 0.63, 0.96);
+          animation: exclamation .7s both linear;
           animation-delay: 9s; }
 
 @keyframes title {
@@ -119,6 +119,7 @@ blockquote:before, blockquote:after, q:before, q:after {
   to {
     transform: translateY(0); } }
     .wrapper #splash .splash-wrap {
+      perspective: 3000px;
       z-index: 10;
       display: -ms-grid;
       display: grid;
@@ -131,10 +132,9 @@ blockquote:before, blockquote:after, q:before, q:after {
       -ms-flex-align: center;
           align-items: center; }
       .wrapper #splash .splash-wrap .splash {
-        perspective: 3000px;
+        perspective: 1000px;
         height: 100%;
-        animation: splash 4s both;
-        background-color: red;
+        animation: splash 5s both;
         height: 100%;
         background-image: url(img/splash.png); }
         .wrapper #splash .splash-wrap .splash:nth-child(1) {
@@ -540,13 +540,19 @@ blockquote:before, blockquote:after, q:before, q:after {
 
 @keyframes splash {
   from {
+    opacity: 0;
     transform: rotateY(90deg); }
   30% {
     transform: rotateY(0deg); }
+  50% {
+    opacity: 1; }
   80% {
     transform: rotateY(0deg); }
+  90% {
+    opacity: 1; }
   to {
-    transform: rotateY(90deg); } }
+    transform: rotateY(90deg);
+    opacity: 0; } }
   @media only screen and (max-width: 600px) {
     .wrapper #splash .title {
       font-size: 2.5rem; }
@@ -563,7 +569,7 @@ blockquote:before, blockquote:after, q:before, q:after {
     margin: 0;
     z-index: 10;
     font-family: dv2;
-    background-color: #d6d6d6;
+    background-color: white;
     opacity: 0;
     transition: all 1.5s cubic-bezier(0.07, 0.57, 0.25, 1); }
     .wrapper #alert > * {
@@ -609,19 +615,25 @@ blockquote:before, blockquote:after, q:before, q:after {
       font-family: dv2;
       font-size: 2rem; }
   .wrapper .game-field-wrap .card-wrap {
-    perspective: 2000px;
-    outline: 1px solid #d6d6d6;
+    border: 1px solid #d6d6d6;
     display: -ms-flexbox;
     display: flex;
     -ms-flex-align: center;
         align-items: center;
-    transition: all .4s; }
+    transition: background 1s;
+    cursor: pointer;
+    overflow: hidden;
+    background: linear-gradient(30deg, white 0%, white 35%, #cbfdf1 50%, white 65%, white 100%);
+    background-position: 0% 100%;
+    background-size: 700%;
+    animation: storm 2.5s; }
     .wrapper .game-field-wrap .card-wrap img {
       width: 100%;
       -webkit-backface-visibility: hidden;
               backface-visibility: hidden;
       animation: show 1s both;
-      transition: all .3s; }
+      transition: all .3s;
+      z-index: 10; }
       .wrapper .game-field-wrap .card-wrap img.disactive {
         animation: hidden .5s both; }
     .wrapper .game-field-wrap .card-wrap.disabled {
@@ -629,7 +641,7 @@ blockquote:before, blockquote:after, q:before, q:after {
       .wrapper .game-field-wrap .card-wrap.disabled img {
         opacity: .2; }
     .wrapper .game-field-wrap .card-wrap:hover {
-      background-color: #cbfdf1; }
+      background: #cbfdf1; }
 
 @keyframes show {
   from {
@@ -642,6 +654,10 @@ blockquote:before, blockquote:after, q:before, q:after {
     transform: rotateY(0deg); }
   to {
     transform: rotateY(90deg); } }
+
+@keyframes storm {
+  to {
+    background-position: 100% 0%; } }
   @media only screen and (max-width: 600px) {
     .wrapper .game-field-wrap #game-field {
       width: 100vw;
@@ -700,7 +716,7 @@ blockquote:before, blockquote:after, q:before, q:after {
           font-size: 1.5rem; } }
 
 button {
-  width: 50%;
+  width: 70%;
   height: 50px;
   font-family: dv2;
   padding: 1%;

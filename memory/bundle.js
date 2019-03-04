@@ -647,8 +647,6 @@ module.exports=pictures;
 /***/ (function(module, exports, __webpack_require__) {
 
 var gs = __webpack_require__(/*! ./index.js */ "./src/js/index.js");
-var startCounter = __webpack_require__(/*! ./endModule.js */ "./src/js/endModule.js").startCounter;
-var showStartImgs = __webpack_require__(/*! ./runModule.js */ "./src/js/runModule.js").showStartImgs;
 var pictures = __webpack_require__(/*! ../img/pictures.js */ "./src/img/pictures.js");
 var gameField = document.getElementById('game-field');
 
@@ -663,28 +661,32 @@ var newCard = function(obj, flexBasis){
 	var div = document.createElement('div');
 	div.get = obj;
 	div.classList.add('card-wrap');
-	// div.style.flexBasis=flexBasis+'%';
 	return div
 };
 
-function runGame(settings){
-	window.scrollTo(0,0);
-	var cardsArray = pictures.slice(0, Math.pow(settings.density, 2) / 2).map(function(i){
+function clearGameField(){
+	var gameField = document.getElementById('game-field');
+	while(gameField.children.length > 0){
+		gameField.firstElementChild.remove();
+	}
+}
+
+function renderCards(density){
+	clearGameField();
+	var cardsArray = pictures.slice(0, Math.pow(density, 2) / 2).map(function(i){
 		return Object.freeze(new newCardObject(i))
 	});
 	cardsArray = cardsArray.concat(cardsArray).sort(function(a, b){
 		return Math.random() - Math.random()
 	});
 	cardsArray.forEach(function(i){
-		gameField.appendChild(newCard(i, 100/settings.density));
+		gameField.appendChild(newCard(i, 100/density));
 	});
-	gameField.style.gridTemplate = 'repeat('+ settings.density +', 1fr)/repeat('+ settings.density +', 1fr)';
-	showStartImgs(settings.hiding);
-	startCounter(settings.time);
-	gs.gameState.play = true;
+	gameField.style.gridTemplate = 'repeat('+ density +', 1fr)/repeat('+ density +', 1fr)';
 }
 
-exports.runGame = runGame;
+exports.renderCards = renderCards;
+exports.clearGameField = clearGameField;
 
 /***/ }),
 
@@ -697,8 +699,9 @@ exports.runGame = runGame;
 
 var gs = __webpack_require__(/*! ./index.js */ "./src/js/index.js");
 var alert = document.getElementById('alert');
-var gameField = document.getElementById('game-field');
 var counter = document.getElementById('count');
+var clearGameField = __webpack_require__(/*! ./cardFabric.js */ "./src/js/cardFabric.js").clearGameField;
+var setInitialsettings = __webpack_require__(/*! ./startModule.js */ "./src/js/startModule.js").setInitialsettings;
 var interval;
 
 function startCounter(time){
@@ -732,15 +735,14 @@ function toRenderAlert(win){
 }
 
 function gameOver(abort){
-	toRenderAlert(abort ? false : true);
-	while(gameField.children.length > 0){
-		gameField.firstElementChild.remove();
-	}
+	clearGameField();
+	if(gs.gameState.play) toRenderAlert(abort ? false : true);
 	clearInterval(interval);
 	counter.innerHTML = '0';
 	gs.gameState.result = undefined;
 	gs.gameState.play = false;
 	document.getElementById('play').classList.remove('abort');
+	setInitialsettings();
 }
 
 alert.lastElementChild.addEventListener('click', function(e){
@@ -780,12 +782,16 @@ var gameState = {
 
 window.addEventListener('load', function(e){
 	setInitialsettings(gameState.settings);
-	setTimeout(function(){
-		splash.style.opacity = 0;
-		// setTimeout(function(){
-		// 	splash.remove();
-		// }, 1000);
-	}, 11000);
+	try{
+		setTimeout(function(){
+			splash.style.opacity = 0;
+			setTimeout(function(){
+				splash.remove();
+			}, 1000);
+	}, 11000)
+	}catch(e){
+		console.log('splach is off')
+	}
 });
 
 module.exports.gameState = gameState;
@@ -802,8 +808,10 @@ module.exports.gameState = gameState;
 var gameField = document.getElementById('game-field');
 var checkGameState = __webpack_require__(/*! ./endModule */ "./src/js/endModule.js").checkGameState;
 var gs = __webpack_require__(/*! ./index.js */ "./src/js/index.js");
+var startCounter = __webpack_require__(/*! ./endModule.js */ "./src/js/endModule.js").startCounter;
 
 gameField.addEventListener('click', function(e){
+	if(!gs.gameState.play) return
 	var trg = e.target;
 	if (!trg.className || trg.className === 'disabled') return false
 	toActiveCard.call(trg);
@@ -811,10 +819,14 @@ gameField.addEventListener('click', function(e){
 });
 
 function toActiveCard(){
-	// this.classList.add('active');
-	var img = document.createElement('img');
-	img.setAttribute('src', this.get.getImg());
-	this.appendChild(img);
+	try{
+		console.log(this);
+		var img = document.createElement('img');
+		img.setAttribute('src', this.get.getImg());
+		this.appendChild(img);
+	}catch(e){
+		console.log(e);
+	}
 }
 
 function toDisabled(){
@@ -822,11 +834,22 @@ function toDisabled(){
 }
 
 function toDisactiveCard(){
-	var firstChild = this.firstElementChild;
-	firstChild.classList.add('disactive');
-	setTimeout(function(){
-		firstChild.remove();
-	}, 500);
+	try{
+		var firstChild = this.firstElementChild;
+		firstChild.classList.add('disactive');
+		setTimeout(function(){
+			firstChild.remove();
+		}, 500);
+	}catch(e){
+		console.log(e);
+	}
+}
+
+function runGame(settings){
+	window.scrollTo(0,0);
+	showStartImgs(settings.hiding);
+	startCounter(settings.time);
+	gs.gameState.play = true;
 }
 
 function showStartImgs(time){
@@ -843,6 +866,7 @@ function showStartImgs(time){
 
 function checkBuffer(item){
 	var buf = gs.gameState.buffer;
+	console.log(item);
 	if(buf){
 		if(item.get.getImg() === gs.gameState.buffer.get.getImg()){
 			toDisabled.call(item);
@@ -861,6 +885,7 @@ function checkBuffer(item){
 }
 
 exports.showStartImgs = showStartImgs;
+exports.runGame = runGame;
 
 /***/ }),
 
@@ -872,30 +897,34 @@ exports.showStartImgs = showStartImgs;
 /***/ (function(module, exports, __webpack_require__) {
 
 var gs = __webpack_require__(/*! ./index.js */ "./src/js/index.js");
-var runGame = __webpack_require__(/*! ./cardFabric.js */ "./src/js/cardFabric.js").runGame;
-var gameOver = __webpack_require__(/*! ./endModule.js */ "./src/js/endModule.js").gameOver;
+var runGame = __webpack_require__(/*! ./runModule.js */ "./src/js/runModule.js");
+var renderCards = __webpack_require__(/*! ./cardFabric */ "./src/js/cardFabric.js").renderCards;
+var gameOver = __webpack_require__(/*! ./endModule.js */ "./src/js/endModule.js");;
 var gameGrid = document.getElementById('density');
 var gameHiding = document.getElementById('hiding');
 var gameTime = document.getElementById('time');
 var form = document.getElementById('settings');
+var renderCards = __webpack_require__(/*! ./cardFabric.js */ "./src/js/cardFabric.js").renderCards;
 
 function setInitialsettings(obj){
 	obj = JSON.parse(localStorage.getItem('settings')) || obj;
 	gameGrid.value = obj.density;
 	gameHiding.value = obj.hiding;
 	gameTime.value = obj.time;
+	renderCards(obj.density);
 }
 
 form.addEventListener('submit', function(e){
 	e.preventDefault();
 	if(gs.gameState.play){
-		return gameOver(true);
+		gs.gameState.play = false;
+		return gameOver.gameOver(true);
 	}
 	var formData = getFormData();
 	if(!validateForm(formData)) return false
 	localStorage.setItem('settings', JSON.stringify(formData));
 	gs.gameState.settings = formData;
-	runGame(gs.gameState.settings);
+	runGame.runGame(gs.gameState.settings);
 	document.getElementById('play').classList.toggle('abort');
 });
 
@@ -923,6 +952,7 @@ form.addEventListener('input', function(e){
 				setError.call(trg, false);
 			}else{
 				setError.call(trg, true);
+				renderCards(trg.value);
 			}
 			break
 		case ('hiding'):
