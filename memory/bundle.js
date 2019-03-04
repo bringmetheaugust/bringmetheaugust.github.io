@@ -360,7 +360,40 @@ function pug_rethrow(err, filename, lineno, str){
 
 var pug = __webpack_require__(/*! ../../node_modules/pug-runtime/index.js */ "./node_modules/pug-runtime/index.js");
 
-function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;pug_html = pug_html + "\u003C!DOCTYPE html\u003E\u003Chtml lang=\"en\"\u003E\u003Chead\u003E\u003Clink rel=\"stylesheet\" href=\"style.css\"\u003E\u003Cmeta charset=\"UTF-8\"\u003E\u003Cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003E\u003Clink" + (" rel=\"shortcut icon\""+pug.attr("href", __webpack_require__(/*! ../img/icon.png */ "./src/img/icon.png"), true, true)+" type=\"image\u002Fx-icon\"") + "\u003E\u003Ctitle\u003ECOOL GAME :3\u003C\u002Ftitle\u003E\u003C\u002Fhead\u003E\u003Cbody\u003E\u003Cdiv class=\"wrapper\"\u003E\u003Cdiv id=\"alert\"\u003E\u003Cdiv class=\"title\"\u003E\u003C\u002Fdiv\u003E\u003Cbutton\u003E\u003Cdiv\u003Eb\u003C\u002Fdiv\u003E\u003Cdiv\u003Ea\u003C\u002Fdiv\u003E\u003Cdiv\u003Ec\u003C\u002Fdiv\u003E\u003Cdiv\u003Ek\u003C\u002Fdiv\u003E\u003C\u002Fbutton\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"game-field-wrap\"\u003E\u003Cdiv id=\"game-field\"\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"count\"\u003Eвремя до окончания :&nbsp;\u003Cspan id=\"count\"\u003E0\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cform id=\"settings\"\u003E\u003Clabel\u003Eselect grid density\u003Cinput id=\"density\" type=\"number\"\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect time for pictures hiding (sec)\u003Cinput id=\"hiding\" type=\"number\"\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect game time (sec)\u003Cinput id=\"time\" type=\"number\"\u003E\u003C\u002Flabel\u003E\u003Cbutton id=\"play\"\u003E\u003Cdiv class=\"play\"\u003E\u003Cdiv\u003Ep\u003C\u002Fdiv\u003E\u003Cdiv\u003El\u003C\u002Fdiv\u003E\u003Cdiv\u003Ea\u003C\u002Fdiv\u003E\u003Cdiv\u003Ey\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"abort\"\u003E\u003Cdiv\u003Es\u003C\u002Fdiv\u003E\u003Cdiv\u003Et\u003C\u002Fdiv\u003E\u003Cdiv\u003Eo\u003C\u002Fdiv\u003E\u003Cdiv\u003Ep\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fbutton\u003E\u003C\u002Fform\u003E\u003C\u002Fdiv\u003E\u003Cscript src=\"bundle.js\" type=\"text\u002Fjavascript\"\u003E\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";;return pug_html;};
+function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;pug_html = pug_html + "\u003C!DOCTYPE html\u003E\u003Chtml lang=\"en\"\u003E\u003Chead\u003E\u003Clink rel=\"stylesheet\" href=\"style.css\"\u003E\u003Cmeta charset=\"UTF-8\"\u003E\u003Cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003E\u003Clink" + (" rel=\"shortcut icon\""+pug.attr("href", __webpack_require__(/*! ../img/icon.png */ "./src/img/icon.png"), true, true)+" type=\"image\u002Fx-icon\"") + "\u003E\u003Ctitle\u003ECOOL GAME :3\u003C\u002Ftitle\u003E\u003C\u002Fhead\u003E\u003Cbody\u003E\u003Cdiv class=\"wrapper\"\u003E" + (null == (pug_interp = __webpack_require__(/*! ./splash.pug */ "./src/html/splash.pug").call(this, locals)) ? "" : pug_interp) + "\u003Cdiv id=\"alert\"\u003E\u003Cdiv class=\"title\"\u003E\u003C\u002Fdiv\u003E\u003Cbutton\u003E\u003Cdiv\u003Eb\u003C\u002Fdiv\u003E\u003Cdiv\u003Ea\u003C\u002Fdiv\u003E\u003Cdiv\u003Ec\u003C\u002Fdiv\u003E\u003Cdiv\u003Ek\u003C\u002Fdiv\u003E\u003C\u002Fbutton\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"game-field-wrap\"\u003E\u003Cdiv id=\"game-field\"\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"count\"\u003Etime left :&nbsp;\u003Cspan id=\"count\"\u003E0\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cform id=\"settings\"\u003E\u003Clabel\u003Eselect grid density\u003Cinput id=\"density\" type=\"number\"\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect time for pictures hiding (sec)\u003Cinput id=\"hiding\" type=\"number\"\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect game time (sec)\u003Cinput id=\"time\" type=\"number\"\u003E\u003C\u002Flabel\u003E\u003Cbutton id=\"play\"\u003E\u003Cdiv class=\"play\"\u003E\u003Cdiv\u003Ep\u003C\u002Fdiv\u003E\u003Cdiv\u003El\u003C\u002Fdiv\u003E\u003Cdiv\u003Ea\u003C\u002Fdiv\u003E\u003Cdiv\u003Ey\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"abort\"\u003E\u003Cdiv\u003Es\u003C\u002Fdiv\u003E\u003Cdiv\u003Et\u003C\u002Fdiv\u003E\u003Cdiv\u003Eo\u003C\u002Fdiv\u003E\u003Cdiv\u003Ep\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fbutton\u003E\u003C\u002Fform\u003E\u003C\u002Fdiv\u003E\u003Cscript src=\"bundle.js\" type=\"text\u002Fjavascript\"\u003E\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";;return pug_html;};
+module.exports = template;
+
+/***/ }),
+
+/***/ "./src/html/splash.pug":
+/*!*****************************!*\
+  !*** ./src/html/splash.pug ***!
+  \*****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+var pug = __webpack_require__(/*! ../../node_modules/pug-runtime/index.js */ "./node_modules/pug-runtime/index.js");
+
+function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;;var locals_for_with = (locals || {});(function (Array) {pug_html = pug_html + "\u003Cdiv id=\"splash\"\u003E\u003Cdiv class=\"title\"\u003EMEMORY STORM\u003Cdiv class=\"exclamation\"\u003Ework hard , play hard\u003Cdiv\u003E!\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"splash-wrap\"\u003E";
+// iterate Array(100)
+;(function(){
+  var $$obj = Array(100);
+  if ('number' == typeof $$obj.length) {
+      for (var pug_index0 = 0, $$l = $$obj.length; pug_index0 < $$l; pug_index0++) {
+        var i = $$obj[pug_index0];
+pug_html = pug_html + "\u003Cdiv class=\"splash\"\u003E\u003C\u002Fdiv\u003E";
+      }
+  } else {
+    var $$l = 0;
+    for (var pug_index0 in $$obj) {
+      $$l++;
+      var i = $$obj[pug_index0];
+pug_html = pug_html + "\u003Cdiv class=\"splash\"\u003E\u003C\u002Fdiv\u003E";
+    }
+  }
+}).call(this);
+
+pug_html = pug_html + "\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E";}.call(this,"Array" in locals_for_with?locals_for_with.Array:typeof Array!=="undefined"?Array:undefined));;return pug_html;};
 module.exports = template;
 
 /***/ }),
@@ -635,6 +668,7 @@ var newCard = function(obj, flexBasis){
 };
 
 function runGame(settings){
+	window.scrollTo(0,0);
 	var cardsArray = pictures.slice(0, Math.pow(settings.density, 2) / 2).map(function(i){
 		return Object.freeze(new newCardObject(i))
 	});
@@ -731,6 +765,7 @@ __webpack_require__(/*! ../html/index.pug */ "./src/html/index.pug");
 __webpack_require__(/*! ./runModule.js */ "./src/js/runModule.js")
 
 var setInitialsettings = __webpack_require__(/*! ./startModule */ "./src/js/startModule.js").setInitialsettings;
+var splash = document.getElementById('splash');
 
 var gameState = {
 	settings: {
@@ -745,6 +780,12 @@ var gameState = {
 
 window.addEventListener('load', function(e){
 	setInitialsettings(gameState.settings);
+	setTimeout(function(){
+		splash.style.opacity = 0;
+		setTimeout(function(){
+			splash.remove();
+		}, 1000);
+	}, 11000);
 });
 
 module.exports.gameState = gameState;
