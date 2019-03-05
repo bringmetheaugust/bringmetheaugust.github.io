@@ -123,10 +123,10 @@ blockquote:before, blockquote:after, q:before, q:after {
       z-index: 10;
       display: -ms-grid;
       display: grid;
-      -ms-grid-columns: (4vw)[10];
-          grid-template-columns: repeat(10, 4vw);
-      -ms-grid-rows: (4vw)[10];
-          grid-template-rows: repeat(10, 4vw);
+      -ms-grid-columns: (6vh)[10];
+          grid-template-columns: repeat(10, 6vh);
+      -ms-grid-rows: (6vh)[10];
+          grid-template-rows: repeat(10, 6vh);
       -ms-flex-pack: center;
           justify-content: center;
       -ms-flex-align: center;
