@@ -55,9 +55,12 @@ blockquote:before, blockquote:after, q:before, q:after {
       align-items: center;
   -ms-flex-direction: row;
       flex-direction: row;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
   min-height: 100vh;
-  font-family: dv;
-  font-size: 1.5rem; }
+  font-size: 1.5rem;
+  color: black;
+  font-family: dv; }
   .wrapper #splash {
     position: fixed;
     top: 0;
@@ -90,8 +93,9 @@ blockquote:before, blockquote:after, q:before, q:after {
           align-items: center;
       -ms-flex-direction: column;
           flex-direction: column;
-      font-family: dv2;
-      font-size: 5rem; }
+      font-size: 5rem;
+      color: black;
+      font-family: dv2; }
       .wrapper #splash .title .exclamation {
         display: -ms-flexbox;
         display: flex;
@@ -584,7 +588,7 @@ blockquote:before, blockquote:after, q:before, q:after {
     transition: all 1.5s cubic-bezier(0.07, 0.57, 0.25, 1); }
     .wrapper #alert > * {
       margin: 1% 0; }
-    .wrapper #alert button {
+    .wrapper #alert .button {
       display: -ms-flexbox;
       display: flex;
       -ms-flex-pack: center;
@@ -606,15 +610,15 @@ blockquote:before, blockquote:after, q:before, q:after {
           flex-direction: column;
       opacity: 1; }
   .wrapper .game-field-wrap #game-field {
-    width: 75vh;
-    height: 75vh;
+    width: 80vh;
+    height: 80vh;
     display: -ms-grid;
     display: grid;
     border: 1px solid #d6d6d6; }
-    .wrapper .game-field-wrap #game-field.play .card-wrap {
+    .wrapper .game-field-wrap #game-field.play li {
       transition: background .5s;
       cursor: pointer; }
-      .wrapper .game-field-wrap #game-field.play .card-wrap:hover {
+      .wrapper .game-field-wrap #game-field.play li:hover {
         background: #cbfdf1; }
   .wrapper .game-field-wrap .count {
     display: -ms-flexbox;
@@ -627,9 +631,10 @@ blockquote:before, blockquote:after, q:before, q:after {
         flex-direction: row;
     text-align: center; }
     .wrapper .game-field-wrap .count #count {
-      font-family: dv2;
-      font-size: 2rem; }
-  .wrapper .game-field-wrap .card-wrap {
+      font-size: 2rem;
+      color: black;
+      font-family: dv2; }
+  .wrapper .game-field-wrap li {
     border: 1px solid #d6d6d6;
     display: -ms-flexbox;
     display: flex;
@@ -641,18 +646,18 @@ blockquote:before, blockquote:after, q:before, q:after {
     background-position: 0% 100%;
     background-size: 700%;
     animation: storm 2.5s; }
-    .wrapper .game-field-wrap .card-wrap img {
+    .wrapper .game-field-wrap li img {
       width: 100%;
       -webkit-backface-visibility: hidden;
               backface-visibility: hidden;
       animation: show 1s both;
       transition: all .3s;
       z-index: 10; }
-      .wrapper .game-field-wrap .card-wrap img.disactive {
+      .wrapper .game-field-wrap li img.disactive {
         animation: hidden .5s both; }
-    .wrapper .game-field-wrap .card-wrap.disabled {
+    .wrapper .game-field-wrap li.disabled {
       pointer-events: none; }
-      .wrapper .game-field-wrap .card-wrap.disabled img {
+      .wrapper .game-field-wrap li.disabled img {
         opacity: .2; }
 
 @keyframes show {
@@ -687,7 +692,7 @@ blockquote:before, blockquote:after, q:before, q:after {
     -ms-flex-direction: column;
         flex-direction: column; }
     .wrapper #settings > * {
-      margin: 5% 0; }
+      margin: 1% 0; }
     .wrapper #settings label {
       display: -ms-grid;
       display: grid;
@@ -695,63 +700,58 @@ blockquote:before, blockquote:after, q:before, q:after {
       text-align: center;
       white-space: nowrap;
       position: relative; }
-      .wrapper #settings label.error {
-        color: red; }
-        .wrapper #settings label.error::after {
-          font-size: 1rem;
-          font-family: dv2;
-          position: absolute;
-          bottom: -17px;
-          width: 100%; }
-        .wrapper #settings label.error:first-child::after {
-          content: 'please, select any even number from 2 to 6'; }
-        .wrapper #settings label.error:nth-child(2)::after {
-          content: 'please, select any even number from 1 to 10'; }
-        .wrapper #settings label.error:nth-child(3)::after {
-          content: 'please, select any even number form 10 to 60'; }
       .wrapper #settings label input {
         min-height: 30px;
         border: 1px solid #d6d6d6;
-        font-family: dv2;
         padding: 1%;
         font-size: 2rem;
+        color: black;
+        font-family: dv2;
         text-align: center;
         transition: background-color .5s; }
         .wrapper #settings label input::-webkit-inner-spin-button {
           -webkit-appearance: none; }
         .wrapper #settings label input:hover {
           background-color: #cbfdf1; }
+      .wrapper #settings label .error {
+        width: 100%;
+        min-height: 20px;
+        text-align: center;
+        font-size: 1rem;
+        color: red;
+        font-family: dv2; }
     @media only screen and (max-width: 1000px) {
       .wrapper #settings {
         font-size: 1.3rem; }
         .wrapper #settings label input {
           font-size: 1.5rem; } }
 
-button {
+.button {
   width: 70%;
   height: 50px;
-  font-family: dv2;
   padding: 1%;
   font-size: 2rem;
+  color: black;
+  font-family: dv2;
   letter-spacing: .7rem;
   border: 1px solid #d6d6d6;
   cursor: pointer;
   background-color: #cbfdf1;
   overflow: hidden;
   transition: background-color .5s; }
-  button .abort {
+  .button .abort {
     transform: translateY(10px); }
-  button:hover div:not(.play):not(.abort) {
+  .button:hover div:not(.play):not(.abort) {
     animation: play .4s both linear; }
-    button:hover div:not(.play):not(.abort):nth-child(1) {
+    .button:hover div:not(.play):not(.abort):nth-child(1) {
       animation-delay: 0.03333s; }
-    button:hover div:not(.play):not(.abort):nth-child(2) {
+    .button:hover div:not(.play):not(.abort):nth-child(2) {
       animation-delay: 0.06667s; }
-    button:hover div:not(.play):not(.abort):nth-child(3) {
+    .button:hover div:not(.play):not(.abort):nth-child(3) {
       animation-delay: 0.1s; }
-    button:hover div:not(.play):not(.abort):nth-child(4) {
+    .button:hover div:not(.play):not(.abort):nth-child(4) {
       animation-delay: 0.13333s; }
-  button > div {
+  .button > div {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-pack: center;
@@ -761,11 +761,11 @@ button {
     -ms-flex-direction: row;
         flex-direction: row;
     transition: transform .5s; }
-    button > div > div {
+    .button > div > div {
       text-align: center; }
-  button.abort {
+  .button.abort {
     background-color: red; }
-    button.abort > div {
+    .button.abort > div {
       transform: translateY(-40px); }
 
 @keyframes play {
