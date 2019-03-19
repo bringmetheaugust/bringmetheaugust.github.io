@@ -610,6 +610,7 @@ blockquote:before, blockquote:after, q:before, q:after {
           flex-direction: column;
       opacity: 1; }
   .wrapper .game-field-wrap #game-field {
+    box-sizing: border-box;
     width: 80vh;
     height: 80vh;
     display: -ms-grid;
@@ -618,8 +619,9 @@ blockquote:before, blockquote:after, q:before, q:after {
     .wrapper .game-field-wrap #game-field.play li {
       transition: background .5s;
       cursor: pointer; }
-      .wrapper .game-field-wrap #game-field.play li:hover {
-        background: #cbfdf1; }
+      @media (hover: hover) {
+        .wrapper .game-field-wrap #game-field.play li:hover {
+          background: #cbfdf1; } }
   .wrapper .game-field-wrap .count {
     display: -ms-flexbox;
     display: flex;
@@ -694,6 +696,7 @@ blockquote:before, blockquote:after, q:before, q:after {
     .wrapper #settings > * {
       margin: 1% 0; }
     .wrapper #settings label {
+      width: 100%;
       display: -ms-grid;
       display: grid;
       grid-gap: 3px;
@@ -701,6 +704,7 @@ blockquote:before, blockquote:after, q:before, q:after {
       white-space: nowrap;
       position: relative; }
       .wrapper #settings label input {
+        width: 100%;
         min-height: 30px;
         border: 1px solid #d6d6d6;
         padding: 1%;
@@ -741,17 +745,17 @@ blockquote:before, blockquote:after, q:before, q:after {
   transition: background-color .5s; }
   .button .abort {
     transform: translateY(10px); }
-  .button:hover div:not(.play):not(.abort) {
+  .button:hover li:not(.play):not(.abort) {
     animation: play .4s both linear; }
-    .button:hover div:not(.play):not(.abort):nth-child(1) {
+    .button:hover li:not(.play):not(.abort):nth-child(1) {
       animation-delay: 0.03333s; }
-    .button:hover div:not(.play):not(.abort):nth-child(2) {
+    .button:hover li:not(.play):not(.abort):nth-child(2) {
       animation-delay: 0.06667s; }
-    .button:hover div:not(.play):not(.abort):nth-child(3) {
+    .button:hover li:not(.play):not(.abort):nth-child(3) {
       animation-delay: 0.1s; }
-    .button:hover div:not(.play):not(.abort):nth-child(4) {
+    .button:hover li:not(.play):not(.abort):nth-child(4) {
       animation-delay: 0.13333s; }
-  .button > div {
+  .button > ul {
     display: -ms-flexbox;
     display: flex;
     -ms-flex-pack: center;
@@ -761,11 +765,11 @@ blockquote:before, blockquote:after, q:before, q:after {
     -ms-flex-direction: row;
         flex-direction: row;
     transition: transform .5s; }
-    .button > div > div {
+    .button > ul > li {
       text-align: center; }
   .button.abort {
     background-color: red; }
-    .button.abort > div {
+    .button.abort > ul {
       transform: translateY(-40px); }
 
 @keyframes play {

@@ -360,7 +360,7 @@ function pug_rethrow(err, filename, lineno, str){
 
 var pug = __webpack_require__(/*! ../../node_modules/pug-runtime/index.js */ "./node_modules/pug-runtime/index.js");
 
-function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;pug_html = pug_html + "\u003C!DOCTYPE html\u003E\u003Chtml lang=\"en\"\u003E\u003Chead\u003E\u003Clink rel=\"stylesheet\" href=\"style.css\"\u003E\u003Cmeta charset=\"UTF-8\"\u003E\u003Cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003E\u003Clink" + (" rel=\"shortcut icon\""+pug.attr("href", __webpack_require__(/*! ../img/icon.png */ "./src/img/icon.png"), true, true)+" type=\"image\u002Fx-icon\"") + "\u003E\u003Ctitle\u003EMEMORY STORM\u003C\u002Ftitle\u003E\u003C\u002Fhead\u003E\u003Cbody\u003E\u003Cdiv class=\"wrapper\"\u003E" + (null == (pug_interp = __webpack_require__(/*! ./splash.pug */ "./src/html/splash.pug").call(this, locals)) ? "" : pug_interp) + "\u003Cdiv id=\"alert\"\u003E\u003Cdiv class=\"title\"\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"button\"\u003E\u003Cdiv\u003Eb\u003C\u002Fdiv\u003E\u003Cdiv\u003Ea\u003C\u002Fdiv\u003E\u003Cdiv\u003Ec\u003C\u002Fdiv\u003E\u003Cdiv\u003Ek\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"game-field-wrap\"\u003E\u003Cul id=\"game-field\"\u003E\u003C\u002Ful\u003E\u003Cdiv class=\"count\"\u003Etime left :\u003Cspan id=\"count\"\u003E0\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cform id=\"settings\"\u003E\u003Clabel\u003Eselect grid density\u003Cinput id=\"density\" type=\"number\"\u003E\u003Cdiv class=\"error\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect time for pictures hiding (sec)\u003Cinput id=\"hiding\" type=\"number\"\u003E\u003Cdiv class=\"error\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect game time (sec)\u003Cinput id=\"time\" type=\"number\"\u003E\u003Cdiv class=\"error\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Flabel\u003E\u003Cdiv class=\"button\" id=\"play\"\u003E\u003Cdiv class=\"play\"\u003E\u003Cdiv\u003Ep\u003C\u002Fdiv\u003E\u003Cdiv\u003El\u003C\u002Fdiv\u003E\u003Cdiv\u003Ea\u003C\u002Fdiv\u003E\u003Cdiv\u003Ey\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"abort\"\u003E\u003Cdiv\u003Es\u003C\u002Fdiv\u003E\u003Cdiv\u003Et\u003C\u002Fdiv\u003E\u003Cdiv\u003Eo\u003C\u002Fdiv\u003E\u003Cdiv\u003Ep\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003C\u002Fform\u003E\u003C\u002Fdiv\u003E\u003Cscript src=\"bundle.js\"\u003E\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";;return pug_html;};
+function template(locals) {var pug_html = "", pug_mixins = {}, pug_interp;pug_html = pug_html + "\u003C!DOCTYPE html\u003E\u003Chtml lang=\"en\"\u003E\u003Chead\u003E\u003Clink rel=\"stylesheet\" href=\"style.css\"\u003E\u003Cmeta charset=\"UTF-8\"\u003E\u003Cmeta name=\"viewport\" content=\"width=device-width, initial-scale=1\"\u003E\u003Clink" + (" rel=\"shortcut icon\""+pug.attr("href", __webpack_require__(/*! ../img/icon.png */ "./src/img/icon.png"), true, true)+" type=\"image\u002Fx-icon\"") + "\u003E\u003Ctitle\u003EMEMORY STORM\u003C\u002Ftitle\u003E\u003C\u002Fhead\u003E\u003Cbody\u003E\u003Cdiv class=\"wrapper\"\u003E" + (null == (pug_interp = __webpack_require__(/*! ./splash.pug */ "./src/html/splash.pug").call(this, locals)) ? "" : pug_interp) + "\u003Cdiv id=\"alert\"\u003E\u003Cdiv class=\"title\"\u003E\u003C\u002Fdiv\u003E\u003Cul class=\"button\"\u003E\u003Cli\u003Eb\u003C\u002Fli\u003E\u003Cli\u003Ea\u003C\u002Fli\u003E\u003Cli\u003Ec\u003C\u002Fli\u003E\u003Cli\u003Ek\u003C\u002Fli\u003E\u003C\u002Ful\u003E\u003C\u002Fdiv\u003E\u003Cdiv class=\"game-field-wrap\"\u003E\u003Cul id=\"game-field\"\u003E\u003C\u002Ful\u003E\u003Cdiv class=\"count\"\u003Etime left :\u003Cspan id=\"count\"\u003E0\u003C\u002Fspan\u003E\u003C\u002Fdiv\u003E\u003C\u002Fdiv\u003E\u003Cform id=\"settings\"\u003E\u003Clabel\u003Eselect grid density\u003Cinput id=\"density\" type=\"number\"\u003E\u003Cdiv class=\"error\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect time for pictures hiding (sec)\u003Cinput id=\"hiding\" type=\"number\"\u003E\u003Cdiv class=\"error\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Flabel\u003E\u003Clabel\u003Eselect game time (sec)\u003Cinput id=\"time\" type=\"number\"\u003E\u003Cdiv class=\"error\"\u003E\u003C\u002Fdiv\u003E\u003C\u002Flabel\u003E\u003Cdiv class=\"button\" id=\"play\"\u003E\u003Cul class=\"play\"\u003E\u003Cli\u003Ep\u003C\u002Fli\u003E\u003Cli\u003El\u003C\u002Fli\u003E\u003Cli\u003Ea\u003C\u002Fli\u003E\u003Cli\u003Ey\u003C\u002Fli\u003E\u003C\u002Ful\u003E\u003Cul class=\"abort\"\u003E\u003Cli\u003Es\u003C\u002Fli\u003E\u003Cli\u003Et\u003C\u002Fli\u003E\u003Cli\u003Eo\u003C\u002Fli\u003E\u003Cli\u003Ep\u003C\u002Fli\u003E\u003C\u002Ful\u003E\u003C\u002Fdiv\u003E\u003C\u002Fform\u003E\u003C\u002Fdiv\u003E\u003Cscript src=\"bundle.js\"\u003E\u003C\u002Fscript\u003E\u003C\u002Fbody\u003E\u003C\u002Fhtml\u003E";;return pug_html;};
 module.exports = template;
 
 /***/ }),
@@ -614,7 +614,6 @@ module.exports = __webpack_require__.p + "img/icon.png";
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-var gs = __webpack_require__(/*! ./index.js */ "./src/js/index.js");
 var pictures = __webpack_require__(/*! ./pictures.js */ "./src/js/pictures.js");
 var gameField = document.getElementById('game-field');
 
@@ -633,7 +632,7 @@ var newCard = function(obj){
 
 function clearGameField(){
 	var gameField = document.getElementById('game-field');
-	while(gameField.children.length > 0){
+	while (gameField.children.length > 0) {
 		gameField.firstElementChild.remove();
 	}
 }
@@ -641,10 +640,10 @@ function clearGameField(){
 function renderCards(density){
 	clearGameField();
 	var cardsArray = pictures.slice(0, Math.pow(density, 2) / 2).map(function(i){
-		return Object.freeze(new newCardObject(i))
+		return Object.freeze(new newCardObject(i));
 	});
 	cardsArray = cardsArray.concat(cardsArray).sort(function(){
-		return Math.random() - Math.random()
+		return Math.random() - Math.random();
 	});
 	cardsArray.forEach(function(i){
 		gameField.appendChild(newCard(i, 100/density));
@@ -675,20 +674,20 @@ function startCounter(time){
 	var timer = time;
 	interval = setInterval(function(){
 		counter.innerHTML = ' '+--timer;
-		if(timer < 1){
+		if (timer < 1) {
 			clearInterval(interval);
 			gameOver(true);
-		};
+		}
 	}, 1000);
 }
 
 function checkGameState(){
 	var result = gs.gameState.result;
-	if(result === undefined){
+	if (result === undefined) {
 		gs.gameState.result = Math.pow(gs.gameState.settings.density, 2) / 2 - 1;
 		return false;
 	}
-	if(result !== 1){
+	if (result !== 1) {
 		--gs.gameState.result;
 		return false;
 	}
@@ -702,7 +701,7 @@ function toRenderAlert(win){
 
 function gameOver(abort){
 	clearGameField();
-	if(gs.gameState.play) toRenderAlert(!abort);
+	if (gs.gameState.play) toRenderAlert(!abort);
 	clearInterval(interval);
 	counter.innerHTML = '0';
 	gs.gameState.result = undefined;
@@ -712,7 +711,7 @@ function gameOver(abort){
 	document.getElementById('game-field').classList.remove('play');
 }
 
-alert.lastElementChild.addEventListener('click', function(e){
+alert.lastElementChild.addEventListener('click', function(){
 	alert.classList.remove('active');
 });
 
@@ -747,7 +746,7 @@ var gameState = {
 	result : undefined
 };
 
-window.addEventListener('load', function(e){
+window.addEventListener('load', function(){
 	setInitialSettings(gameState.settings);
 		setTimeout(function(){
 		hideSplash();
@@ -814,7 +813,7 @@ var startCounter = __webpack_require__(/*! ./endModule.js */ "./src/js/endModule
 var gameField = document.getElementById('game-field');
 
 gameField.addEventListener('click', function(e){
-	if(!gs.gameState.play) return;
+	if (!gs.gameState.play) return;
 	var trg = e.target;
 	if (trg.children.length || trg.tagName !== 'LI') return;
 	toActiveCard.call(trg);
@@ -822,13 +821,9 @@ gameField.addEventListener('click', function(e){
 });
 
 function toActiveCard(){
-	try{
-		var img = document.createElement('img');
-		img.setAttribute('src', this.get.getImg());
-		this.appendChild(img);
-	}catch(e){
-		console.log(e);
-	}
+	var img = document.createElement('img');
+	img.setAttribute('src', this.get.getImg());
+	this.appendChild(img);
 }
 
 function toDisabled(){
@@ -836,15 +831,12 @@ function toDisabled(){
 }
 
 function toDisactiveCard(){
-	try{
-		var firstChild = this.firstElementChild;
-		firstChild.classList.add('disactive');
-		setTimeout(function(){
-			firstChild.remove();
-		}, 400);
-	}catch(e){
-		console.log(e);
-	}
+	var firstChild = this.firstElementChild;
+	if(firstChild === null) return;
+	firstChild.classList.add('disactive');
+	setTimeout(function(){
+		firstChild.remove();
+	}, 400);
 }
 
 function runGame(settings){
@@ -857,11 +849,11 @@ function runGame(settings){
 
 function showStartImgs(time){
 	var chld = gameField.children;
-	for(var i = 0, length = chld.length; i < length; i++){
+	for (var i = 0, length = chld.length; i < length; i++) {
 		toActiveCard.call(chld[i]);
 	}
 	setTimeout(function(){
-		for(var i = 0, length = chld.length; i < length; i++){
+		for (var i = 0, length = chld.length; i < length; i++) {
 			toDisactiveCard.call(chld[i]);
 		}
 	}, time*1000);
@@ -869,8 +861,8 @@ function showStartImgs(time){
 
 function checkBuffer(item){
 	var buf = gs.gameState.buffer;
-	if(buf){
-		if(item.get.getImg() === gs.gameState.buffer.get.getImg()){
+	if (buf) {
+		if (item.get.getImg() === gs.gameState.buffer.get.getImg()) {
 			toDisabled.call(item);
 			toDisabled.call(gs.gameState.buffer);
 			gs.gameState.buffer = undefined;
@@ -901,7 +893,7 @@ exports.runGame = runGame;
 var gs = __webpack_require__(/*! ./index.js */ "./src/js/index.js");
 var runGame = __webpack_require__(/*! ./runModule.js */ "./src/js/runModule.js");
 var renderCards = __webpack_require__(/*! ./cardFabric */ "./src/js/cardFabric.js").renderCards;
-var gameOver = __webpack_require__(/*! ./endModule.js */ "./src/js/endModule.js");;
+var gameOver = __webpack_require__(/*! ./endModule.js */ "./src/js/endModule.js");
 var gameGrid = document.getElementById('density');
 var gameHiding = document.getElementById('hiding');
 var gameTime = document.getElementById('time');
@@ -918,13 +910,14 @@ function setInitialSettings(obj){
 	renderCards(obj.density);
 }
 
-document.getElementById('play').addEventListener('click', function(e){
-	if(gs.gameState.play){
+document.getElementById('play').addEventListener('click', function(){
+	formAccessMeneger(gs.gameState.play);
+	if (gs.gameState.play) {
 		gs.gameState.play = false;
 		return gameOver.gameOver(true); 
 	}
 	var formData = getFormData();
-	if(!validateForm(formData)) return;
+	if (!validateForm(formData)) return;
 	localStorage.setItem('settings', JSON.stringify(formData));
 	gs.gameState.settings = formData;
 	runGame.runGame(gs.gameState.settings);
@@ -932,10 +925,10 @@ document.getElementById('play').addEventListener('click', function(e){
 });
 
 function validateForm(obj){
-	for(var i in obj){
-		if(typeof obj[i] !== 'number' || Number.isNaN(obj[i]) ) return false;
+	for (var i in obj) {
+		if (typeof obj[i] !== 'number' || Number.isNaN(obj[i])) return false;
 	}
-	if((obj.density < MIN_DENSITY || obj.density > MAX_DENSITY || obj.density % 2) ||
+	if ((obj.density < MIN_DENSITY || obj.density > MAX_DENSITY || obj.density % 2) ||
 		(obj.hiding < MIN_HIDING_TIME || obj.hiding > MAX_HIDING_TIME) ||
 		(obj.time < MIN_GAME_TIME || obj.time > MAX_GAME_TIME)) return false;
 	return obj;
@@ -952,28 +945,29 @@ function getFormData(){
 form.addEventListener('input', function(e){
 	if (gs.gameState.play) return;
 	var trg = e.target;
-	switch (trg.id){
-		case ('density'):
-			(trg.value < MIN_DENSITY || trg.value > MAX_DENSITY || trg.value % 2) ?
-				setError.call(trg, 'Please, set any from 2 to 6 multiples of two') :
-				(setError.call(trg), renderCards(trg.value));
-			break;
-		case ('hiding'):
-			trg.value < MIN_HIDING_TIME || trg.value > MAX_HIDING_TIME ?
-				setError.call(trg, 'Please, set any number from 1 to 10') :
-				setError.call(trg);
-			break;
-		case ('time'):
-			trg.value < MIN_GAME_TIME || trg.value > MAX_GAME_TIME ?
-				setError.call(trg, 'please, set any number form 10 to 60') :
-				setError.call(trg);
-			break;
+	var isNan = Number.isNaN(Number(trg.value));
+	if (trg.id === 'density') {
+		setError.call(trg, (isNan || trg.value < MIN_DENSITY || trg.value > MAX_DENSITY || trg.value % 2) ?
+			'Please, set any from 2 to 6 multiples of two' : renderCards(trg.value));
+	}
+	if (trg.id === 'hiding') {
+		setError.call(isNan || trg, trg.value < MIN_HIDING_TIME || trg.value > MAX_HIDING_TIME ?
+			'Please, set any number from 1 to 10' : undefined);
+	}
+	if (trg.id === 'time') {
+		setError.call(trg, isNan || trg.value < MIN_GAME_TIME || trg.value > MAX_GAME_TIME ?
+			'Please, set any number form 10 to 60' : undefined);
 	}
 });
 
+function formAccessMeneger(gameState){
+	[gameGrid, gameHiding, gameTime].forEach(function(i){
+		gameState ? i.removeAttribute("readonly") : i.setAttribute('readonly', true);
+	});
+}
+
 function setError(val){
-	if (val) return this.nextElementSibling.innerHTML = val;
-	this.nextElementSibling.innerHTML = '';
+	this.nextElementSibling.innerHTML = val || '';
 }
 
 exports.setInitialSettings = setInitialSettings;
