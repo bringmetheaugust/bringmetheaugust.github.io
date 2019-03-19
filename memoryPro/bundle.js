@@ -28478,6 +28478,10 @@ function (_React$Component) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Game).call(this, props));
 
+    _this.shouldComponentUpdate = function (nextPr) {
+      return _this.props.play !== nextPr.play ? true : false;
+    };
+
     _this.componentWillUpdate = function (nextPr) {
       return nextPr.play ? _this.runCount(nextPr.store.settings.time) : _this.stopCount();
     };
@@ -28510,12 +28514,6 @@ function (_React$Component) {
   }
 
   _createClass(Game, [{
-    key: "shouldComponentUpdate",
-    value: function shouldComponentUpdate(nextPr) {
-      if (this.props.play !== nextPr.play) return true;
-      return false;
-    }
-  }, {
     key: "render",
     value: function render() {
       var _this2 = this;
@@ -28679,7 +28677,8 @@ function (_React$Component) {
           return _this2.density = i;
         },
         type: "number",
-        defaultValue: str.density
+        defaultValue: str.density,
+        readOnly: this.props.play
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "error"
       }, st.invalidDensity ? 'Please, set any number from 2 to 6 multiples of two' : '')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "select time for pictures hiding (sec)", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -28688,7 +28687,8 @@ function (_React$Component) {
           return _this2.hiding = i;
         },
         type: "number",
-        defaultValue: str.hiding
+        defaultValue: str.hiding,
+        readOnly: this.props.play
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "error"
       }, st.invalidHiding ? 'Please, set any number from 1 to 10' : '')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "select game time (sec)", react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("input", {
@@ -28697,7 +28697,8 @@ function (_React$Component) {
           return _this2.time = i;
         },
         type: "number",
-        defaultValue: str.time
+        defaultValue: str.time,
+        readOnly: this.props.play
       }), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
         className: "error"
       }, st.invalidTime ? 'Please, set any number form 10 to 60' : '')), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -28859,11 +28860,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
-var settingsButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+var settingsButton = react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
   className: "play"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "p"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "l"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "a"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "y")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "p"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "l"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "a"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "y")), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("ul", {
   className: "abort"
-}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "s"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "t"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "o"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, "p")));
+}, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "s"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "t"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "o"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("li", null, "p")));
 
 /***/ }),
 
@@ -29113,13 +29114,13 @@ var getLocalStorage = function getLocalStorage() {
 };
 
 var validateForm = function validateForm(obj) {
-  if (!obj) return;
+  if (!obj) return null;
 
   for (var i in obj) {
-    if (typeof obj[i] !== 'number' || Number.isNaN(obj[i])) return;
+    if (typeof obj[i] !== 'number' || Number.isNaN(obj[i])) return null;
   }
 
-  if (obj.density < MIN_DENSITY || obj.density > MAX_DENSITY || obj.density % 2 || obj.hiding < MIN_HIDING_TIME || obj.hiding > MAX_HIDING_TIME || obj.time < MIN_GAME_TIME || obj.time > MAX_GAME_TIME) return;
+  if (obj.density < MIN_DENSITY || obj.density > MAX_DENSITY || obj.density % 2 || obj.hiding < MIN_HIDING_TIME || obj.hiding > MAX_HIDING_TIME || obj.time < MIN_GAME_TIME || obj.time > MAX_GAME_TIME) return null;
   return obj;
 };
 
