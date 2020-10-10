@@ -1,7 +1,7 @@
 #### 2019
 
 [Jester&Niko](https://bringmetheaugust.github.io/JN)    
-[Memory Storm 2](https://bringmetheaugust.github.io/memoryPro)    
+[Memory Storm 2](https://bringmetheaugust.github.io/memoryStorm)    
 [Yasya and friends](https://bringmetheaugust.github.io/yasya)    
   
 #### 2018
