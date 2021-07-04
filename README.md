@@ -1,8 +1,4 @@
-<img align="right" width="70%" src="./icon.jpg" />
-
-#### 2021
-
- * [Garage](https://bringmetheaugust.github.io/garage/ua)    
+<img align="right" width="70%" src="./icon.jpg" />  
 
 #### 2019
 
