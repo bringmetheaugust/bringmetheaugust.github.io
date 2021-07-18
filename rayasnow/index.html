@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
+    <title>Раечкин снег</title>
+</head>
+<body>
+    <audio id="melody" autoplay src="melody.mp3"></audio>
+    <div class="text">
+        <p>
+            Пусть этот бесконечный холодный снег не даст тебе растаять летом
+            или разукрасит твой монотонный вид из окна зимой.
+        </p>
+        <p>
+            Береги себя и не беги от признаний в прекрасном.
+        </p>
+    </div>
+    <div id="app"></div>
+    <footer>
+        <div class="me">на память от Августа</div>
+        <svg version="1.1" id="melody-play" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="24px" viewBox="0 0 24 24" xml:space="preserve">
+            <rect x="0" y="0" width="4" height="7" fill="#fff">
+                <animateTransform attributeType="xml" attributeName="transform" type="scale" values="1,1; 1,2; 1,1" begin="0s" dur="1.5s" repeatCount="indefinite"></animateTransform>       
+            </rect>
+            <rect x="10" y="0" width="4" height="7" fill="#fff">
+                <animateTransform attributeType="xml" attributeName="transform" type="scale" values="1,1; 1,2; 1,1" begin="0.4s" dur="1.5s" repeatCount="indefinite"></animateTransform>       
+            </rect>
+            <rect x="20" y="0" width="4" height="7" fill="#fff">
+                <animateTransform attributeType="xml" attributeName="transform" type="scale" values="1,1; 1,2; 1,1" begin="0.7s" dur="1.5s" repeatCount="indefinite"></animateTransform>       
+            </rect>
+        </svg>
+    </footer>
+    <script type="module" src="index.js"></script>
+    <script>
+        document.getElementById('melody-play').addEventListener('click', e => {
+            document.getElementById('melody').play();
+            e.currentTarget.style.opacity = '0';
+            e.currentTarget.style.pointerEvents = 'none';
+        });
+    </script>
+</body>
+</html>
