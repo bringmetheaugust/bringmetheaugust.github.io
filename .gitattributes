@@ -1,7 +1,4 @@
-*.js linguist-detectable=false
-*.css linguist-detectable=false
-*.html linguist-detectable=false
-*.* linguist-detectable=false
+works/* linguist-vendored
 
 # *.md linguist-detectable=true
 # *.md linguist-language=Markdown
