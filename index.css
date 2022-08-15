@@ -46,12 +46,9 @@ blockquote:before, blockquote:after, q:before, q:after {
 }
 
 body {
-	margin: var(--gap) 30vw;
+    margin: var(--gap);
     font-family: 'me', Times, serif;
-}
-
-section {
-	margin: var(--gap) 0;
+    letter-spacing: 1px;
 }
 
 h1 {
@@ -73,6 +70,7 @@ h3 {
 
 a {
     text-decoration: none;
+    color: initial;
 }
 
 a:hover {
@@ -81,18 +79,21 @@ a:hover {
 
 /* OTHERS */
 
-header {
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
+.works-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
 }
 
-.links {
-	display: flex;
-	justify-content: flex-end;
-	gap: var(--gap);
-}
-
-.works-list li ul {
+.works-list ul {
     margin-left: var(--gap);
+}
+
+.works-list li li {
+    margin: calc(var(--gap) / 2) 0;
+}
+
+footer {
+    position: absolute;
+    bottom: 0;
 }
