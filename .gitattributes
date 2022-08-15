@@ -1,6 +1,1 @@
-works/* linguist-vendored
-works/* linguist-detectable=true
-
-# *.md linguist-detectable=true
-# *.md linguist-language=Markdown
-# *.md linguist-documentation=false
+works/** linguist-vendored
