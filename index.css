@@ -46,7 +46,7 @@ blockquote:before, blockquote:after, q:before, q:after {
 }
 
 body {
-    margin: var(--gap);
+    height: 100vh;
     font-family: 'me', Times, serif;
     letter-spacing: 1px;
 }
@@ -79,6 +79,28 @@ a:hover {
 
 /* OTHERS */
 
+main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding: 10% 0;
+}
+
+section.projects {
+    position: relative;
+    flex-basis: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: calc(var(--gap) * 2);
+    text-align: right;
+}
+
+.projects, .media {
+    height: 100%;
+}
+
 .project-list {
     display: flex;
     flex-direction: column;
@@ -93,7 +115,34 @@ a:hover {
     margin: calc(var(--gap) / 2) 0;
 }
 
-footer {
+.links {
     position: absolute;
     bottom: 0;
+}
+
+.links {
+    display: flex;
+}
+
+.links a {
+    display: flex;
+}
+
+section.media {
+    overflow: hidden;
+    flex-basis: 50%;
+}
+
+section.media img {
+    height: 100%;
+}
+
+@media only screen and (max-width: 767px) {
+    main {
+        padding: initial;
+    }
+
+    .links {
+        bottom: var(--gap);
+    }
 }
