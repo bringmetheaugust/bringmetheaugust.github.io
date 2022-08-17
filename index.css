@@ -79,17 +79,17 @@ a:hover {
 
 /* OTHERS */
 
-.works-list {
+.project-list {
     display: flex;
     flex-direction: column;
     gap: var(--gap);
 }
 
-.works-list ul {
+.project-list ul {
     margin-left: var(--gap);
 }
 
-.works-list li li {
+.project-list li li {
     margin: calc(var(--gap) / 2) 0;
 }
 
